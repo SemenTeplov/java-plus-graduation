@@ -122,6 +122,8 @@
                                 ${project.basedir}/src/main/resources/static/ewm-service.yaml
                             </inputSpec>
                             <generatorName>spring</generatorName>
+                            <apiPackage>ru.practicum.openapi.api</apiPackage>
+                            <modelPackage>ru.practicum.openapi.model</modelPackage>
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>
                                 <interfaceOnly>true</interfaceOnly>
