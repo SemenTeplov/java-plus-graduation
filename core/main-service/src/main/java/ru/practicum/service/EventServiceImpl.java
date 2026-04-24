@@ -42,7 +42,7 @@ import ru.practicum.openapi.model.ParticipationRequestDto;
 import ru.practicum.openapi.model.UpdateEventAdminRequest;
 import ru.practicum.openapi.model.UpdateEventUserRequest;
 
-import main.StatsClient;
+import main.client.StatsClient;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

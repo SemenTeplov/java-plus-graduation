@@ -1,4 +1,4 @@
-package main;
+package main.client;
 
 import dto.EndpointHitDto;
 import dto.ViewStats;

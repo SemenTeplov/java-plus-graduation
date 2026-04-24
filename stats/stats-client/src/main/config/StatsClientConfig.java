@@ -11,7 +11,7 @@ import org.springframework.retry.policy.MaxAttemptsRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.client.RestClient;
 
-import main.StatsClient;
+import main.client.StatsClient;
 import main.exception.StatsServerUnavailable;
 
 @Configuration
