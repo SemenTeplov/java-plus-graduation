@@ -43,6 +43,7 @@ import ru.practicum.openapi.model.UpdateEventAdminRequest;
 import ru.practicum.openapi.model.UpdateEventUserRequest;
 
 import main.StatsClient;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
