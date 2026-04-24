@@ -34,6 +34,7 @@ import static main.java.ru.practicum.persistence.status.StatusRequest.*;
 @Transactional
 @RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService {
+
     private final RequestRepository requestRepository;
 
     private final EventRepository eventRepository;

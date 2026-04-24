@@ -20,6 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StatsServiceImpl implements StatsService {
+
     private final StatsRepository statsRepository;
 
     private final StatsMapper mapper;

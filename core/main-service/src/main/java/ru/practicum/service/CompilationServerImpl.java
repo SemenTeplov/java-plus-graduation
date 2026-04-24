@@ -38,6 +38,7 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class CompilationServerImpl implements main.java.ru.practicum.service.CompilationServer {
+
     private final CompilationRepository compilationRepository;
 
     private final CategoryRepository categoryRepository;

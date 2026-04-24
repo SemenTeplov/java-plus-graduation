@@ -30,6 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class StatsControllerImpl {
+
     private final StatsService statsService;
 
     @PostMapping("/hit")

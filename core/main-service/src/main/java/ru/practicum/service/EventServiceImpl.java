@@ -1,5 +1,6 @@
 package main.java.ru.practicum.service;
 
+import dto.EndpointHitDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +43,7 @@ import ru.practicum.openapi.model.ParticipationRequestDto;
 import ru.practicum.openapi.model.UpdateEventAdminRequest;
 import ru.practicum.openapi.model.UpdateEventUserRequest;
 
+import java.StatsClient;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -57,6 +59,7 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
+
     private final UserRepository userRepository;
 
     private final EventRepository eventRepository;
@@ -76,6 +79,8 @@ public class EventServiceImpl implements EventService {
     private final LocationMapper locationMapper;
 
     private final EventSpecification eventSpecification;
+
+    private final StatsClient statsClient;
 
     @Override
     public ResponseEntity<EventFullDto> addEvent(Long userId, NewEventDto newEventDto) {
@@ -161,7 +166,13 @@ public class EventServiceImpl implements EventService {
         LocationEntity location = locationRepository.findById(event.getLocation())
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
 
-        EwmClient.sendEvent(Values.EVENT_GET_URI, id);
+        //EwmClient.sendEvent(Values.EVENT_GET_URI, id);
+        statsClient.saveHit(EndpointHitDto.builder()
+                .uri(Values.EVENT_GET_URI + id)
+                .app(Values.APPLICATION)
+                .ip(Values.EWM_IP)
+                .timestamp(LocalDateTime.now())
+                .build());
 
         return ResponseEntity.ok(getEventFullDto(event, location));
     }
@@ -209,7 +220,13 @@ public class EventServiceImpl implements EventService {
                 .map(this::getEventShortDto)
                 .toList();
 
-        EwmClient.sendEvents(Values.EVENTS_GET_URI);
+        //EwmClient.sendEvents(Values.EVENTS_GET_URI);
+        statsClient.saveHit(EndpointHitDto.builder()
+                .uri(Values.EVENT_GET_URI)
+                .app(Values.APPLICATION)
+                .ip(Values.EWM_IP)
+                .timestamp(LocalDateTime.now())
+                .build());
 
         return ResponseEntity.ok(list);
     }

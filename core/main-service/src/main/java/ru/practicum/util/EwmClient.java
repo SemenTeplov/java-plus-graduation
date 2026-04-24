@@ -8,6 +8,7 @@ import org.springframework.web.client.RestClient;
 import java.time.LocalDateTime;
 
 public class EwmClient {
+
     private static final RestClient client = RestClient.create();
 
     public static void sendEvent(String uri, Long id) {

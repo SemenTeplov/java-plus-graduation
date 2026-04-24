@@ -40,6 +40,7 @@ import static ru.practicum.openapi.model.EventFullDto.StateEnum.PUBLISHED;
 @Transactional
 @Slf4j
 public class CommentServiceImpl implements CommentService {
+
     private final CommentRepository commentRepository;
 
     private final UserRepository userRepository;
