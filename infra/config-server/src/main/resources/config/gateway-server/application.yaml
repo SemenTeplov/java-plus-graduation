@@ -4,9 +4,9 @@ spring:
       discovery.locator.enabled: true
       routes:
         - id: main_service_route
-          uri: lb://main-service
+          uri: lb://ewm-main-service
           predicates:
-            - Path=/main-service/**
+            - Path=/ewm-main-service/**
 
 management:
   endpoints:
