@@ -5,6 +5,7 @@ import dto.ViewStats;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -17,6 +18,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class StatsClient {
+
     private final RestClient client;
 
     public void saveHit(EndpointHitDto hitDto) {
