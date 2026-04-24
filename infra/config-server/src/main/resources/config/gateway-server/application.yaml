@@ -6,7 +6,7 @@ spring:
         - id: main_service_route
           uri: lb://main-service
           predicates:
-            - Path=/ewm-main-service/**
+            - Path=/main-service/**
 
 management:
   endpoints:
