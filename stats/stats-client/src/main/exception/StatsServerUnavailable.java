@@ -1,4 +1,4 @@
-package java.exception;
+package main.exception;
 
 public class StatsServerUnavailable extends RuntimeException {
     public StatsServerUnavailable(String id) {

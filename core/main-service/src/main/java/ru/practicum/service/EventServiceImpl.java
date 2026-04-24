@@ -26,7 +26,6 @@ import main.java.ru.practicum.persistence.repository.RequestRepository;
 import main.java.ru.practicum.persistence.repository.UserRepository;
 import main.java.ru.practicum.persistence.status.StatusRequest;
 import main.java.ru.practicum.specification.EventSpecification;
-import main.java.ru.practicum.util.EwmClient;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -43,7 +42,7 @@ import ru.practicum.openapi.model.ParticipationRequestDto;
 import ru.practicum.openapi.model.UpdateEventAdminRequest;
 import ru.practicum.openapi.model.UpdateEventUserRequest;
 
-import java.StatsClient;
+import main.StatsClient;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;

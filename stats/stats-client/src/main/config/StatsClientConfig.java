@@ -1,4 +1,4 @@
-package java.config;
+package main.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
@@ -11,8 +11,8 @@ import org.springframework.retry.policy.MaxAttemptsRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.client.RestClient;
 
-import java.StatsClient;
-import java.exception.StatsServerUnavailable;
+import main.StatsClient;
+import main.exception.StatsServerUnavailable;
 
 @Configuration
 public class StatsClientConfig {
