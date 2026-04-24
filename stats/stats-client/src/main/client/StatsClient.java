@@ -3,8 +3,7 @@ package main.client;
 import dto.EndpointHitDto;
 import dto.ViewStats;
 
-import lombok.RequiredArgsConstructor;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -15,10 +14,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class StatsClient {
 
-    private final RestClient client;
+    @Autowired
+    private RestClient client;
 
     public void saveHit(EndpointHitDto hitDto) {
         client.post()

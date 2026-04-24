@@ -12,7 +12,6 @@ import org.springframework.retry.policy.MaxAttemptsRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.client.RestClient;
 
-import main.client.StatsClient;
 import main.exception.StatsServerUnavailable;
 
 @Configuration
@@ -37,11 +36,6 @@ public class StatsClientConfig {
         return RestClient.builder()
                 .baseUrl("http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort())
                 .build();
-    }
-
-    @Bean
-    public StatsClient statsClient(RestClient client) {
-        return new StatsClient(client);
     }
 
     private RetryTemplate getRetryTemplate() {
