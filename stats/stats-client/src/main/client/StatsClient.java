@@ -1,7 +1,7 @@
 package main.client;
 
-import dto.EndpointHitDto;
-import dto.ViewStats;
+import main.dto.EndpointHitDto;
+import main.dto.ViewStats;
 
 import main.exception.StatsServerUnavailable;
 

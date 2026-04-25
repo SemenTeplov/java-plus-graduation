@@ -10,10 +10,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>stats.dto</groupId>
-    <packaging>jar</packaging>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>stats-dto</name>
     <artifactId>stats-dto</artifactId>
 
     <dependencies>
@@ -30,20 +26,12 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>main/java</sourceDirectory>
+        <sourceDirectory>src</sourceDirectory>
 
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
             </plugin>
         </plugins>
     </build>

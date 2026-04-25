@@ -1,6 +1,6 @@
 package main.java.ru.practicum.service;
 
-import dto.EndpointHitDto;
+import main.dto.EndpointHitDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
