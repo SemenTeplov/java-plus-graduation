@@ -221,7 +221,7 @@ public class EventServiceImpl implements EventService {
                 .toList();
 
         statsClient.saveHit(EndpointHitDto.builder()
-                .uri(Values.EVENT_GET_URI)
+                .uri(Values.EVENTS_GET_URI)
                 .app(Values.APPLICATION)
                 .ip(Values.EWM_IP)
                 .timestamp(LocalDateTime.now())
