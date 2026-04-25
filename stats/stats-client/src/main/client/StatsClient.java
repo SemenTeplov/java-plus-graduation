@@ -3,8 +3,15 @@ package main.client;
 import dto.EndpointHitDto;
 import dto.ViewStats;
 
+import main.exception.StatsServerUnavailable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.retry.backoff.FixedBackOffPolicy;
+import org.springframework.retry.policy.MaxAttemptsRetryPolicy;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriBuilder;
@@ -17,10 +24,13 @@ import java.util.List;
 public class StatsClient {
 
     @Autowired
-    private RestClient client;
+    private Environment environment;
+
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
     public void saveHit(EndpointHitDto hitDto) {
-        client.post()
+        restClient().post()
                 .uri("/hit")
                 .body(hitDto)
                 .retrieve()
@@ -37,9 +47,41 @@ public class StatsClient {
             builder.queryParam("uris", uris);
         }
 
-        return client.get()
+        return restClient().get()
                 .uri(builder.toUriString())
                 .retrieve()
                 .body(new ParameterizedTypeReference<List<ViewStats>>() {});
+    }
+
+    private RestClient restClient() {
+
+        ServiceInstance serviceInstance = getRetryTemplate().execute(cxt -> getInstance());
+
+        return RestClient.builder()
+                .baseUrl("http://" + serviceInstance.getHost() + ":" + serviceInstance.getPort())
+                .build();
+    }
+
+    private RetryTemplate getRetryTemplate() {
+
+        RetryTemplate retryTemplate = new RetryTemplate();
+
+        FixedBackOffPolicy fixedBackOffPolicy = new FixedBackOffPolicy();
+        fixedBackOffPolicy.setBackOffPeriod(3000L);
+        retryTemplate.setBackOffPolicy(fixedBackOffPolicy);
+
+        MaxAttemptsRetryPolicy retryPolicy = new MaxAttemptsRetryPolicy();
+        retryPolicy.setMaxAttempts(3);
+        retryTemplate.setRetryPolicy(retryPolicy);
+
+        return retryTemplate;
+    }
+
+    private ServiceInstance getInstance() {
+        try {
+            return discoveryClient.getInstances(environment.getProperty("stats.client.nameService")).getFirst();
+        } catch (Exception exception) {
+            throw new StatsServerUnavailable(environment.getProperty("stats.client.nameService"));
+        }
     }
 }
