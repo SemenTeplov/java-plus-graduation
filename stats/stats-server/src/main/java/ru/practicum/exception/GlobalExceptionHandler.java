@@ -2,7 +2,7 @@ package main.java.ru.practicum.exception;
 
 import constant.Messages;
 
-import dto.ExceptionDto;
+import main.dto.ExceptionDto;
 
 import lombok.extern.slf4j.Slf4j;
 
