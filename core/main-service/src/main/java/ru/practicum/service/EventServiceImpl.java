@@ -1,6 +1,7 @@
 package main.java.ru.practicum.service;
 
-import main.client.StatsClient;
+import main.java.ru.practicum.utils.StatsClient;
+
 import main.dto.EndpointHitDto;
 
 import lombok.RequiredArgsConstructor;
