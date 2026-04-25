@@ -14,9 +14,9 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>infra</module>
 		<module>stats</module>
 		<module>core</module>
-		<module>infra</module>
 	</modules>
 
 	<groupId>ru.practicum</groupId>
