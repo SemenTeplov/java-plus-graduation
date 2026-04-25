@@ -1,7 +1,7 @@
 package main.java.ru.practicum.service;
 
-import dto.EndpointHitDto;
-import dto.ViewStats;
+import main.dto.EndpointHitDto;
+import main.dto.ViewStats;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

@@ -8,8 +8,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import constant.Messages;
 
-import dto.EndpointHitDto;
-import dto.ViewStats;
+import main.dto.EndpointHitDto;
+import main.dto.ViewStats;
 
 import main.java.ru.practicum.mapper.StatsMapper;
 import main.java.ru.practicum.repository.StatsRepository;

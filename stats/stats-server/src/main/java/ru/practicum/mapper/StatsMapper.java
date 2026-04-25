@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 
 import main.java.ru.practicum.model.EndpointHit;
 
-import dto.EndpointHitDto;
+import main.dto.EndpointHitDto;
 
 @Mapper(componentModel = "spring")
 public interface StatsMapper {

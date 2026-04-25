@@ -4,8 +4,8 @@ import constant.Messages;
 
 import constant.Values;
 
-import dto.EndpointHitDto;
-import dto.ViewStats;
+import main.dto.EndpointHitDto;
+import main.dto.ViewStats;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
