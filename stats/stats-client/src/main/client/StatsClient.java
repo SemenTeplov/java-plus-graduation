@@ -4,11 +4,10 @@ import dto.EndpointHitDto;
 import dto.ViewStats;
 
 import main.exception.StatsServerUnavailable;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.env.Environment;
 import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.policy.MaxAttemptsRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
@@ -23,11 +22,11 @@ import java.util.List;
 @Service
 public class StatsClient {
 
-    @Autowired
-    private Environment environment;
+    private final DiscoveryClient discoveryClient;
 
-    @Autowired
-    private DiscoveryClient discoveryClient;
+    public StatsClient(DiscoveryClient discoveryClient) {
+        this.discoveryClient = discoveryClient;
+    }
 
     public void saveHit(EndpointHitDto hitDto) {
         restClient().post()
@@ -79,9 +78,9 @@ public class StatsClient {
 
     private ServiceInstance getInstance() {
         try {
-            return discoveryClient.getInstances(environment.getProperty("stats.client.nameService")).getFirst();
+            return discoveryClient.getInstances("main-service").getFirst();
         } catch (Exception exception) {
-            throw new StatsServerUnavailable(environment.getProperty("stats.client.nameService"));
+            throw new StatsServerUnavailable("main-service");
         }
     }
 }

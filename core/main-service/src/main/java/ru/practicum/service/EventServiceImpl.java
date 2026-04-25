@@ -1,6 +1,7 @@
 package main.java.ru.practicum.service;
 
 import dto.EndpointHitDto;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -166,7 +167,6 @@ public class EventServiceImpl implements EventService {
         LocationEntity location = locationRepository.findById(event.getLocation())
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
 
-        //EwmClient.sendEvent(Values.EVENT_GET_URI, id);
         statsClient.saveHit(EndpointHitDto.builder()
                 .uri(Values.EVENT_GET_URI + id)
                 .app(Values.APPLICATION)
@@ -220,7 +220,6 @@ public class EventServiceImpl implements EventService {
                 .map(this::getEventShortDto)
                 .toList();
 
-        //EwmClient.sendEvents(Values.EVENTS_GET_URI);
         statsClient.saveHit(EndpointHitDto.builder()
                 .uri(Values.EVENT_GET_URI)
                 .app(Values.APPLICATION)
