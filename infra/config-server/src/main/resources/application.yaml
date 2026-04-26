@@ -16,7 +16,6 @@ spring:
             - classpath:config/infra/{application}
     discovery:
       enabled: true
-      serviceId: config-server
 eureka:
   client:
     serviceUrl:
