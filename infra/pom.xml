@@ -9,14 +9,12 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>stats</artifactId>
+    <artifactId>infra</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>stats</name>
-
     <modules>
-        <module>stats-dto</module>
-        <module>stats-client</module>
-        <module>stats-server</module>
+        <module>config-server</module>
+        <module>discovery-server</module>
+        <module>gateway-server</module>
     </modules>
+
 </project>
