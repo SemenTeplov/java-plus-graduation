@@ -22,8 +22,8 @@ public interface CommentMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "text", source = "newCommentDto.text")
-    @Mapping(target = "author", source = "author.id")
-    @Mapping(target = "event", source = "event.id")
+    @Mapping(target = "authorId", source = "author.id")
+    @Mapping(target = "eventId", source = "event.id")
     @Mapping(target = "created", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "edited", ignore = true)
     Comment toComment(NewCommentDto newCommentDto, UserShortDto author, EventShortDto event);
