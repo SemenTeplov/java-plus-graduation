@@ -1,0 +1,17 @@
+package main.java.ru.practicum.external;
+
+import main.dto.EventShortDto;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+
+@FeignClient(name = "event-service")
+public interface EventClient {
+
+    @GetMapping("/events/compilations")
+    ResponseEntity<List<EventShortDto>> getAllById(@RequestBody List<Long> ids);
+}
