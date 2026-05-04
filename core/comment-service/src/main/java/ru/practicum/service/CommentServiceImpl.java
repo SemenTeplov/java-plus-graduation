@@ -82,11 +82,11 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(String.format(Exceptions.EXCEPTION_COMMENT_NOT_FOUND, commentId)));
 
-        if (!comment.getAuthor().equals(userId)) {
+        if (!comment.getAuthorId().equals(userId)) {
             throw new ValidationException(Exceptions.EXCEPTION_ONLY_AUTHOR_CAN_EDIT);
         }
 
-        if (!comment.getEvent().equals(eventId)) {
+        if (!comment.getEventId().equals(eventId)) {
             throw new ValidationException(Exceptions.EXCEPTION_COMMENT_FOR_OTHER_EVENT);
         }
 
@@ -109,15 +109,15 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAllByAuthorId(userId, PageRequest.of(from / size, size))
                 .stream()
                 .map(comment -> {
-                    UserShortDto userShort = userClient.getUserById(comment.getAuthor()).getBody();
+                    UserShortDto userShort = userClient.getUserById(comment.getAuthorId()).getBody();
 
                     assert requests != null;
                     Long confirmedRequests = requests.stream()
-                            .filter(r -> r.getEvent().equals(comment.getEvent())
+                            .filter(r -> r.getEvent().equals(comment.getEventId())
                                     && r.getStatus().equals(StatusRequest.CONFIRMED.toString())).count();
 
                     EventShortDto eventShort = createEventShortDtoWithConfirmedRequests(
-                            comment.getEvent(), confirmedRequests);
+                            comment.getEventId(), confirmedRequests);
 
                     return commentMapper.toCommentDto(comment, userShort, eventShort);
                 })
@@ -135,7 +135,7 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAllByEventId(eventId, PageRequest.of(from / size, size))
                 .stream()
                 .map(comment -> commentMapper
-                        .toCommentDto(comment, userClient.getUserById(comment.getAuthor()).getBody(), eventShort))
+                        .toCommentDto(comment, userClient.getUserById(comment.getAuthorId()).getBody(), eventShort))
                 .collect(Collectors.toList());
     }
 
@@ -147,11 +147,11 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
         Long confirmedRequests = requestClient.countByEventIdAndStatus(
-                comment.getEvent(), StatusRequest.CONFIRMED.toString()).getBody();
+                comment.getEventId(), StatusRequest.CONFIRMED.toString()).getBody();
         EventShortDto eventShort = createEventShortDtoWithConfirmedRequests(
-                comment.getEvent(), confirmedRequests);
+                comment.getEventId(), confirmedRequests);
 
-        return commentMapper.toCommentDto(comment, userClient.getUserById(comment.getAuthor()).getBody(), eventShort);
+        return commentMapper.toCommentDto(comment, userClient.getUserById(comment.getAuthorId()).getBody(), eventShort);
     }
 
     @Override
@@ -161,7 +161,7 @@ public class CommentServiceImpl implements CommentService {
 
         userClient.getUserById(userId);
 
-        if (!commentRepository.findById(commentId).get().getAuthor().equals(userId)) {
+        if (!commentRepository.findById(commentId).get().getAuthorId().equals(userId)) {
             throw new ValidationException(Exceptions.EXCEPTION_ONLY_AUTHOR_CAN_DELETE);
         }
 
