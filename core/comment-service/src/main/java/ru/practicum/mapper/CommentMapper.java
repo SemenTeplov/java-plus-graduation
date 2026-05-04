@@ -22,12 +22,16 @@ public interface CommentMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "text", source = "newCommentDto.text")
+    @Mapping(target = "author", source = "author.id")
+    @Mapping(target = "event", source = "event.id")
     @Mapping(target = "created", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "edited", ignore = true)
     Comment toComment(NewCommentDto newCommentDto, UserShortDto author, EventShortDto event);
 
     @Mapping(target = "id", source = "comment.id")
     @Mapping(target = "text", source = "comment.text")
+    @Mapping(target = "author", source = "author")
+    @Mapping(target = "event", source = "event")
     @Mapping(target = "created", source = "comment.created", qualifiedByName = "localDateTimeToString")
     @Mapping(target = "edited", source = "comment.edited", qualifiedByName = "localDateTimeToString")
     CommentDto toCommentDto(Comment comment, UserShortDto author, EventShortDto event);
