@@ -17,7 +17,6 @@ import main.java.ru.practicum.external.EventClient;
 import main.java.ru.practicum.external.UserClient;
 import main.java.ru.practicum.mapper.CompilationMapper;
 import main.java.ru.practicum.persistence.entity.Compilation;
-import main.java.ru.practicum.persistence.entity.Event;
 import main.java.ru.practicum.persistence.repository.CompilationRepository;
 
 import org.springframework.http.HttpStatus;
@@ -54,15 +53,14 @@ public class CompilationServerImpl implements CompilationServer {
 
         List<Compilation> compilations = compilationRepository.getCompilations(pinned, from, size).stream().toList();
         Set<EventShortDto> events = new HashSet<>(Objects.requireNonNull(eventClient.getAllById(compilations.stream()
-                .flatMap(c -> c.getEvents().stream().map(Event::getEventId))
-                .toList()).getBody()));
+                .flatMap(c -> c.getEvents().stream()).toList()).getBody()));
         List<CompilationDto> list = compilations.stream()
                 .map(c -> {
                     CompilationDto compilationDto = compilationMapper.compilationToCompilationDto(c);
 
                     compilationDto.setEvents(completionCompilationDto(events.stream()
                                 .filter(e -> c.getEvents().stream()
-                                        .anyMatch(i -> i.getEventId().equals(e.getId())))
+                                        .anyMatch(i -> i.equals(e.getId())))
                                 .toList()));
 
                     return compilationDto;
@@ -79,7 +77,7 @@ public class CompilationServerImpl implements CompilationServer {
                 .orElseThrow(() -> new NotFoundCompletion(Exceptions.NOT_FOUND_COMPLETION));
         CompilationDto compilationDto = compilationMapper.compilationToCompilationDto(compilation);
         compilationDto.setEvents(completionCompilationDto(Objects.requireNonNull(eventClient
-                .getAllById(compilation.getEvents().stream().map(Event::getEventId).toList()).getBody())));
+                .getAllById(compilation.getEvents()).getBody())));
 
         return ResponseEntity.status(HttpStatus.OK).body(compilationDto);
     }
@@ -100,14 +98,13 @@ public class CompilationServerImpl implements CompilationServer {
         Long id = compilation.getId();
 
         compilation.setEvents(Objects.requireNonNull(eventClient.getAllById(newCompilationDto.events()).getBody())
-                .stream().map(e -> Event.builder().eventId(e.getId()).compilationId(id)
-                        .build()).toList());
+                .stream().map(EventShortDto::getId).toList());
 
         compilation = compilationRepository.save(compilation);
 
         CompilationDto compilationDto = compilationMapper.compilationToCompilationDto(compilation);
         compilationDto.setEvents(completionCompilationDto(Objects.requireNonNull(eventClient
-                .getAllById(compilation.getEvents().stream().map(Event::getEventId).toList()).getBody())));
+                .getAllById(compilation.getEvents()).getBody())));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(compilationDto);
     }
@@ -136,15 +133,14 @@ public class CompilationServerImpl implements CompilationServer {
 
         if (updateCompilationRequest.getEvents() != null) {
             compilation.setEvents(Objects.requireNonNull(eventClient.getAllById(updateCompilationRequest.getEvents()).getBody())
-                    .stream().map(e -> Event.builder().eventId(e.getId()).compilationId(id)
-                    .build()).toList());
+                    .stream().map(EventShortDto::getId).toList());
         }
 
         compilation = compilationRepository.save(compilation);
 
         CompilationDto compilationDto = compilationMapper.compilationToCompilationDto(compilation);
         compilationDto.setEvents(completionCompilationDto(Objects.requireNonNull(eventClient
-                .getAllById(compilation.getEvents().stream().map(Event::getEventId).toList()).getBody())));
+                .getAllById(compilation.getEvents()).getBody())));
 
         return ResponseEntity.status(HttpStatus.OK).body(compilationDto);
     }

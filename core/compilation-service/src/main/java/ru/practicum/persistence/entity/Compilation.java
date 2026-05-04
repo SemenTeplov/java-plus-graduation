@@ -1,13 +1,13 @@
 package main.java.ru.practicum.persistence.entity;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import lombok.AccessLevel;
@@ -38,8 +38,10 @@ public class Compilation {
 
     String title;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "compilation_to_events",
-            joinColumns = @JoinColumn(name = "compilation_id", referencedColumnName = "id"))
-    List<Event> events;
+    @ElementCollection
+    @CollectionTable(
+            name = "compilation_to_events",
+            joinColumns = @JoinColumn(name = "compilation_id"))
+    @Column(name = "event_id")
+    List<Long> events;
 }
