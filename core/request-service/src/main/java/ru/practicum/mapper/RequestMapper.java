@@ -23,6 +23,7 @@ public interface RequestMapper {
     @Mapping(target = "created", source = "created", qualifiedByName = "toOffsetDateTime")
     ParticipationRequestDto toParticipationRequestDto(Request participationRequest);
 
+    @Mapping(target = "created", source = "created", qualifiedByName = "toOffsetDateTime")
     Request toRequest(ParticipationRequestDto participationRequest);
 
     @Named("toOffsetDateTime")
