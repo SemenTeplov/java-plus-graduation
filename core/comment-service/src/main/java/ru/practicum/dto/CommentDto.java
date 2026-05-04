@@ -16,7 +16,7 @@ public record CommentDto(
 
         @NotBlank
         @Size(max = 5000)
-        String Text,
+        String text,
 
         UserShortDto author,
 
