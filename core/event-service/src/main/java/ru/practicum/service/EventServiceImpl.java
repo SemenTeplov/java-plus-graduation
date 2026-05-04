@@ -5,7 +5,6 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import main.client.StatsClient;
 import main.dto.CategoryDto;
 import main.dto.EndpointHitDto;
 import main.dto.EventRequestStatusRequest;
@@ -30,6 +29,7 @@ import main.java.ru.practicum.exception.NotMeetRulesEditionException;
 import main.java.ru.practicum.exception.NotRespondStatusException;
 import main.java.ru.practicum.externel.CategoryClient;
 import main.java.ru.practicum.externel.RequestClient;
+import main.java.ru.practicum.externel.StatsClient;
 import main.java.ru.practicum.externel.UserClient;
 import main.java.ru.practicum.mapper.EventMapper;
 import main.java.ru.practicum.mapper.LocationMapper;
