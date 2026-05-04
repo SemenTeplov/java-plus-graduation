@@ -1,14 +1,13 @@
 package main.java.ru.practicum.mapper;
 
-
 import main.dto.EventShortDto;
-import main.dto.ParticipationRequestDto;
 import main.java.ru.practicum.constant.Values;
 import main.java.ru.practicum.dto.EventFullDto;
 import main.java.ru.practicum.dto.NewEventDto;
 import main.java.ru.practicum.dto.UpdateEventAdminRequest;
 import main.java.ru.practicum.dto.UpdateEventUserRequest;
 import main.java.ru.practicum.persistence.entity.Event;
+import main.java.ru.practicum.persistence.status.State;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -37,9 +36,6 @@ public interface EventMapper {
     @Mapping(target = "state", qualifiedByName = "toStatusEnum")
     @Mapping(target = "eventDate", qualifiedByName = "toStringFromTime")
     EventFullDto eventToEventFullDto(Event event);
-
-//    @Mapping(target = "created", source = "created", qualifiedByName = "toStringFromTime")
-//    ParticipationRequestDto requestToParticipationRequestDto(Request requests);
 
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "initiator", ignore = true)
@@ -74,8 +70,8 @@ public interface EventMapper {
                 .format(DateTimeFormatter.ofPattern(Values.DATE_TIME_PATTERN));
     }
 
-//    @Named("toStatusEnum")
-//    default EventFullDto.StateEnum toStatusEnum(String status) {
-//        return EventFullDto.StateEnum.valueOf(status);
-//    }
+    @Named("toStatusEnum")
+    default State toStatusEnum(String status) {
+        return State.valueOf(status);
+    }
 }
