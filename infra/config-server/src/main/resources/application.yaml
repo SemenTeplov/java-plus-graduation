@@ -11,9 +11,9 @@ spring:
       server:
         native:
           searchLocations:
-            - classpath:config/stats/{application}/application
-            - classpath:config/core/{application}/application
-            - classpath:config/infra/{application}/application
+            - classpath:config/stats/{application}/
+            - classpath:config/core/{application}/
+            - classpath:config/infra/{application}/
     discovery:
       enabled: true
 eureka:
