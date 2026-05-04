@@ -26,6 +26,12 @@ public interface RequestMapper {
     @Mapping(target = "created", source = "created", qualifiedByName = "toOffsetDateTime")
     Request toRequest(ParticipationRequestDto participationRequest);
 
+    @Mapping(target = "created", expression = "java(java.time.OffsetDateTime.now())")
+    @Mapping(target = "event", source = "eventId")
+    @Mapping(target = "requester", source = "userId")
+    @Mapping(target = "status", source = "status")
+    Request toNewRequest(Long userId, Long eventId, String status);
+
     @Named("toString")
     default String toOffsetDateTime(OffsetDateTime time) {
         if (time == null) {

@@ -1,5 +1,6 @@
 package main.java.ru.practicum.controller;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,6 +10,7 @@ import main.java.ru.practicum.service.RequestService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PUBLIC)
@@ -27,8 +30,8 @@ public class RequestController {
     private final RequestService requestService;
 
     @PostMapping("/users/{userId}/requests")
-    ResponseEntity<ParticipationRequestDto> addParticipationRequest(@PathVariable("userId") Long userId,
-                                                                    @RequestParam(value = "eventId") Long eventId) {
+    ResponseEntity<ParticipationRequestDto> addParticipationRequest(@NotNull @PathVariable("userId") Long userId,
+                                                                    @NotNull @RequestParam(value = "eventId") Long eventId) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(requestService.addRequest(userId, eventId));
     }

@@ -63,21 +63,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleException(Exception e) {
-        log.info(Messages.MESSAGE_INTERNAL_SERVER, e.getMessage(), e);
-
-        ApiError error = ApiError.builder()
-                .errors(Arrays.stream(e.getStackTrace()).map(String::valueOf).toList())
-                .reason(Messages.MESSAGE_INTERNAL_SERVER)
-                .message(Exceptions.EXCEPTION_INTERNAL_SERVER)
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value() + " " + HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                .timestamp(LocalDateTime.now().toString())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
-
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiError> handleValidationException(ValidationException e) {
         log.info(Messages.MESSAGE_ERROR_VALIDATION, e.getMessage());
@@ -91,5 +76,20 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleException(Exception e) {
+        log.info(Messages.MESSAGE_INTERNAL_SERVER, e.getMessage(), e);
+
+        ApiError error = ApiError.builder()
+                .errors(Arrays.stream(e.getStackTrace()).map(String::valueOf).toList())
+                .reason(Messages.MESSAGE_INTERNAL_SERVER)
+                .message(Exceptions.EXCEPTION_INTERNAL_SERVER)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value() + " " + HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                .timestamp(LocalDateTime.now().toString())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 }

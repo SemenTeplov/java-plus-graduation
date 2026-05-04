@@ -3,11 +3,13 @@ package main.java.ru.practicum.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 import main.dto.CategoryDto;
 import main.dto.LocationDto;
 import main.dto.UserShortDto;
@@ -18,6 +20,7 @@ import main.java.ru.practicum.persistence.status.State;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventFullDto {
 
         @NotBlank

@@ -48,11 +48,7 @@ public class RequestServiceImpl implements RequestService {
             throw new ForbiddenException(Exceptions.EXCEPTION_REQUEST_EXIST);
         }
 
-        Request request = new Request();
-        request.setCreated(OffsetDateTime.now());
-        request.setEvent(eventId);
-        request.setRequester(userId);
-        request.setStatus(status);
+        Request request = requestMapper.toNewRequest(userId, eventId, status);
 
         log.info(Messages.MESSAGE_ADDED_REQUEST, request.getId(), request.getStatus());
 

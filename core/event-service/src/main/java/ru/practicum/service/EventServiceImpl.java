@@ -475,6 +475,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private void validateEventFields(NewEventDto newEventDto) {
+
         if (newEventDto.annotation() != null && newEventDto.annotation().trim().isEmpty()) {
             throw new ValidationException(Exceptions.EXCEPTION_FIELD_ANNOTATION_NOT_HAS_SPACE);
         }
