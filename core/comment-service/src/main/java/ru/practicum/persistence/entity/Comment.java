@@ -29,9 +29,9 @@ public class Comment {
 
     String text;
 
-    Long author;
+    Long authorId;
 
-    Long event;
+    Long eventId;
 
     LocalDateTime created;
 
