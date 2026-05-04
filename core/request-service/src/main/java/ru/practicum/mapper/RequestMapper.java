@@ -20,13 +20,13 @@ public interface RequestMapper {
             DateTimeFormatter.ofPattern(Values.DATE_TIME_PATTERN)
                     .withZone(ZoneId.of("UTC"));
 
-    @Mapping(target = "created", source = "created", qualifiedByName = "toOffsetDateTime")
+    @Mapping(target = "created", source = "created", qualifiedByName = "toString")
     ParticipationRequestDto toParticipationRequestDto(Request participationRequest);
 
     @Mapping(target = "created", source = "created", qualifiedByName = "toOffsetDateTime")
     Request toRequest(ParticipationRequestDto participationRequest);
 
-    @Named("toOffsetDateTime")
+    @Named("toString")
     default String toOffsetDateTime(OffsetDateTime time) {
         if (time == null) {
             return null;
@@ -34,5 +34,14 @@ public interface RequestMapper {
 
         ZonedDateTime utcTime = time.atZoneSameInstant(ZoneId.of("UTC"));
         return FORMATTER.format(utcTime);
+    }
+
+    @Named("toOffsetDateTime")
+    default OffsetDateTime toOffsetDateTime(String time) {
+        if (time == null) {
+            return null;
+        }
+
+        return OffsetDateTime.parse(time, FORMATTER);
     }
 }
