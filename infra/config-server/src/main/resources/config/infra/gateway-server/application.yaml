@@ -7,6 +7,7 @@ spring:
           uri: lb://category-service
           predicates:
             - Path=/admin/categories/**
+            - Path=/admin/categories
             - Path=/categories/**
         - id: comment_service_route
           uri: lb://comment-service
