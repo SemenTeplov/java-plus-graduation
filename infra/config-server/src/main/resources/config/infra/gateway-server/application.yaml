@@ -29,7 +29,7 @@ spring:
         - id: request_service_route
           uri: lb://request-service
           predicates:
-            - Path=/users/{userId}/requests/**
+            - Path=/users/*/requests/**
             - Path=/request/**
             - Path=/users/requests
         - id: user_service_route
@@ -37,8 +37,8 @@ spring:
           predicates:
             - Path=/users/client/check/{userId}
             - Path=/admin/users/**
-            - Path=/users/{userId}
             - Path=/users/client
+            - Path=/users/**
 
 management:
   endpoints:
