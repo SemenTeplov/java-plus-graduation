@@ -11,8 +11,8 @@ spring:
         - id: comment_service_route
           uri: lb://comment-service
           predicates:
-            - Path=/user/{userId}/comments/**
-            - Path=/admin/comments/{commentId}
+            - Path=/user/*/comments/**
+            - Path=/admin/comments/**
             - Path=/comments/**
         - id: compilation_service_route
           uri: lb://compilation-service
@@ -22,10 +22,10 @@ spring:
         - id: event_service_route
           uri: lb://event-service
           predicates:
-            - Path=/users/{userId}/events/**
+            - Path=/users/client/{eventId}/{userId}/{status}/{count}
+            - Path=/users/*/events/**
             - Path=/events/**
             - Path=/admin/events/**
-            - Path=/users/client/{eventId}/{userId}/{status}/{count}
         - id: request_service_route
           uri: lb://request-service
           predicates:
@@ -35,11 +35,10 @@ spring:
         - id: user_service_route
           uri: lb://user-service
           predicates:
-            - Path=/admin/users
+            - Path=/users/client/check/{userId}
             - Path=/admin/users/**
             - Path=/users/{userId}
             - Path=/users/client
-            - Path=/users/client/check/{userId}
 
 management:
   endpoints:
