@@ -37,6 +37,7 @@ spring:
           predicates:
             - Path=/users/client/check/{userId}
             - Path=/admin/users/**
+            - Path=/admin/users
             - Path=/users/client
             - Path=/users/**
 
