@@ -1,6 +1,8 @@
 package main.java.ru.practicum.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -37,21 +39,21 @@ public class RequestController {
     }
 
     @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
-    ResponseEntity<ParticipationRequestDto> cancelRequest(@PathVariable("userId") Long userId,
-                                                          @PathVariable("requestId") Long requestId) {
+    ResponseEntity<ParticipationRequestDto> cancelRequest(@NotNull @PathVariable("userId") Long userId,
+                                                          @NotNull @PathVariable("requestId") Long requestId) {
 
         return ResponseEntity.ok(requestService.cancelRequest(userId, requestId));
     }
 
     @GetMapping("/users/{userId}/requests")
-    ResponseEntity<List<ParticipationRequestDto>> getUserRequests(@PathVariable("userId") Long userId) {
+    ResponseEntity<List<ParticipationRequestDto>> getUserRequests(@NotNull @PathVariable("userId") Long userId) {
 
         return ResponseEntity.ok(requestService.getRequestsByUser(userId));
     }
 
     @GetMapping("/request/{eventId}/{status}")
-    ResponseEntity<Long> countByEventIdAndStatus(@PathVariable("eventId") Long eventId,
-                                                 @PathVariable("status") String status) {
+    ResponseEntity<Long> countByEventIdAndStatus(@NotNull @PathVariable("eventId") Long eventId,
+                                                 @NotNull @PathVariable("status") String status) {
 
         return ResponseEntity.ok(requestService.countByEventIdAndStatus(eventId, status));
     }
@@ -63,19 +65,19 @@ public class RequestController {
     }
 
     @GetMapping("/request/client")
-    ResponseEntity<List<ParticipationRequestDto>> getRequestsByIds(@RequestBody List<Long> ids) {
+    ResponseEntity<List<ParticipationRequestDto>> getRequestsByIds(@Valid @RequestBody List<Long> ids) {
 
         return ResponseEntity.ok(requestService.getRequestsByIds(ids));
     }
 
     @PostMapping("/users/requests")
-    ResponseEntity<List<ParticipationRequestDto>> addParticipationRequests(@RequestBody List<ParticipationRequestDto> list) {
+    ResponseEntity<List<ParticipationRequestDto>> addParticipationRequests(@Valid @RequestBody List<ParticipationRequestDto> list) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(requestService.addParticipationRequests(list));
     }
 
     @GetMapping("/request/client/{eventId}")
-    ResponseEntity<List<ParticipationRequestDto>> getRequestsByEvent(@PathVariable("eventId") Long eventId) {
+    ResponseEntity<List<ParticipationRequestDto>> getRequestsByEvent(@NotNull @PathVariable("eventId") Long eventId) {
 
         return ResponseEntity.ok(requestService.getRequestsByEvent(eventId));
     }
