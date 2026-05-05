@@ -6,113 +6,39 @@ spring:
         - id: category_service_route
           uri: lb://category-service
           predicates:
-            - Path=/admin/categories
-            - Method=POST
-            - Path=/admin/categories/{catId}
-            - Method=DELETE
-            - Path=/categories
-            - Method=GET
-            - Path=/categories/{catId}
-            - Method=GET
-            - Path=/admin/categories/{catId}
-            - Method=PATCH
-            - Path=/categories/client
-            - Method=GET
+            - Path=/admin/categories/**
+            - Path=/categories/**
         - id: comment_service_route
           uri: lb://comment-service
           predicates:
-            - Path=/user/{userId}/comments/{eventId}
-            - Method=POST
-            - Path=/user/{userId}/comments/{commentId}
-            - Method=DELETE
+            - Path=/user/{userId}/comments/**
             - Path=/admin/comments/{commentId}
-            - Method=DELETE
-            - Path=/comments/{commentId}
-            - Method=GET
-            - Path=/comments/event/{eventId}
-            - Method=GET
-            - Path=/user/{userId}/comments
-            - Method=GET
-            - Path=/user/{userId}/comments/{eventId}/{commentId}
-            - Method=PATCH
+            - Path=/comments/**
         - id: compilation_service_route
           uri: lb://compilation-service
           predicates:
-            - Path=/admin/compilations/{compId}
-            - Method=DELETE
-            - Path=/compilations/{compId}
-            - Method=GET
-            - Path=/compilations
-            - Method=GET
-            - Path=/admin/compilations
-            - Method=POST
-            - Path=/admin/compilations/{compId}
-            - Method=PATCH
+            - Path=/admin/compilations/**
+            - Path=/compilations/**
         - id: event_service_route
           uri: lb://event-service
           predicates:
-            - Path=/users/{userId}/events
-            - Method=POST
-            - Path=/users/{userId}/events/{eventId}/requests
-            - Method=PATCH
-            - Path=/events/{id}
-            - Method=GET
-            - Path=/users/{userId}/events/{eventId}/requests
-            - Method=GET
-            - Path=/users/{userId}/events/{eventId}
-            - Method=GET
-            - Path=/events
-            - Method=GET
-            - Path=/admin/events
-            - Method=GET
-            - Path=/users/{userId}/events
-            - Method=GET
-            - Path=/users/{userId}/events/{eventId}
-            - Method=PATCH
-            - Path=/admin/events/{eventId}
-            - Method=PATCH
-            - Path=/events/category/{categoryId}
-            - Method=GET
-            - Path=/events/comment/{eventId}
-            - Method=GET
-            - Path=/events/compilations
-            - Method=GET
+            - Path=/users/{userId}/events/**
+            - Path=/events/**
+            - Path=/admin/events/**
             - Path=/users/client/{eventId}/{userId}/{status}/{count}
-            - Method=GET
         - id: request_service_route
           uri: lb://request-service
           predicates:
-            - Path=/users/{userId}/requests
-            - Method=POST
-            - Path=/users/{userId}/requests/{requestId}/cancel
-            - Method=PATCH
-            - Path=/users/{userId}/requests
-            - Method=GET
-            - Path=/request/{eventId}/{status}
-            - Method=GET
-            - Path=/request
-            - Method=GET
-            - Path=/request/client
-            - Method=GET
+            - Path=/users/{userId}/requests/**
+            - Path=/request/**
             - Path=/users/requests
-            - Method=POST
-            - Path=/request/client/{eventId}
-            - Method=GET
         - id: user_service_route
           uri: lb://user-service
           predicates:
-            - Path=/admin/users/{userId}
-            - Method=DELETE
-            - Path=/admin/users
-            - Method=GET
-            - Path=/admin/users
-            - Method=POST
+            - Path=/admin/users/**
             - Path=/users/{userId}
-            - Method=GET
             - Path=/users/client
-            - Method=GET
             - Path=/users/client/check/{userId}
-            - Method=GET
 
 management:
   endpoints:
