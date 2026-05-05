@@ -30,6 +30,7 @@ spring:
           uri: lb://request-service
           predicates:
             - Path=/users/*/requests/**
+            - Path=/users/*/requests
             - Path=/request/**
             - Path=/users/requests
         - id: user_service_route
