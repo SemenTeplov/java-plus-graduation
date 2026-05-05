@@ -33,7 +33,7 @@ public class RequestController {
 
     @PostMapping("/users/{userId}/requests")
     ResponseEntity<ParticipationRequestDto> addParticipationRequest(@NotNull @PathVariable("userId") Long userId,
-                                                                    @NotNull @Valid @RequestParam(value = "eventId") Long eventId) {
+                                                                    @NotNull @RequestParam(value = "eventId") Long eventId) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(requestService.addRequest(userId, eventId));
     }
