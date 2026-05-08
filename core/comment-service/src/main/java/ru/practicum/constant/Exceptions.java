@@ -14,4 +14,5 @@ public class Exceptions {
     public static final String EXCEPTION_ONLY_AUTHOR_CAN_EDIT = "Редактировать комментарий может только автор";
     public static final String EXCEPTION_COMMENT_FOR_OTHER_EVENT = "Этот комментарий относится к другому мероприятию";
     public static final String EXCEPTION_ONLY_AUTHOR_CAN_DELETE = "Удалить комментарий может только автор";
+    public static final String EXCEPTION_NOT_VALID = "Валидация не пройдена. Недопустимое значение.";
 }

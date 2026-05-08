@@ -12,4 +12,5 @@ public class Exceptions {
     public static final String EXCEPTION_WRONG_REQUEST = "Некорректно составлен запрос";
     public static final String EXCEPTION_CONFLICT_EMAIL = "Пользователь с email %s уже существует";
     public static final String EXCEPTION_NOT_FOUND_USER = "Пользователь с id=%d не найден";
+    public static final String EXCEPTION_NOT_VALID = "Валидация не пройдена. Недопустимое значение.";
 }

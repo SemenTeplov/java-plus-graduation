@@ -14,4 +14,5 @@ public class Messages {
     public static final String MESSAGE_GET_CATEGORIES = "GET /categories";
     public static final String MESSAGE_GET_CATEGORY = "GET /categories/{}";
     public static final String MESSAGE_UPDATE_CATEGORY = "PATCH /admin/categories/{} with request: {}";
+    public static final String MESSAGE_NOT_VALID = "Значение не прошло валидацию: {}";
 }

@@ -16,4 +16,5 @@ public class Exceptions {
     public static final String EXCEPTION_LENGTH_MORE_ONE_CATEGORY_VALIDATION = "Имя категории должно содержать хотя бы 1 символ";
     public static final String EXCEPTION_LENGTH_LESS_FIFTY_CATEGORY_VALIDATION = "Имя категории не может превышать 50 символов";
     public static final String EXCEPTION_CANT_DELETE_CATEGORY = "Невозможно удалить категорию, так как с ней связаны события";
+    public static final String EXCEPTION_NOT_VALID = "Валидация не пройдена. Недопустимое значение.";
 }

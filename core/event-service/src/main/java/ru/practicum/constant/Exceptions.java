@@ -27,4 +27,5 @@ public class Exceptions {
     public static final String EXCEPTION_REQUEST_INITIATOR_OWN = "Инициатор не может отправлять запросы на собственное мероприятие.";
     public static final String EXCEPTION_REQUEST_NOT_PUBLISHED = "Участие возможно только в опубликованном мероприятии.";
     public static final String EXCEPTION_REQUEST_LIMIT = "Достигнут лимит участников.";
+    public static final String EXCEPTION_NOT_VALID = "Валидация не пройдена. Недопустимое значение.";
 }

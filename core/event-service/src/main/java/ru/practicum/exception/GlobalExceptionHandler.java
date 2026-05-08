@@ -10,6 +10,7 @@ import main.dto.ApiError;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -43,6 +44,21 @@ public class GlobalExceptionHandler {
                 .errors(Arrays.stream(e.getStackTrace()).map(String::valueOf).toList())
                 .reason(Messages.MESSAGE_DATE_MISMATCH)
                 .message(Exceptions.EXCEPTION_DATE_MISMATCH)
+                .status(HttpStatus.BAD_REQUEST.value() + " " + HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .timestamp(LocalDateTime.now().toString())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MissingServletRequestParameterException  e) {
+        log.info(Messages.MESSAGE_NOT_VALID, e.getMessage(), e);
+
+        ApiError error = ApiError.builder()
+                .errors(Arrays.stream(e.getStackTrace()).map(String::valueOf).toList())
+                .reason(Messages.MESSAGE_NOT_VALID)
+                .message(Exceptions.EXCEPTION_NOT_VALID)
                 .status(HttpStatus.BAD_REQUEST.value() + " " + HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .timestamp(LocalDateTime.now().toString())
                 .build();

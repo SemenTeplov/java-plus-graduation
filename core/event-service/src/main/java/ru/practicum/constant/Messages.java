@@ -22,4 +22,5 @@ public class Messages {
     public static final String MESSAGE_GET_EVENTS_FOR_ADMIN = "Поступил запрос на получение события администратором";
     public static final String MESSAGE_GET_EVENTS_FOR_USER = "Поступил запрос на получение события пользователем";
     public static final String MESSAGE_UPDATE_EVENT = "Поступил запрос на обновление события";
+    public static final String MESSAGE_NOT_VALID = "Значение не прошло валидацию: {}";
 }

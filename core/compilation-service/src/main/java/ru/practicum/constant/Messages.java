@@ -12,4 +12,5 @@ public class Messages {
     public static final String SAVE_COMPILATION = "Пришел запрос на сохранение подборки события {}";
     public static final String DELETE_COMPILATION = "Пришел запрос на удаление подборки события {}";
     public static final String UPDATE_COMPILATION = "Пришел запрос на обновление подборки события {}";
+    public static final String MESSAGE_NOT_VALID = "Значение не прошло валидацию: {}";
 }
