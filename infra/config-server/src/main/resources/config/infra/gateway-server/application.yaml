@@ -5,34 +5,38 @@ spring:
       routes:
         - id: category_service_route
           uri: lb://category-service
-          predicates:
-            - Path=/admin/categories/*
-            - Path=/admin/categories
+          Predicates:
+            - Path=/admin/categories/**
             - Path=/categories/**
+
         - id: comment_service_route
           uri: lb://comment-service
-          predicates:
+          Predicates:
             - Path=/admin/comments/**
             - Path=/comments/**
+
         - id: compilation_service_route
           uri: lb://compilation-service
-          predicates:
+          Predicates:
             - Path=/admin/compilations/**
             - Path=/compilations/**
+
         - id: event_service_route
           uri: lb://event-service
-          predicates:
+          Predicates:
             - Path=/admin/events/**
             - Path=/events/**
             - Path=/users/*/events
+
         - id: request_service_route
           uri: lb://request-service
-          predicates:
+          Predicates:
             - Path=/users/*/requests/**
             - Path=/events/**
+
         - id: user_service_route
           uri: lb://user-service
-          predicates:
+          Predicates:
             - Path=/admin/users/**
 
 management:
