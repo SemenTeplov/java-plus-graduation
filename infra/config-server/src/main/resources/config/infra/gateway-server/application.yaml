@@ -12,6 +12,7 @@ spring:
         - id: comment_service_route
           uri: lb://comment-service
           Predicates:
+            - Path=/admin/comments
             - Path=/admin/comments/**
             - Path=/comments/**
 
