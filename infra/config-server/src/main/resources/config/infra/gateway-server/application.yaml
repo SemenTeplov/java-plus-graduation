@@ -37,8 +37,7 @@ spring:
         - id: user_service_route
           uri: lb://user-service
           predicates:
-            - Path=/admin/users/**
-            - Path=/users/**
+            - Path=/admin/users/**, Path=/users/**
 
 management:
   endpoints:
