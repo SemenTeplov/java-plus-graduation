@@ -298,20 +298,20 @@ public class EventServiceImpl implements EventService {
 
         if (updateEventUserRequest.getStateAction() != null) {
             switch (updateEventUserRequest.getStateAction()) {
-                case CANCEL_REVIEW:
+                case CANCEL_REVIEW -> {
                     if (event.getState().equals(State.PENDING.toString()) ||
                             event.getState().equals(State.CANCELED.toString())) {
                         event.setState(State.CANCELED.toString());
                     } else {
                         throw new NotMeetRulesEditionException(Exceptions.EXCEPTION_NOT_MEET_RULES);
-                    }
-                case SEND_TO_REVIEW:
+                    }}
+                case SEND_TO_REVIEW -> {
                     if (event.getState().equals(State.CANCELED.toString())) {
                         event.setState(State.PENDING.toString());
                     } else {
                         event.setState(State.CANCELED.toString());
-                    }
-                default:
+                    }}
+                default ->
                     throw new NotMeetRulesEditionException(Exceptions.EXCEPTION_NOT_MEET_RULES);
             }
         }
