@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -54,6 +55,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MissingServletRequestParameterException  e) {
+        log.info(Messages.MESSAGE_NOT_VALID, e.getMessage(), e);
+
+        ApiError error = ApiError.builder()
+                .errors(Arrays.stream(e.getStackTrace()).map(String::valueOf).toList())
+                .reason(Messages.MESSAGE_NOT_VALID)
+                .message(Exceptions.EXCEPTION_NOT_VALID)
+                .status(HttpStatus.BAD_REQUEST.value() + " " + HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .timestamp(LocalDateTime.now().toString())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(NoResourceFoundException  e) {
         log.info(Messages.MESSAGE_NOT_VALID, e.getMessage(), e);
 
         ApiError error = ApiError.builder()
