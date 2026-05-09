@@ -71,7 +71,7 @@ public class Event {
     @Column(name = "title", nullable = false)
     String title;
 
-    @Column(name = "title", length = 10)
+    @Column(name = "state", length = 10)
     String state;
 
     Long views;
