@@ -50,6 +50,9 @@ public interface EventMapper {
     @Mapping(target = "eventDate", qualifiedByName = "toOffsetDateTime")
     @Mapping(target = "location", source = "locationId")
     @Mapping(target = "title", qualifiedByName = "checkTitleSize")
+    @Mapping(target = "annotation", qualifiedByName = "checkAnnotationSize")
+    @Mapping(target = "description", qualifiedByName = "checkDescriptionSize")
+    @Mapping(target = "participantLimit", qualifiedByName = "checkParticipantLimitSize")
     void updateEventAdminRequestToEvent(@MappingTarget Event event, Long locationId,
                                          UpdateEventAdminRequest updateEventAdminRequest);
 
@@ -83,5 +86,32 @@ public interface EventMapper {
         }
 
         return title;
+    }
+
+    @Named("checkAnnotationSize")
+    default String checkAnnotationSize(String annotation) {
+        if (annotation.length() < 20 || annotation.length() > 2000) {
+            throw new IllegalArgumentException();
+        }
+
+        return annotation;
+    }
+
+    @Named("checkDescriptionSize")
+    default String checkDescriptionSize(String description) {
+        if (description.length() < 20 || description.length() > 7000) {
+            throw new IllegalArgumentException();
+        }
+
+        return description;
+    }
+
+    @Named("checkParticipantLimitSize")
+    default Integer checkParticipantLimitSize(Integer participantLimit) {
+        if (participantLimit < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        return participantLimit;
     }
 }

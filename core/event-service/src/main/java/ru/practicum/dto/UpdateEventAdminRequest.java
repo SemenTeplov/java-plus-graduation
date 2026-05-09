@@ -20,12 +20,10 @@ import main.java.ru.practicum.persistence.status.StateEvent;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateEventAdminRequest {
 
-    @Size(min = 20, max = 2000)
     String annotation;
 
     Long category;
 
-    @Size(min = 20, max = 7000)
     String description;
 
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")
@@ -35,7 +33,6 @@ public class UpdateEventAdminRequest {
 
     Boolean paid;
 
-    @Size(min = 0)
     Integer participantLimit;
 
     Boolean requestModeration;
