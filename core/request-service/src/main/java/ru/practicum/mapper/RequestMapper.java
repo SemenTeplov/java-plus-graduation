@@ -33,7 +33,7 @@ public interface RequestMapper {
     Request toNewRequest(Long userId, Long eventId, String status);
 
     @Named("toString")
-    default String toOffsetDateTime(OffsetDateTime time) {
+    default String toString(OffsetDateTime time) {
         if (time == null) {
             return null;
         }
