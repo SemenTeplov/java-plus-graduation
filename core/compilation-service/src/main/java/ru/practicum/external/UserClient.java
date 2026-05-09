@@ -5,7 +5,7 @@ import main.dto.UserShortDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ import java.util.List;
 public interface UserClient {
 
     @GetMapping("/users/client")
-    ResponseEntity<List<UserShortDto>> getUsersById(@RequestBody List<Long> ids);
+    ResponseEntity<List<UserShortDto>> getUsersById(@RequestParam List<Long> ids);
 }

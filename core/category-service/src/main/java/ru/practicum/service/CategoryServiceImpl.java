@@ -1,7 +1,5 @@
 package main.java.ru.practicum.service;
 
-import jakarta.validation.ValidationException;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,8 +36,6 @@ public class CategoryServiceImpl implements CategoryService {
 
         log.info(Messages.MESSAGE_ADD_CATEGORIES, newCategoryDto);
 
-        validateCategoryName(newCategoryDto.name());
-
         if (categoryRepository.existsByName(newCategoryDto.name())) {
             throw new ForbiddenException(String.format(Exceptions.EXCEPTION_CONFLICT_CATEGORY, newCategoryDto.name()));
         }
@@ -53,8 +49,6 @@ public class CategoryServiceImpl implements CategoryService {
         log.info(Messages.MESSAGE_UPDATE_CATEGORY, categoryId, categoryDto);
 
         Category category = getCategory(categoryId);
-
-        validateCategoryName(categoryDto.name());
 
         if (!category.getName().equals(categoryDto.name())) {
             boolean nameExists = categoryRepository.existsByNameAndIdNot(categoryDto.name(), categoryId);
@@ -113,26 +107,5 @@ public class CategoryServiceImpl implements CategoryService {
 
         return categoryRepository.findById(categoryId).orElseThrow(() ->
                 new NotFoundException(String.format(Messages.MESSAGE_CATEGORY_NOT_FOUND, categoryId)));
-    }
-
-    private void validateCategoryName(String name) {
-
-        if (name == null) {
-            throw new ValidationException(Exceptions.EXCEPTION_NOT_CATEGORY_VALIDATION);
-        }
-
-        String trimmed = name.trim();
-
-        if (trimmed.isEmpty()) {
-            throw new ValidationException(Exceptions.EXCEPTION_NOT_EMPTY_CATEGORY_VALIDATION);
-        }
-
-        if (trimmed.length() < 1) {
-            throw new ValidationException(Exceptions.EXCEPTION_LENGTH_MORE_ONE_CATEGORY_VALIDATION);
-        }
-
-        if (trimmed.length() > 50) {
-            throw new ValidationException(Exceptions.EXCEPTION_LENGTH_LESS_FIFTY_CATEGORY_VALIDATION);
-        }
     }
 }

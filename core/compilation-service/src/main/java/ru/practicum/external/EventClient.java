@@ -5,7 +5,7 @@ import main.dto.EventShortDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ import java.util.List;
 public interface EventClient {
 
     @GetMapping("/events/compilations")
-    ResponseEntity<List<EventShortDto>> getAllById(@RequestBody List<Long> ids);
+    ResponseEntity<List<EventShortDto>> getAllById(@RequestParam List<Long> ids);
 }

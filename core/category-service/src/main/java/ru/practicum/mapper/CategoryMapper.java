@@ -4,12 +4,20 @@ import main.java.ru.practicum.presistence.entity.Category;
 import main.java.ru.practicum.dto.NewCategoryDto;
 import main.java.ru.practicum.dto.CategoryDto;
 
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        unmappedTargetPolicy = ReportingPolicy.ERROR,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CategoryMapper {
 
-    public Category toCategory(NewCategoryDto newCategoryDto);
+    @Mapping(target = "id", ignore = true)
+    Category toCategory(NewCategoryDto newCategoryDto);
 
-    public CategoryDto toCategoryDto(Category category);
+    CategoryDto toCategoryDto(Category category);
 }
