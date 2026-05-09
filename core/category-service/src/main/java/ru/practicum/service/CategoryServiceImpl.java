@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import main.java.ru.practicum.constant.Exceptions;
 import main.java.ru.practicum.constant.Messages;
-import main.java.ru.practicum.dto.CategoryDto;
-import main.java.ru.practicum.dto.NewCategoryDto;
+import main.java.ru.practicum.dto.ResponseCategoryDto;
+import main.java.ru.practicum.dto.RequestCategoryDto;
 import main.java.ru.practicum.exception.ForbiddenException;
 import main.java.ru.practicum.exception.NotFoundException;
 import main.java.ru.practicum.external.EventClient;
@@ -32,19 +32,19 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventClient eventClient;
 
     @Override
-    public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
+    public ResponseCategoryDto addCategory(RequestCategoryDto requestCategoryDto) {
 
-        log.info(Messages.MESSAGE_ADD_CATEGORIES, newCategoryDto);
+        log.info(Messages.MESSAGE_ADD_CATEGORIES, requestCategoryDto);
 
-        if (categoryRepository.existsByName(newCategoryDto.name())) {
-            throw new ForbiddenException(String.format(Exceptions.EXCEPTION_CONFLICT_CATEGORY, newCategoryDto.name()));
+        if (categoryRepository.existsByName(requestCategoryDto.name())) {
+            throw new ForbiddenException(String.format(Exceptions.EXCEPTION_CONFLICT_CATEGORY, requestCategoryDto.name()));
         }
 
-        return categoryMapper.toCategoryDto(categoryRepository.save(categoryMapper.toCategory(newCategoryDto)));
+        return categoryMapper.toCategoryDto(categoryRepository.save(categoryMapper.toCategory(requestCategoryDto)));
     }
 
     @Override
-    public CategoryDto updateCategory(Long categoryId, CategoryDto categoryDto) {
+    public ResponseCategoryDto updateCategory(Long categoryId, ResponseCategoryDto categoryDto) {
 
         log.info(Messages.MESSAGE_UPDATE_CATEGORY, categoryId, categoryDto);
 
@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getCategories(Integer from, Integer size) {
+    public List<ResponseCategoryDto> getCategories(Integer from, Integer size) {
 
         log.info(Messages.MESSAGE_GET_CATEGORIES);
 
@@ -73,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getCategoryById(Long categoryId) {
+    public ResponseCategoryDto getCategoryById(Long categoryId) {
 
         return categoryMapper.toCategoryDto(getCategory(categoryId));
     }
@@ -95,7 +95,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getCategoriesByIds(List<Long> ids) {
+    public List<ResponseCategoryDto> getCategoriesByIds(List<Long> ids) {
+
+        log.info(Messages.MESSAGE_GET_CATEGORIES_BY_IDS, ids);
 
         return categoryRepository.getCategoriesByIds(ids.toArray(Long[]::new)).stream()
                 .map(categoryMapper::toCategoryDto).toList();

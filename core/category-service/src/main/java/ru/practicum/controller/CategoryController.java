@@ -6,8 +6,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import main.java.ru.practicum.dto.CategoryDto;
-import main.java.ru.practicum.dto.NewCategoryDto;
+import main.java.ru.practicum.dto.ResponseCategoryDto;
+import main.java.ru.practicum.dto.RequestCategoryDto;
 import main.java.ru.practicum.service.CategoryService;
 
 import org.springframework.http.HttpStatus;
@@ -33,9 +33,9 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/admin/categories")
-    ResponseEntity<CategoryDto> addCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
+    ResponseEntity<ResponseCategoryDto> addCategory(@Valid @RequestBody RequestCategoryDto requestCategoryDto) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.addCategory(newCategoryDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.addCategory(requestCategoryDto));
     }
 
     @DeleteMapping("/admin/categories/{catId}")
@@ -47,27 +47,27 @@ public class CategoryController {
     }
 
     @GetMapping("/categories")
-    ResponseEntity<List<CategoryDto>> getCategories(@RequestParam(required = false, defaultValue = "0") Integer from,
-                                                    @RequestParam(required = false, defaultValue = "10") Integer size) {
+    ResponseEntity<List<ResponseCategoryDto>> getCategories(@RequestParam(required = false, defaultValue = "0") Integer from,
+                                                            @RequestParam(required = false, defaultValue = "10") Integer size) {
 
         return ResponseEntity.ok(categoryService.getCategories(from, size));
     }
 
     @GetMapping("/categories/{catId}")
-    ResponseEntity<CategoryDto> getCategory(@PathVariable("catId") Long catId) {
+    ResponseEntity<ResponseCategoryDto> getCategory(@PathVariable("catId") Long catId) {
 
         return ResponseEntity.ok(categoryService.getCategoryById(catId));
     }
 
     @PatchMapping("/admin/categories/{catId}")
-    ResponseEntity<CategoryDto> updateCategory(@PathVariable("catId") Long catId,
-                                               @Valid @RequestBody CategoryDto categoryDto) {
+    ResponseEntity<ResponseCategoryDto> updateCategory(@PathVariable("catId") Long catId,
+                                                       @Valid @RequestBody ResponseCategoryDto categoryDto) {
 
         return ResponseEntity.ok(categoryService.updateCategory(catId, categoryDto));
     }
 
     @GetMapping("/categories/client")
-    ResponseEntity<List<CategoryDto>> getCategoriesByIds(@RequestParam List<Long> ids) {
+    ResponseEntity<List<ResponseCategoryDto>> getCategoriesByIds(@RequestParam List<Long> ids) {
 
         return ResponseEntity.ok(categoryService.getCategoriesByIds(ids));
     }
