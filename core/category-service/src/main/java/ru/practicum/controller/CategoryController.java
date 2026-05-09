@@ -66,7 +66,7 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/client")
-    ResponseEntity<List<CategoryDto>> getCategoriesByIds(@RequestBody List<Long> ids) {
+    ResponseEntity<List<CategoryDto>> getCategoriesByIds(@RequestParam List<Long> ids) {
 
         return ResponseEntity.ok(categoryService.getCategoriesByIds(ids));
     }
