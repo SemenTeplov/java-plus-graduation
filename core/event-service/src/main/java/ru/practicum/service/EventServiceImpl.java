@@ -310,7 +310,7 @@ public class EventServiceImpl implements EventService {
                     if (event.getState().equals(State.CANCELED.toString())) {
                         event.setState(State.PENDING.toString());
                     } else {
-                        throw new NotMeetRulesEditionException(Exceptions.EXCEPTION_NOT_MEET_RULES);
+                        event.setState(State.CANCELED.toString());
                     }
                     break;
                 default:
