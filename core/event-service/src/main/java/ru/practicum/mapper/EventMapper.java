@@ -49,6 +49,7 @@ public interface EventMapper {
 
     @Mapping(target = "eventDate", qualifiedByName = "toOffsetDateTime")
     @Mapping(target = "location", source = "locationId")
+    @Mapping(target = "title", qualifiedByName = "checkTitleSize")
     void updateEventAdminRequestToEvent(@MappingTarget Event event, Long locationId,
                                          UpdateEventAdminRequest updateEventAdminRequest);
 
@@ -73,5 +74,14 @@ public interface EventMapper {
     @Named("toStatusEnum")
     default State toStatusEnum(String status) {
         return State.valueOf(status);
+    }
+
+    @Named("checkTitleSize")
+    default String checkTitleSize(String title) {
+        if (title.length() < 3 || title.length() > 120) {
+            throw new IllegalArgumentException();
+        }
+
+        return title;
     }
 }
