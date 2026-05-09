@@ -2,15 +2,16 @@ package main.java.ru.practicum.dto;
 
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+
 import main.dto.LocationDto;
-import main.java.ru.practicum.persistence.status.StateAction;
+import main.java.ru.practicum.persistence.status.StateEvent;
 
 @Data
 @Builder
@@ -39,7 +40,7 @@ public class UpdateEventAdminRequest {
 
     Boolean requestModeration;
 
-    StateAction stateAction;
+    StateEvent stateAction;
 
     @Size(min = 3, max = 120)
     String title;
