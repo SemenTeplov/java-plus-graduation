@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 public interface RequestClient {
 
     @GetMapping("/request/client")
-    ResponseEntity<List<ParticipationRequestDto>> getRequestsByIds(@RequestBody List<Long> ids);
+    ResponseEntity<List<ParticipationRequestDto>> getRequestsByIds(@RequestParam List<Long> ids);
 
     @GetMapping("/request/{eventId}/{status}")
     ResponseEntity<Long> countByEventIdAndStatus(@PathVariable("eventId") Long eventId,

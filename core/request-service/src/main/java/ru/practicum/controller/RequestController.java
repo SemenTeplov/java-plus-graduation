@@ -65,7 +65,7 @@ public class RequestController {
     }
 
     @GetMapping("/request/client")
-    ResponseEntity<List<ParticipationRequestDto>> getRequestsByIds(@RequestBody List<Long> ids) {
+    ResponseEntity<List<ParticipationRequestDto>> getRequestsByIds(@RequestParam List<Long> ids) {
 
         return ResponseEntity.ok(requestService.getRequestsByIds(ids));
     }
