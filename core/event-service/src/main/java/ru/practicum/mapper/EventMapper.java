@@ -28,6 +28,9 @@ public interface EventMapper {
 
     @Mapping(target = "eventDate", qualifiedByName = "toOffsetDateTime")
     @Mapping(target = "location", ignore = true)
+    @Mapping(target = "paid", expression = "java(newEventDto.paid == null ? false : newEventDto.paid)")
+    @Mapping(target = "participantLimit", expression = "java(newEventDto.participantLimit == null ? 0 : newEventDto.participantLimit)")
+    @Mapping(target = "requestModeration", expression = "java(newEventDto.requestModeration == null ? false : newEventDto.requestModeration)")
     Event newEventDtoToEvent(NewEventDto newEventDto);
 
     @Mapping(target = "category", ignore = true)
