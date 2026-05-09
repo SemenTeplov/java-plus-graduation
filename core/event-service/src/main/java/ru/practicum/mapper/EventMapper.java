@@ -40,6 +40,7 @@ public interface EventMapper {
     @Mapping(target = "location", ignore = true)
     @Mapping(target = "state", qualifiedByName = "toStatusEnum")
     @Mapping(target = "eventDate", qualifiedByName = "toStringFromTime")
+    @Mapping(target = "createdOn", expression = "java(java.time.LocalDateTime.now().toString())")
     EventFullDto eventToEventFullDto(Event event);
 
     @Mapping(target = "category", ignore = true)
