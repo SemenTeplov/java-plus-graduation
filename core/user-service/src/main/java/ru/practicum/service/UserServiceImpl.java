@@ -1,7 +1,6 @@
 package main.java.ru.practicum.service;
 
 import jakarta.validation.ValidationException;
-import jakarta.ws.rs.ForbiddenException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +15,7 @@ import main.java.ru.practicum.exception.NotFoundException;
 import main.java.ru.practicum.mapper.UserMapper;
 import main.java.ru.practicum.persistence.entity.User;
 import main.java.ru.practicum.persistence.repository.UserRepository;
+import main.java.ru.practicum.exception.ForbiddenException;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
