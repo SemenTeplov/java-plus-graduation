@@ -73,6 +73,9 @@ public interface EventMapper {
 
     @Named("toStringFromTime")
     default String toStringFromTime(OffsetDateTime date) {
+        if (date == null) {
+            return null;
+        }
 
         return date.atZoneSameInstant(ZoneId.of("UTC"))
                 .format(DateTimeFormatter.ofPattern(Values.DATE_TIME_PATTERN));
@@ -80,11 +83,19 @@ public interface EventMapper {
 
     @Named("toStatusEnum")
     default State toStatusEnum(String status) {
+        if (status == null || status.isEmpty()) {
+            return null;
+        }
+
         return State.valueOf(status);
     }
 
     @Named("checkTitleSize")
     default String checkTitleSize(String title) {
+        if (title == null || title.isEmpty()) {
+            return null;
+        }
+
         if (title.length() < 3 || title.length() > 120) {
             throw new IllegalArgumentException();
         }
@@ -94,6 +105,10 @@ public interface EventMapper {
 
     @Named("checkAnnotationSize")
     default String checkAnnotationSize(String annotation) {
+        if (annotation == null || annotation.isEmpty()) {
+            return null;
+        }
+
         if (annotation.length() < 20 || annotation.length() > 2000) {
             throw new IllegalArgumentException();
         }
@@ -103,6 +118,10 @@ public interface EventMapper {
 
     @Named("checkDescriptionSize")
     default String checkDescriptionSize(String description) {
+        if (description == null || description.isEmpty()) {
+            return null;
+        }
+
         if (description.length() < 20 || description.length() > 7000) {
             throw new IllegalArgumentException();
         }
@@ -112,6 +131,10 @@ public interface EventMapper {
 
     @Named("checkParticipantLimitSize")
     default Integer checkParticipantLimitSize(Integer participantLimit) {
+        if (participantLimit == null) {
+            return null;
+        }
+
         if (participantLimit < 0) {
             throw new IllegalArgumentException();
         }

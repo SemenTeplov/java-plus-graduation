@@ -305,14 +305,12 @@ public class EventServiceImpl implements EventService {
                     } else {
                         throw new NotMeetRulesEditionException(Exceptions.EXCEPTION_NOT_MEET_RULES);
                     }
-                    break;
                 case SEND_TO_REVIEW:
                     if (event.getState().equals(State.CANCELED.toString())) {
                         event.setState(State.PENDING.toString());
                     } else {
                         event.setState(State.CANCELED.toString());
                     }
-                    break;
                 default:
                     throw new NotMeetRulesEditionException(Exceptions.EXCEPTION_NOT_MEET_RULES);
             }
