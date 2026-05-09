@@ -1,7 +1,6 @@
 package main.java.ru.practicum.dto;
 
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -21,12 +20,10 @@ import main.java.ru.practicum.persistence.status.StateAction;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateEventUserRequest {
 
-    @Size(min = 20, max = 2000)
     String annotation;
 
     Long category;
 
-    @Size(min = 20, max = 7000)
     String description;
 
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$")
@@ -36,13 +33,11 @@ public class UpdateEventUserRequest {
 
     Boolean paid;
 
-    @Size(min = 0)
     Integer participantLimit;
 
     Boolean requestModeration;
 
     StateAction stateAction;
 
-    @Size(min = 3, max = 120)
     String title;
 }

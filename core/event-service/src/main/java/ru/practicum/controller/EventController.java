@@ -130,7 +130,7 @@ public class EventController {
     @PatchMapping("/users/{userId}/events/{eventId}")
     ResponseEntity<EventFullDto> updateEvent(@PathVariable("userId") Long userId,
                                              @PathVariable("eventId") Long eventId,
-                                             @Valid @RequestBody UpdateEventUserRequest updateEventUserRequest) {
+                                             @RequestBody(required = false) UpdateEventUserRequest updateEventUserRequest) {
 
         return ResponseEntity.ok(eventService.updateEvent(userId, eventId, updateEventUserRequest));
     }
