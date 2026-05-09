@@ -71,7 +71,7 @@ public class RequestController {
     }
 
     @PostMapping("/users/requests")
-    ResponseEntity<List<ParticipationRequestDto>> addParticipationRequests(@Valid @RequestBody List<ParticipationRequestDto> list) {
+    ResponseEntity<List<ParticipationRequestDto>> addParticipationRequests(@RequestBody List<ParticipationRequestDto> list) {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(requestService.addParticipationRequests(list));
     }
