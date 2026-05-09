@@ -44,6 +44,10 @@ public interface EventMapper {
 
     @Mapping(target = "eventDate", qualifiedByName = "toOffsetDateTime")
     @Mapping(target = "location", source = "locationId")
+    @Mapping(target = "title", qualifiedByName = "checkTitleSize")
+    @Mapping(target = "annotation", qualifiedByName = "checkAnnotationSize")
+    @Mapping(target = "description", qualifiedByName = "checkDescriptionSize")
+    @Mapping(target = "participantLimit", qualifiedByName = "checkParticipantLimitSize")
     void updateEventUserRequestToEvent(@MappingTarget Event event, Long locationId,
                                         UpdateEventUserRequest updateEventUserRequest);
 
