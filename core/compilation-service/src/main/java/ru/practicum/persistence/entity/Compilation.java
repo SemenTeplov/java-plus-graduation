@@ -13,9 +13,11 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
@@ -28,12 +30,15 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "compilations")
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@ToString(of = {"id", "pinned", "events"})
+@EqualsAndHashCode(of = {"id", "pinned", "events"})
 public class Compilation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(name = "pinned", nullable = false)
     Boolean pinned;
 
     String title;

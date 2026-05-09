@@ -64,7 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/users/client")
-    ResponseEntity<List<UserShortDto>> getUsersById(@RequestBody List<Long> ids) {
+    ResponseEntity<List<UserShortDto>> getUsersById(@RequestParam List<Long> ids) {
 
         return ResponseEntity.ok(userService.getUsersById(ids));
     }
