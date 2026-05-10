@@ -1,6 +1,6 @@
 package main.java.ru.practicum.external;
 
-import main.dto.UserShortDto;
+import main.java.ru.practicum.dto.UserShortDto;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

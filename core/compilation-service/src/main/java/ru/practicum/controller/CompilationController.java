@@ -6,9 +6,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import main.java.ru.practicum.dto.CompilationDto;
-import main.java.ru.practicum.dto.NewCompilationDto;
-import main.java.ru.practicum.dto.UpdateCompilationRequest;
+import main.java.ru.practicum.dto.ResponseCompilationDto;
+import main.java.ru.practicum.dto.RequestCompilationDto;
+import main.java.ru.practicum.dto.RequestUpdateCompilationDto;
 import main.java.ru.practicum.service.CompilationServer;
 
 import org.springframework.http.ResponseEntity;
@@ -40,13 +40,13 @@ public class CompilationController {
     }
 
     @GetMapping("/compilations/{compId}")
-    ResponseEntity<CompilationDto> getCompilation(@PathVariable("compId") Long compId) {
+    ResponseEntity<ResponseCompilationDto> getCompilation(@PathVariable("compId") Long compId) {
 
         return compilationServer.getCompilation(compId);
     }
 
     @GetMapping("/compilations")
-    ResponseEntity<List<CompilationDto>> getCompilations(
+    ResponseEntity<List<ResponseCompilationDto>> getCompilations(
             @RequestParam(value = "pinned", required = false) @Nullable Boolean pinned,
             @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
             @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
@@ -55,15 +55,15 @@ public class CompilationController {
     }
 
     @PostMapping("/admin/compilations")
-    ResponseEntity<CompilationDto> saveCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
+    ResponseEntity<ResponseCompilationDto> saveCompilation(@Valid @RequestBody RequestCompilationDto request) {
 
-        return compilationServer.saveCompilation(newCompilationDto);
+        return compilationServer.saveCompilation(request);
     }
 
     @PatchMapping("/admin/compilations/{compId}")
-    ResponseEntity<CompilationDto> updateCompilation(@PathVariable("compId") Long compId,
-                                                     @Valid @RequestBody UpdateCompilationRequest updateCompilationRequest) {
+    ResponseEntity<ResponseCompilationDto> updateCompilation(@PathVariable("compId") Long compId,
+                                                             @Valid @RequestBody RequestUpdateCompilationDto request) {
 
-        return compilationServer.updateCompilation(compId, updateCompilationRequest);
+        return compilationServer.updateCompilation(compId, request);
     }
 }

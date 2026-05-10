@@ -1,25 +1,33 @@
 package main.java.ru.practicum.mapper;
 
-import main.java.ru.practicum.dto.CompilationDto;
-import main.java.ru.practicum.dto.NewCompilationDto;
-import main.java.ru.practicum.dto.UpdateCompilationRequest;
+import main.java.ru.practicum.dto.EventShortDto;
+import main.java.ru.practicum.dto.ResponseCompilationDto;
+import main.java.ru.practicum.dto.RequestCompilationDto;
+import main.java.ru.practicum.dto.RequestUpdateCompilationDto;
 import main.java.ru.practicum.persistence.entity.Compilation;
 
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+import java.util.List;
+
+@Mapper(componentModel = "spring",
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        unmappedTargetPolicy = ReportingPolicy.ERROR,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CompilationMapper {
 
-    @Mapping(target = "events", ignore = true)
-    CompilationDto compilationToCompilationDto(Compilation compilation);
+    @Mapping(target = "events", source = "list")
+    ResponseCompilationDto compilationAndEventsToCompilationDto(Compilation compilation, List<EventShortDto> list);
 
-    @Mapping(target = "events", ignore = true)
-    Compilation newCompilationDtoToCompilation(NewCompilationDto newCompilationDto);
+    @Mapping(target = "events", source = "list")
+    Compilation newCompilationDtoToCompilation(RequestCompilationDto newCompilationDto, List<Long> list);
 
     @Mapping(target = "events", ignore = true)
     void updateCompilationRequestToCompilation(@MappingTarget Compilation compilation,
-                                               UpdateCompilationRequest updateCompilationRequest);
+                                               RequestUpdateCompilationDto updateCompilationRequest);
 }

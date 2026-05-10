@@ -10,12 +10,10 @@ import main.java.ru.practicum.persistence.entity.Comment;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
-import java.lang.annotation.Target;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
