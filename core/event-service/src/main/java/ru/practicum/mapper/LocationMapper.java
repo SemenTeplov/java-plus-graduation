@@ -5,6 +5,7 @@ import main.java.ru.practicum.persistence.entity.Location;
 
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
@@ -14,6 +15,7 @@ import org.mapstruct.ReportingPolicy;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface LocationMapper {
 
+    @Mapping(target = "id", ignore = true)
     Location locationDtoToLocation(LocationDto location);
 
     LocationDto locationToLocationDto(Location location);

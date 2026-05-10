@@ -36,8 +36,8 @@ public interface EventMapper {
     @Mapping(target = "location", source = "locationId")
     @Mapping(target = "initiator", source = "userId")
     @Mapping(target = "state", expression = "java(main.java.ru.practicum.persistence.status.State.PENDING)")
-    @Mapping(target = "confirmedRequests", defaultValue = "0")
-    @Mapping(target = "views", defaultValue = "0L")
+    @Mapping(target = "confirmedRequests", source = "0")
+    @Mapping(target = "views", source = "0L")
     @Mapping(target = "paid", expression = "java(newEventDto.paid() == null ? false : newEventDto.paid())")
     @Mapping(target = "participantLimit",
             expression = "java(newEventDto.participantLimit() == null ? 0 : newEventDto.participantLimit())")
@@ -48,6 +48,7 @@ public interface EventMapper {
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "initiator", ignore = true)
     @Mapping(target = "location", ignore = true)
+    @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "state", qualifiedByName = "toStatusEnum")
     @Mapping(target = "eventDate", qualifiedByName = "toStringFromTime")
     @Mapping(target = "createdOn", expression = "java(java.time.LocalDateTime.now().toString())")
@@ -58,6 +59,11 @@ public interface EventMapper {
     @Mapping(target = "eventDate", qualifiedByName = "toStringFromTime")
     EventShortDto eventToEventShortDto(Event event);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "confirmedRequests", ignore = true)
+    @Mapping(target = "initiator", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    @Mapping(target = "views", ignore = true)
     @Mapping(target = "eventDate", qualifiedByName = "toOffsetDateTime")
     @Mapping(target = "location", source = "locationId")
     @Mapping(target = "title", qualifiedByName = "checkTitleSize")
@@ -67,6 +73,11 @@ public interface EventMapper {
     void updateEventUserRequestToEvent(@MappingTarget Event event, Long locationId,
                                         UpdateEventUserRequest updateEventUserRequest);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "confirmedRequests", ignore = true)
+    @Mapping(target = "initiator", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    @Mapping(target = "views", ignore = true)
     @Mapping(target = "eventDate", qualifiedByName = "toOffsetDateTime")
     @Mapping(target = "location", source = "locationId")
     @Mapping(target = "title", qualifiedByName = "checkTitleSize")
