@@ -49,7 +49,7 @@ public interface EventMapper {
             expression = "java(newEventDto.requestModeration() == null ? true : newEventDto.requestModeration())")
     Event newEventDtoToEvent(RequestEventDto newEventDto, Long userId, Long locationId);
 
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "id", source = "event.getId()")
     @Mapping(target = "category", source = "category")
     @Mapping(target = "initiator", source = "user")
     @Mapping(target = "location", source = "location")
@@ -59,7 +59,7 @@ public interface EventMapper {
     @Mapping(target = "createdOn", expression = "java(java.time.LocalDateTime.now().toString())")
     ResponseEventFullDto eventToEventFullDto(Event event, UserShortDto user, CategoryDto category, LocationDto location);
 
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "id", source = "event.getId()")
     @Mapping(target = "category", source = "category")
     @Mapping(target = "initiator", source = "user")
     @Mapping(target = "location", source = "location")
