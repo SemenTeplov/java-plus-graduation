@@ -36,8 +36,8 @@ public interface EventMapper {
     @Mapping(target = "location", source = "locationId")
     @Mapping(target = "initiator", source = "userId")
     @Mapping(target = "state", expression = "java(main.java.ru.practicum.persistence.status.State.PENDING)")
-    @Mapping(target = "confirmedRequests", source = "0")
-    @Mapping(target = "views", source = "0L")
+    @Mapping(target = "confirmedRequests", constant = "0")
+    @Mapping(target = "views", constant = "0L")
     @Mapping(target = "paid", expression = "java(newEventDto.paid() == null ? false : newEventDto.paid())")
     @Mapping(target = "participantLimit",
             expression = "java(newEventDto.participantLimit() == null ? 0 : newEventDto.participantLimit())")
