@@ -163,10 +163,10 @@ public class CompilationServerImpl implements CompilationServer {
         return events.stream().peek(e -> {
             e.setCategory(categories.stream().filter(ct -> ct.id()
                     .equals(e.getCategory().id())).findFirst()
-                    .orElseThrow(() -> new NotFoundCompletion(Exceptions.NOT_FOUND_COMPLETION)));
+                    .orElse(null));
             e.setInitiator(users.stream().filter(u -> u.id()
-                    .equals(e.getInitiator().id())).findFirst().
-                    orElseThrow(() -> new NotFoundCompletion(Exceptions.NOT_FOUND_COMPLETION)));
+                    .equals(e.getInitiator().id())).findFirst()
+                    .orElse(null));
         }).toList();
     }
 }

@@ -102,9 +102,7 @@ public class EventServiceImpl implements EventService {
 
         log.info(Messages.MESSAGE_CHANGE_STATUS);
 
-        UserShortDto user = userClient.getUserById(userId).getBody();
-
-        if (user == null) {
+        if (userClient.getUserById(userId).getBody() == null) {
             throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND_USER, userId));
         }
 
