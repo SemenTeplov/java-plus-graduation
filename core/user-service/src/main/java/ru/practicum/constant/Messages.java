@@ -12,4 +12,7 @@ public class Messages {
     public static final String MESSAGE_GET_USERS = "GET /admin/users?ids={}&from={}&size={}";
     public static final String MESSAGE_REGISTER_USER = "POST /admin/users with request: {}";
     public static final String MESSAGE_NOT_VALID = "Значение не прошло валидацию: {}";
+    public static final String MESSAGE_GET_USER_BY_ID = "GET /users/{userId} response UserShortDto";
+    public static final String MESSAGE_GET_USERS_BY_ID = "GET /users/client with param {} response List<UserShortDto>";
+    public static final String MESSAGE_CHECK_USER = "GET /users/client/check/{} response void";
 }

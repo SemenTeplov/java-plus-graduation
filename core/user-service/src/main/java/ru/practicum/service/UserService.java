@@ -1,6 +1,6 @@
 package main.java.ru.practicum.service;
 
-import main.dto.UserShortDto;
+import main.java.ru.practicum.dto.UserShortDto;
 import main.java.ru.practicum.dto.GetUsersRequest;
 import main.java.ru.practicum.dto.NewUserRequest;
 import main.java.ru.practicum.dto.UserDto;
@@ -19,5 +19,5 @@ public interface UserService {
 
     List<UserShortDto> getUsersById(List<Long> ids);
 
-    Void checkUser(Long userId);
+    void checkUser(Long userId);
 }

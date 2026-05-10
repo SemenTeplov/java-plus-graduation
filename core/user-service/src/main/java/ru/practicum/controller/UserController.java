@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import main.dto.UserShortDto;
+import main.java.ru.practicum.dto.UserShortDto;
 import main.java.ru.practicum.dto.GetUsersRequest;
 import main.java.ru.practicum.dto.NewUserRequest;
 import main.java.ru.practicum.dto.UserDto;
@@ -72,6 +72,8 @@ public class UserController {
     @GetMapping("/users/client/check/{userId}")
     ResponseEntity<Void> checkUser(@PathVariable("userId") Long userId) {
 
-        return ResponseEntity.ok(userService.checkUser(userId));
+        userService.checkUser(userId);
+
+        return ResponseEntity.ok().build();
     }
 }

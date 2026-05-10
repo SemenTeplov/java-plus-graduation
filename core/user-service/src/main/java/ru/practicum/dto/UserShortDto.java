@@ -1,8 +1,7 @@
 package main.java.ru.practicum.dto;
 
-public record UserDto(
-
-        String email,
+public record UserShortDto(
+        
         Long id,
         String name
 ) {
