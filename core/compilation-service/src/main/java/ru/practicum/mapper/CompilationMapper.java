@@ -26,7 +26,7 @@ public interface CompilationMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "events", source = "list")
-    @Mapping(target = "pinned", source = "pinned", defaultValue = "false")
+    @Mapping(target = "pinned", source = "newCompilationDto.pinned", defaultValue = "false")
     Compilation newCompilationDtoToCompilation(RequestCompilationDto newCompilationDto, List<Long> list);
 
     @Mapping(target = "id", ignore = true)
