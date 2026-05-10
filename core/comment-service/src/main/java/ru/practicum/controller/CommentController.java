@@ -6,8 +6,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import main.java.ru.practicum.dto.CommentDto;
-import main.java.ru.practicum.dto.NewCommentDto;
+import main.java.ru.practicum.dto.ResponseCommentDto;
+import main.java.ru.practicum.dto.RequestCommentDto;
 import main.java.ru.practicum.service.CommentService;
 
 import org.springframework.http.HttpStatus;
@@ -33,11 +33,11 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/user/{userId}/comments/{eventId}")
-    ResponseEntity<CommentDto> addComment(@PathVariable("userId") Long userId, @PathVariable("eventId") Long eventId,
-                                          @Valid @RequestBody NewCommentDto newCommentDto) {
+    ResponseEntity<ResponseCommentDto> addComment(@PathVariable("userId") Long userId, @PathVariable("eventId") Long eventId,
+                                                  @Valid @RequestBody RequestCommentDto request) {
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(commentService.addComment(userId, eventId, newCommentDto));
+                .body(commentService.addComment(userId, eventId, request));
     }
 
     @DeleteMapping("/user/{userId}/comments/{commentId}")
@@ -57,33 +57,33 @@ public class CommentController {
     }
 
     @GetMapping("/comments/{commentId}")
-    ResponseEntity<CommentDto> getCommentById(@PathVariable("commentId") Long commentId) {
+    ResponseEntity<ResponseCommentDto> getCommentById(@PathVariable("commentId") Long commentId) {
 
         return ResponseEntity.ok(commentService.getCommentById(commentId));
     }
 
     @GetMapping("/comments/event/{eventId}")
-    ResponseEntity<List<CommentDto>> getComments(@PathVariable("eventId") Long eventId,
-                                                 @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
-                                                 @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+    ResponseEntity<List<ResponseCommentDto>> getComments(@PathVariable("eventId") Long eventId,
+                                                         @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
+                                                         @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
         return ResponseEntity.ok(commentService.getComments(eventId, from, size));
     }
 
     @GetMapping("/user/{userId}/comments")
-    ResponseEntity<List<CommentDto>> getCommentsByAuthor(@PathVariable("userId") Long userId,
-                                                         @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
-                                                         @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+    ResponseEntity<List<ResponseCommentDto>> getCommentsByAuthor(@PathVariable("userId") Long userId,
+                                                                 @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
+                                                                 @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
         return ResponseEntity.ok(commentService.getCommentsByAuthor(userId, from, size));
     }
 
     @PatchMapping("/user/{userId}/comments/{eventId}/{commentId}")
-    ResponseEntity<CommentDto> updateComment(@PathVariable("userId") Long userId,
-                                             @PathVariable("eventId") Long eventId,
-                                             @PathVariable("commentId") Long commentId,
-                                             @Valid @RequestBody NewCommentDto newCommentDto) {
+    ResponseEntity<ResponseCommentDto> updateComment(@PathVariable("userId") Long userId,
+                                                     @PathVariable("eventId") Long eventId,
+                                                     @PathVariable("commentId") Long commentId,
+                                                     @Valid @RequestBody RequestCommentDto request) {
 
-        return ResponseEntity.ok(commentService.updateComment(userId, eventId, commentId, newCommentDto));
+        return ResponseEntity.ok(commentService.updateComment(userId, eventId, commentId, request));
     }
 }

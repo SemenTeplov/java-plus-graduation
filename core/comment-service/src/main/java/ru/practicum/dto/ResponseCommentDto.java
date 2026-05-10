@@ -1,7 +1,6 @@
 package main.java.ru.practicum.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
 
@@ -11,7 +10,7 @@ import main.dto.UserShortDto;
 import lombok.Builder;
 
 @Builder
-public record CommentDto(
+public record ResponseCommentDto(
         Long id,
 
         @NotBlank

@@ -383,10 +383,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getAllById(List<Long> ids) {
 
-        if (ids.isEmpty()) {
-            return List.of();
-        }
-
         return eventRepository
                 .getEventsByIds(ids.toArray(Long[]::new)).stream().map(eventMapper::eventToEventShortDto).toList();
     }

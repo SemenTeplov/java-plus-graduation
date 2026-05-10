@@ -10,8 +10,8 @@ import main.dto.ParticipationRequestDto;
 import main.dto.UserShortDto;
 import main.java.ru.practicum.constant.Exceptions;
 import main.java.ru.practicum.constant.Messages;
-import main.java.ru.practicum.dto.CommentDto;
-import main.java.ru.practicum.dto.NewCommentDto;
+import main.java.ru.practicum.dto.ResponseCommentDto;
+import main.java.ru.practicum.dto.RequestCommentDto;
 import main.java.ru.practicum.exception.NotFoundException;
 import main.java.ru.practicum.external.EventClient;
 import main.java.ru.practicum.external.RequestClient;
@@ -46,13 +46,9 @@ public class CommentServiceImpl implements CommentService {
     private final RequestClient requestClient;
 
     @Override
-    public CommentDto addComment(Long userId, Long eventId, NewCommentDto newCommentDto) {
+    public ResponseCommentDto addComment(Long userId, Long eventId, RequestCommentDto request) {
 
         log.info(Messages.MESSAGE_ADD_COMMENT, userId, eventId);
-
-        if (newCommentDto.text().isBlank()) {
-            throw new ValidationException(Exceptions.EXCEPTION_COMMENT_IS_EMPTY);
-        }
 
         UserShortDto author = userClient.getUserById(userId).getBody();
         EventShortDto event = eventClient.getEventById(eventId).getBody();
@@ -61,17 +57,13 @@ public class CommentServiceImpl implements CommentService {
         event.setConfirmedRequests(requestClient.countByEventIdAndStatus(eventId, StatusRequest.CONFIRMED.toString()).getBody());
 
         return commentMapper.toCommentDto(commentRepository
-                        .save(commentMapper.toComment(newCommentDto, author, event)), author, event);
+                        .save(commentMapper.toComment(request, author, event)), author, event);
     }
 
     @Override
-    public CommentDto updateComment(Long userId, Long eventId, Long commentId, NewCommentDto newCommentDto) {
+    public ResponseCommentDto updateComment(Long userId, Long eventId, Long commentId, RequestCommentDto request) {
 
         log.info(Messages.MESSAGE_UPDATE_COMMENT, userId, eventId, commentId);
-
-        if (newCommentDto.text().isBlank()) {
-            throw new ValidationException(Exceptions.EXCEPTION_COMMENT_IS_EMPTY);
-        }
 
         UserShortDto author = userClient.getUserById(userId).getBody();
         EventShortDto event = eventClient.getEventById(eventId).getBody();
@@ -90,7 +82,7 @@ public class CommentServiceImpl implements CommentService {
             throw new ValidationException(Exceptions.EXCEPTION_COMMENT_FOR_OTHER_EVENT);
         }
 
-        comment.setText(newCommentDto.text());
+        comment.setText(request.text());
         comment.setEdited(LocalDateTime.now());
         comment = commentRepository.save(comment);
 
@@ -98,7 +90,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto> getCommentsByAuthor(Long userId, Integer from, Integer size) {
+    public List<ResponseCommentDto> getCommentsByAuthor(Long userId, Integer from, Integer size) {
 
         log.info(Messages.MESSAGE_GET_COMMENTS_BY_AUTHOR, userId);
 
@@ -125,7 +117,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto> getComments(Long eventId, Integer from, Integer size) {
+    public List<ResponseCommentDto> getComments(Long eventId, Integer from, Integer size) {
 
         log.info(Messages.MESSAGE_GET_COMMENTS_BY_EVENT, eventId);
 
@@ -140,7 +132,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto getCommentById(Long commentId) {
+    public ResponseCommentDto getCommentById(Long commentId) {
 
         log.info(Messages.MESSAGE_GET_COMMENT_BY_ID, commentId);
 

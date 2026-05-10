@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -98,7 +99,7 @@ public class CompilationServerImpl implements CompilationServer {
         Long id = compilation.getId();
 
         compilation.setEvents(Objects.requireNonNull(eventClient.getAllById(newCompilationDto.events()).getBody())
-                .stream().map(EventShortDto::getId).toList());
+                .stream().map(EventShortDto::getId).collect(Collectors.toList()));
 
         compilation = compilationRepository.save(compilation);
 
