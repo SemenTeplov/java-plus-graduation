@@ -1,20 +1,28 @@
 package main.java.ru.practicum.mapper;
 
-import main.dto.EventShortDto;
-import main.dto.UserShortDto;
+import main.java.ru.practicum.dto.EventShortDto;
+import main.java.ru.practicum.dto.UserShortDto;
 import main.java.ru.practicum.constant.Values;
 import main.java.ru.practicum.dto.ResponseCommentDto;
 import main.java.ru.practicum.dto.RequestCommentDto;
 import main.java.ru.practicum.persistence.entity.Comment;
 
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
+import java.lang.annotation.Target;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        unmappedTargetPolicy = ReportingPolicy.ERROR,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface CommentMapper {
 
     DateTimeFormatter FORMATTER =

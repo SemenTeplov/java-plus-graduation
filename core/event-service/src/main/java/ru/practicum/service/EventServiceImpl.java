@@ -384,7 +384,8 @@ public class EventServiceImpl implements EventService {
     public List<EventShortDto> getAllById(List<Long> ids) {
 
         return eventRepository
-                .getEventsByIds(ids.toArray(Long[]::new)).stream().map(eventMapper::eventToEventShortDto).toList();
+                .getEventsByIds(ids.toArray(Long[]::new)).stream().map(eventMapper::eventToEventShortDto)
+                .collect(Collectors.toList());
     }
 
     @Override

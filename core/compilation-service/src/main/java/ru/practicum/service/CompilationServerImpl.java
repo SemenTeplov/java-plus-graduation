@@ -89,10 +89,6 @@ public class CompilationServerImpl implements CompilationServer {
 
         log.info(Messages.SAVE_COMPILATION, newCompilationDto);
 
-        if (newCompilationDto.title().isBlank()) {
-            throw new IllegalArgumentException();
-        }
-
         Compilation compilation = compilationMapper.newCompilationDtoToCompilation(newCompilationDto);
         compilation = compilationRepository.save(compilation);
 

@@ -5,9 +5,9 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import main.dto.EventShortDto;
-import main.dto.ParticipationRequestDto;
-import main.dto.UserShortDto;
+import main.java.ru.practicum.dto.EventShortDto;
+import main.java.ru.practicum.dto.ParticipationRequestDto;
+import main.java.ru.practicum.dto.UserShortDto;
 import main.java.ru.practicum.constant.Exceptions;
 import main.java.ru.practicum.constant.Messages;
 import main.java.ru.practicum.dto.ResponseCommentDto;
@@ -19,7 +19,7 @@ import main.java.ru.practicum.external.UserClient;
 import main.java.ru.practicum.mapper.CommentMapper;
 import main.java.ru.practicum.persistence.entity.Comment;
 import main.java.ru.practicum.persistence.repository.CommentRepository;
-import main.status.StatusRequest;
+import main.java.ru.practicum.persistence.status.StatusRequest;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -54,7 +54,8 @@ public class CommentServiceImpl implements CommentService {
         EventShortDto event = eventClient.getEventById(eventId).getBody();
 
         assert event != null;
-        event.setConfirmedRequests(requestClient.countByEventIdAndStatus(eventId, StatusRequest.CONFIRMED.toString()).getBody());
+        event.setConfirmedRequests(
+                requestClient.countByEventIdAndStatus(eventId, StatusRequest.CONFIRMED.toString()).getBody());
 
         return commentMapper.toCommentDto(commentRepository
                         .save(commentMapper.toComment(request, author, event)), author, event);
@@ -69,7 +70,8 @@ public class CommentServiceImpl implements CommentService {
         EventShortDto event = eventClient.getEventById(eventId).getBody();
 
         assert event != null;
-        event.setConfirmedRequests(requestClient.countByEventIdAndStatus(eventId, StatusRequest.CONFIRMED.toString()).getBody());
+        event.setConfirmedRequests(
+                requestClient.countByEventIdAndStatus(eventId, StatusRequest.CONFIRMED.toString()).getBody());
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new NotFoundException(String.format(Exceptions.EXCEPTION_COMMENT_NOT_FOUND, commentId)));
@@ -143,7 +145,8 @@ public class CommentServiceImpl implements CommentService {
         EventShortDto eventShort = createEventShortDtoWithConfirmedRequests(
                 comment.getEventId(), confirmedRequests);
 
-        return commentMapper.toCommentDto(comment, userClient.getUserById(comment.getAuthorId()).getBody(), eventShort);
+        return commentMapper
+                .toCommentDto(comment, userClient.getUserById(comment.getAuthorId()).getBody(), eventShort);
     }
 
     @Override
@@ -153,7 +156,9 @@ public class CommentServiceImpl implements CommentService {
 
         userClient.getUserById(userId);
 
-        if (!commentRepository.findById(commentId).get().getAuthorId().equals(userId)) {
+        if (!commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND))
+                .getAuthorId().equals(userId)) {
             throw new ValidationException(Exceptions.EXCEPTION_ONLY_AUTHOR_CAN_DELETE);
         }
 
