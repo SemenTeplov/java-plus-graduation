@@ -12,4 +12,5 @@ public class Exceptions {
     public static final String EXCEPTION_NOT_FOUND = "Объект не найден, 404";
     public static final String METHOD_ARGUMENT_TYPE_MISMATCH_EXCEPTION = "Некорректный запрос.";
     public static final String EXCEPTION_NOT_VALID = "Валидация не пройдена. Недопустимое значение.";
+    public static final String EXCEPTION_NOT_MEET_RULES = "Не соответствет требованиям.";
 }

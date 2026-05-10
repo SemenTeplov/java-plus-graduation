@@ -236,23 +236,22 @@ public class EventServiceImpl implements EventService {
         log.info(Messages.MESSAGE_GET_EVENTS_FOR_ADMIN);
 
         Page<Event> events = eventSpecification.getPagesFromGetEventsForAdminRequest(request, eventRepository);
+
         Map<Long, UserShortDto> users = userClient.getUsersById(events.map(Event::getInitiator).toList()).getBody()
                 .stream().collect(Collectors.toMap(UserShortDto::id, u -> u));
+
         Map<Long, CategoryDto> category = categoryClient.getCategoriesByIds(events.map(Event::getCategory).toList()).getBody()
                 .stream().collect(Collectors.toMap(CategoryDto::id, c -> c));
+
         Map<Long, Location> location = locationRepository.findAllById(events.map(Event::getLocation).toList())
                 .stream().collect(Collectors.toMap(Location::getId, l -> l));
 
         return events.stream()
-                .map(e -> {
-                    ResponseEventFullDto eventFullDto = eventMapper.eventToEventFullDto(e);
-
-                    eventFullDto.setInitiator(users.get(e.getInitiator()));
-                    eventFullDto.setCategory(category.get(e.getCategory()));
-                    eventFullDto.setLocation(locationMapper.locationToLocationDto(location.get(e.getLocation())));
-
-                    return eventFullDto;
-                })
+                .map(event -> eventMapper.eventToEventFullDto(
+                        event,
+                        users.get(event.getInitiator()),
+                        category.get(event.getCategory()),
+                        locationMapper.locationToLocationDto(location.get(event.getLocation()))))
                 .toList();
     }
 
@@ -425,14 +424,12 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND));
         }
 
-        ResponseEventFullDto eventFullDto = eventMapper.eventToEventFullDto(event);
-
-        eventFullDto.setPublishedOn(OffsetDateTime.now().format(DateTimeFormatter.ofPattern(Values.DATE_TIME_PATTERN)));
-        eventFullDto.setInitiator(user);
-        eventFullDto.setCategory(category);
-        eventFullDto.setLocation(locationMapper.locationToLocationDto(location));
-
-        return eventFullDto;
+        return eventMapper.eventToEventFullDto(
+                event,
+                user,
+                category,
+                locationMapper.locationToLocationDto(location),
+                OffsetDateTime.now().format(DateTimeFormatter.ofPattern(Values.DATE_TIME_PATTERN)));
     }
 
     private EventShortDto getEventShortDto(Event event) {

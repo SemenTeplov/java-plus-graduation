@@ -1,11 +1,14 @@
 package main.java.ru.practicum.mapper;
 
+import main.java.ru.practicum.dto.CategoryDto;
 import main.java.ru.practicum.dto.EventShortDto;
 import main.java.ru.practicum.constant.Values;
+import main.java.ru.practicum.dto.LocationDto;
 import main.java.ru.practicum.dto.ResponseEventFullDto;
 import main.java.ru.practicum.dto.RequestEventDto;
 import main.java.ru.practicum.dto.UpdateEventAdminRequest;
 import main.java.ru.practicum.dto.UpdateEventUserRequest;
+import main.java.ru.practicum.dto.UserShortDto;
 import main.java.ru.practicum.persistence.entity.Event;
 import main.java.ru.practicum.persistence.status.State;
 
@@ -46,14 +49,23 @@ public interface EventMapper {
             expression = "java(newEventDto.requestModeration() == null ? true : newEventDto.requestModeration())")
     Event newEventDtoToEvent(RequestEventDto newEventDto, Long userId, Long locationId);
 
-    @Mapping(target = "category", ignore = true)
-    @Mapping(target = "initiator", ignore = true)
-    @Mapping(target = "location", ignore = true)
+    @Mapping(target = "category", source = "category")
+    @Mapping(target = "initiator", source = "user")
+    @Mapping(target = "location", source = "location")
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "state", qualifiedByName = "toStatusEnum")
     @Mapping(target = "eventDate", qualifiedByName = "toStringFromTime")
     @Mapping(target = "createdOn", expression = "java(java.time.LocalDateTime.now().toString())")
-    ResponseEventFullDto eventToEventFullDto(Event event);
+    ResponseEventFullDto eventToEventFullDto(Event event, UserShortDto user, CategoryDto category, LocationDto location);
+
+    @Mapping(target = "category", source = "category")
+    @Mapping(target = "initiator", source = "user")
+    @Mapping(target = "location", source = "location")
+    @Mapping(target = "publishedOn", source = "publishedOn")
+    @Mapping(target = "state", qualifiedByName = "toStatusEnum")
+    @Mapping(target = "eventDate", qualifiedByName = "toStringFromTime")
+    @Mapping(target = "createdOn", expression = "java(java.time.LocalDateTime.now().toString())")
+    ResponseEventFullDto eventToEventFullDto(Event event, UserShortDto user, CategoryDto category, LocationDto location, String publishedOn);
 
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "initiator", ignore = true)

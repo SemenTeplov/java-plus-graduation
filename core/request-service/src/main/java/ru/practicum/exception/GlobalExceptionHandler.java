@@ -140,6 +140,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler({NotMeetRulesEditionException.class})
+    public ResponseEntity<ApiError> handleNotMeetRulesEditionException(NotMeetRulesEditionException ex) {
+        log.warn(Exceptions.EXCEPTION_NOT_MEET_RULES, ex);
+        ApiError body = new ApiError(Arrays.stream(
+                ex.getStackTrace()).map(String::valueOf).toList(),
+                Exceptions.EXCEPTION_NOT_MEET_RULES,
+                Exceptions.EXCEPTION_NOT_MEET_RULES,
+                HttpStatus.CONFLICT.value() + " " + HttpStatus.CONFLICT.getReasonPhrase(),
+                LocalDateTime.now().toString());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleException(Exception e) {
         log.info(Messages.MESSAGE_INTERNAL_SERVER, e.getMessage(), e);

@@ -5,6 +5,7 @@ import feign.codec.ErrorDecoder;
 
 import main.java.ru.practicum.constant.Exceptions;
 import main.java.ru.practicum.exception.NotFoundException;
+import main.java.ru.practicum.exception.NotMeetRulesEditionException;
 
 public class FeignErrorDecoder implements ErrorDecoder {
 
@@ -19,6 +20,9 @@ public class FeignErrorDecoder implements ErrorDecoder {
             }
             case 404 -> {
                 return new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND);
+            }
+            case 409 -> {
+                return new NotMeetRulesEditionException(Exceptions.EXCEPTION_NOT_MEET_RULES);
             }
             case 500 -> {
                 return new Exception(Exceptions.EXCEPTION_INTERNAL_SERVER);

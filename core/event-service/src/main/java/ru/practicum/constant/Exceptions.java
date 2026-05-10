@@ -5,9 +5,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Exceptions {
 
-    public static final String EXCEPTION_FIELD_ANNOTATION_NOT_HAS_SPACE = "Поле annotation не может состоять только из пробелов";
-    public static final String EXCEPTION_FIELD_DESCRIPTION_NOT_HAS_SPACE = "Поле description не может состоять только из пробелов";
-    public static final String EXCEPTION_FIELD_TITLE_NOT_HAS_SPACE = "Поле title не может состоять только из пробелов";
     public static final String EXCEPTION_NOT_ILLEGAL_ARGUMENT = "Используется не допустимое значение";
     public static final String EXCEPTION_DATE_MISMATCH = "Дата не соответствует требованиям 409";
     public static final String EXCEPTION_INTERNAL_SERVER = "Внутренняя ошибка сервера. Подождите несколько минут и попробуйте снова.";
