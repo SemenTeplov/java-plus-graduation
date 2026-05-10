@@ -155,7 +155,7 @@ public class EventController {
     }
 
     @GetMapping("/events/compilations")
-    ResponseEntity<List<EventShortDto>> getAllById(@RequestParam List<Long> ids) {
+    ResponseEntity<List<EventShortDto>> getAllById(@RequestParam(required = false) List<Long> ids) {
 
         return ResponseEntity.ok(eventService.getAllById(ids));
     }

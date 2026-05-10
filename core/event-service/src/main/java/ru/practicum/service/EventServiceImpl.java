@@ -112,16 +112,6 @@ public class EventServiceImpl implements EventService {
         List<ParticipationRequestDto> requests = requestClient
                 .getRequestsByIds(eventRequestStatusRequest.requestIds()).getBody();
 
-        assert requests != null;
-        List<ParticipationRequestDto> participationRequestDto =
-                requestClient.addParticipationRequests(requests.stream().peek(r -> {
-                    if (!r.getStatus().equals(Status.PENDING.toString())) {
-                        throw new NotRespondStatusException(Messages.MESSAGE_NOT_RESPOND_STATUS);
-                    } else {
-                        r.setStatus(eventRequestStatusRequest.status().toString());
-                    }
-                }).toList()).getBody();
-
         EventRequestStatusUpdateResult result;
 
         if (eventRequestStatusRequest.status().equals(StatusRequest.CONFIRMED)) {
@@ -135,11 +125,17 @@ public class EventServiceImpl implements EventService {
                 throw new LimitRequestsExceededException(Exceptions.EXCEPTION_LIMIT_EXCEEDED);
             }
 
-            assert participationRequestDto != null;
+            List<ParticipationRequestDto> participationRequestDto = getParticipationRequestDto(
+                    requests, eventRequestStatusRequest.status().toString());
+
             event.setConfirmedRequests(event.getConfirmedRequests() + participationRequestDto.size());
 
             result = EventRequestStatusUpdateResult.builder().confirmedRequests(participationRequestDto).build();
         } else {
+
+            List<ParticipationRequestDto> participationRequestDto = getParticipationRequestDto(
+                    requests, eventRequestStatusRequest.status().toString());
+
             result = EventRequestStatusUpdateResult.builder().rejectedRequests(participationRequestDto).build();
         }
 
@@ -483,5 +479,21 @@ public class EventServiceImpl implements EventService {
                 throw new ValidationException(Exceptions.EXCEPTION_WRONG_DATE_RANGE);
             }
         }
+    }
+
+    private List<ParticipationRequestDto> getParticipationRequestDto(
+            List<ParticipationRequestDto> requests, String status) {
+
+        if (requests == null) {
+            return null;
+        }
+
+        return requestClient.addParticipationRequests(requests.stream().peek(r -> {
+                    if (!r.getStatus().equals(Status.PENDING.toString())) {
+                        throw new NotRespondStatusException(Messages.MESSAGE_NOT_RESPOND_STATUS);
+                    } else {
+                        r.setStatus(status);
+                    }
+                }).toList()).getBody();
     }
 }
