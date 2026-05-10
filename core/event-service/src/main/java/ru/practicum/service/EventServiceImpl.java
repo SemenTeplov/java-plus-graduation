@@ -112,19 +112,6 @@ public class EventServiceImpl implements EventService {
         List<ParticipationRequestDto> requests = requestClient
                 .getRequestsByIds(eventRequestStatusRequest.requestIds()).getBody();
 
-        if (eventRequestStatusRequest.status().equals(StatusRequest.CONFIRMED)) {
-
-            Long confirmedRequests = requestClient
-                    .countByEventIdAndStatus(eventId, StatusRequest.CONFIRMED.toString()).getBody();
-
-            assert requests != null;
-            long newConfirmedCount = (confirmedRequests == null ? 0 : confirmedRequests) + requests.size();
-
-            if (event.getParticipantLimit() > 0 && newConfirmedCount > event.getParticipantLimit()) {
-                throw new LimitRequestsExceededException(Exceptions.EXCEPTION_LIMIT_EXCEEDED);
-            }
-        }
-
         assert requests != null;
         List<ParticipationRequestDto> participationRequestDto =
                 requestClient.addParticipationRequests(requests.stream().peek(r -> {
@@ -137,8 +124,20 @@ public class EventServiceImpl implements EventService {
 
         EventRequestStatusUpdateResult result;
 
-        if (eventRequestStatusRequest.status().equals(Status.CONFIRMED)) {
+        if (eventRequestStatusRequest.status().equals(StatusRequest.CONFIRMED)) {
+
+            Long confirmedRequests = requestClient
+                    .countByEventIdAndStatus(eventId, StatusRequest.CONFIRMED.toString()).getBody();
+
+            long newConfirmedCount = (confirmedRequests == null ? 0 : confirmedRequests) + requests.size();
+
+            if (event.getParticipantLimit() > 0 && newConfirmedCount > event.getParticipantLimit()) {
+                throw new LimitRequestsExceededException(Exceptions.EXCEPTION_LIMIT_EXCEEDED);
+            }
+
+            assert participationRequestDto != null;
             event.setConfirmedRequests(event.getConfirmedRequests() + participationRequestDto.size());
+
             result = EventRequestStatusUpdateResult.builder().confirmedRequests(participationRequestDto).build();
         } else {
             result = EventRequestStatusUpdateResult.builder().rejectedRequests(participationRequestDto).build();
@@ -380,8 +379,13 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventShortDto> getAllById(List<Long> ids) {
 
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
         return eventRepository
-                .getEventsByIds(ids.toArray(Long[]::new)).stream().map(eventMapper::eventToEventShortDto)
+                .getEventsByIds(ids.toArray(Long[]::new)).stream()
+                .map(eventMapper::eventToEventShortDto)
                 .collect(Collectors.toList());
     }
 
