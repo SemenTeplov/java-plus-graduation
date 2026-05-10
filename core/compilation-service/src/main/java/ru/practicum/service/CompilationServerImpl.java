@@ -127,9 +127,10 @@ public class CompilationServerImpl implements CompilationServer {
 
         if (updateCompilationRequest.getEvents() != null) {
             compilation.setEvents(Objects.requireNonNull(eventClient
-                            .getAllById(updateCompilationRequest.getEvents())
-                            .getBody())
-                            .stream().map(EventShortDto::getId).toList());
+                    .getAllById(updateCompilationRequest.getEvents())
+                    .getBody())
+                    .stream().map(EventShortDto::getId)
+                    .collect(Collectors.toList()));
         }
 
         compilation = compilationRepository.save(compilation);

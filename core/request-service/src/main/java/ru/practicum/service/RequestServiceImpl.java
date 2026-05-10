@@ -5,7 +5,7 @@ import jakarta.ws.rs.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import main.dto.ParticipationRequestDto;
+import main.java.ru.practicum.dto.ParticipationRequestDto;
 import main.java.ru.practicum.constant.Exceptions;
 import main.java.ru.practicum.constant.Messages;
 import main.java.ru.practicum.exception.NotFoundException;
@@ -15,11 +15,10 @@ import main.java.ru.practicum.mapper.RequestMapper;
 import main.java.ru.practicum.persistence.entity.Request;
 import main.java.ru.practicum.persistence.repository.RequestRepository;
 import main.java.ru.practicum.persistence.status.State;
-import main.status.Status;
+import main.java.ru.practicum.persistence.status.Status;
 
 import org.springframework.stereotype.Service;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,23 +79,34 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Long countByEventIdAndStatus(Long eventId, String status) {
+
+        log.info(Messages.MESSAGE_COUNT, eventId, status);
+
         return requestRepository.countByEventIdAndStatus(eventId, status);
     }
 
     @Override
     public List<ParticipationRequestDto> getAll() {
+
+        log.info(Messages.MESSAGE_GET_ALL);
+
         return requestRepository.findAll().stream()
                 .map(requestMapper::toParticipationRequestDto).toList();
     }
 
     @Override
     public List<ParticipationRequestDto> getRequestsByIds(List<Long> ids) {
+
+        log.info(Messages.MESSAGE_GET_REQUEST, ids);
+
         return requestRepository.getRequestsByIds(ids.toArray(Long[]::new)).stream()
                 .map(requestMapper::toParticipationRequestDto).toList();
     }
 
     @Override
     public List<ParticipationRequestDto> addParticipationRequests(List<ParticipationRequestDto> list) {
+
+        log.info(Messages.MESSAGE_ADD_REQUEST, list);
 
         List<Request> requests = requestRepository.saveAll(list.stream().map(requestMapper::toRequest).toList());
 
@@ -105,6 +115,9 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<ParticipationRequestDto> getRequestsByEvent(Long eventId) {
+
+        log.info(Messages.MESSAGE_GET_REQUEST_BY_EVENT, eventId);
+
         return requestRepository.getRequestsByEventId(eventId).stream()
                 .map(requestMapper::toParticipationRequestDto).toList();
     }

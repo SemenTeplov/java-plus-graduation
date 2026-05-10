@@ -1,13 +1,12 @@
 package main.java.ru.practicum.controller;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import main.dto.ParticipationRequestDto;
+import main.java.ru.practicum.dto.ParticipationRequestDto;
 import main.java.ru.practicum.service.RequestService;
 
 import org.springframework.http.HttpStatus;
