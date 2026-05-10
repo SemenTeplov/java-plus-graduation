@@ -30,6 +30,7 @@ public interface RequestMapper {
     @Mapping(target = "created", source = "created", qualifiedByName = "toLocalDateTime")
     Request toRequest(ParticipationRequestDto participationRequest);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "created", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "event", source = "eventId")
     @Mapping(target = "requester", source = "userId")
