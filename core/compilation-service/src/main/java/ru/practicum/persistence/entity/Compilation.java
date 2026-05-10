@@ -49,5 +49,5 @@ public class Compilation {
             name = "compilation_to_events",
             joinColumns = @JoinColumn(name = "compilation_id"))
     @Column(name = "event_id")
-    List<Long> events = new ArrayList<>(); ;
+    List<Long> events = new ArrayList<>();
 }

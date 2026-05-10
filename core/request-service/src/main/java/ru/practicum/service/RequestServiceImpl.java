@@ -1,13 +1,12 @@
 package main.java.ru.practicum.service;
 
-import jakarta.ws.rs.ForbiddenException;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import main.java.ru.practicum.dto.ParticipationRequestDto;
 import main.java.ru.practicum.constant.Exceptions;
 import main.java.ru.practicum.constant.Messages;
+import main.java.ru.practicum.exception.ForbiddenException;
 import main.java.ru.practicum.exception.NotFoundException;
 import main.java.ru.practicum.external.EventClient;
 import main.java.ru.practicum.external.UserClient;
