@@ -32,6 +32,7 @@ public interface EventMapper {
     DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern(Values.DATE_TIME_PATTERN);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "eventDate", qualifiedByName = "toOffsetDateTime")
     @Mapping(target = "location", source = "locationId")
     @Mapping(target = "initiator", source = "userId")
