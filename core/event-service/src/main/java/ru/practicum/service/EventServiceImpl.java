@@ -5,20 +5,20 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import main.dto.CategoryDto;
-import main.dto.EndpointHitDto;
-import main.dto.EventRequestStatusRequest;
-import main.dto.EventRequestStatusUpdateResult;
-import main.dto.EventShortDto;
-import main.dto.ParticipationRequestDto;
-import main.dto.UserShortDto;
+import main.java.ru.practicum.dto.CategoryDto;
+import main.java.ru.practicum.dto.EndpointHitDto;
+import main.java.ru.practicum.dto.EventRequestStatusRequest;
+import main.java.ru.practicum.dto.EventRequestStatusUpdateResult;
+import main.java.ru.practicum.dto.EventShortDto;
+import main.java.ru.practicum.dto.ParticipationRequestDto;
+import main.java.ru.practicum.dto.UserShortDto;
 import main.java.ru.practicum.constant.Exceptions;
 import main.java.ru.practicum.constant.Messages;
 import main.java.ru.practicum.constant.Values;
-import main.java.ru.practicum.dto.EventFullDto;
+import main.java.ru.practicum.dto.ResponseEventFullDto;
 import main.java.ru.practicum.dto.GetEventsForAdminRequest;
 import main.java.ru.practicum.dto.GetEventsRequest;
-import main.java.ru.practicum.dto.NewEventDto;
+import main.java.ru.practicum.dto.RequestEventDto;
 import main.java.ru.practicum.dto.UpdateEventAdminRequest;
 import main.java.ru.practicum.dto.UpdateEventUserRequest;
 import main.java.ru.practicum.exception.ForbiddenException;
@@ -40,8 +40,8 @@ import main.java.ru.practicum.persistence.repository.LocationRepository;
 import main.java.ru.practicum.persistence.status.State;
 import main.java.ru.practicum.persistence.status.StateEvent;
 import main.java.ru.practicum.specification.EventSpecification;
-import main.status.StatusRequest;
-import main.status.Status;
+import main.java.ru.practicum.persistence.status.StatusRequest;
+import main.java.ru.practicum.persistence.status.Status;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -80,23 +80,17 @@ public class EventServiceImpl implements EventService {
     private final EventSpecification eventSpecification;
 
     @Override
-    public EventFullDto addEvent(Long userId, NewEventDto newEventDto) {
+    public ResponseEventFullDto addEvent(Long userId, RequestEventDto newEventDto) {
 
         log.info(Messages.MESSAGE_ADD_EVENT, userId, newEventDto);
 
-        validateEventFields(newEventDto);
         checkDate(newEventDto.eventDate());
 
         Location location = locationRepository
                 .save(locationMapper.locationDtoToLocation(newEventDto.location()));
 
-        Event event = eventMapper.newEventDtoToEvent(newEventDto);
-        event.setInitiator(userId);
-        event.setLocation(location.getId());
-        event.setState(State.PENDING.toString());
-        event.setConfirmedRequests(0);
-        event.setViews(0L);
-        event = eventRepository.save(event);
+        Event event = eventRepository
+                .save(eventMapper.newEventDtoToEvent(newEventDto, userId, location.getId()));
 
         return getEventFullDto(event, location);
     }
@@ -121,17 +115,19 @@ public class EventServiceImpl implements EventService {
                 .getRequestsByIds(eventRequestStatusRequest.requestIds()).getBody();
 
         if (eventRequestStatusRequest.status().equals(StatusRequest.CONFIRMED)) {
-            Long confirmedRequests =
-                    requestClient.countByEventIdAndStatus(eventId, StatusRequest.CONFIRMED.toString()).getBody();
+
+            Long confirmedRequests = requestClient
+                    .countByEventIdAndStatus(eventId, StatusRequest.CONFIRMED.toString()).getBody();
 
             assert requests != null;
-            long newConfirmedCount = confirmedRequests + requests.size();
+            long newConfirmedCount = (confirmedRequests == null ? 0 : confirmedRequests) + requests.size();
 
             if (event.getParticipantLimit() > 0 && newConfirmedCount > event.getParticipantLimit()) {
                 throw new LimitRequestsExceededException(Exceptions.EXCEPTION_LIMIT_EXCEEDED);
             }
         }
 
+        assert requests != null;
         List<ParticipationRequestDto> participationRequestDto =
                 requestClient.addParticipationRequests(requests.stream().peek(r -> {
                     if (!r.getStatus().equals(Status.PENDING.toString())) {
@@ -156,7 +152,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getEvent(Long id) {
+    public ResponseEventFullDto getEvent(Long id) {
 
         log.info(Messages.MESSAGE_GET_EVENT_BY_ID, id);
 
@@ -168,7 +164,7 @@ public class EventServiceImpl implements EventService {
             eventRepository.save(event);
         }
 
-        if (!event.getState().equals(State.PUBLISHED.toString())) {
+        if (!event.getState().equals(State.PUBLISHED)) {
             throw new NotFoundException(Exceptions.EXCEPTION_NOT_PUBLISHED);
         }
 
@@ -201,12 +197,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getEventUser(Long userId, Long eventId) {
+    public ResponseEventFullDto getEventUser(Long userId, Long eventId) {
 
         log.info(Messages.MESSAGE_GET_EVENTS_BY_USER_ID_AND_EVENT_ID, eventId, userId);
 
         Event event = eventRepository.getEventByUserIdAndEventId(userId, eventId)
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
+
         Location location = locationRepository.findById(event.getLocation())
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
 
@@ -236,7 +233,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> getEventsAdmin(GetEventsForAdminRequest request) {
+    public List<ResponseEventFullDto> getEventsAdmin(GetEventsForAdminRequest request) {
 
         log.info(Messages.MESSAGE_GET_EVENTS_FOR_ADMIN);
 
@@ -250,7 +247,7 @@ public class EventServiceImpl implements EventService {
 
         return events.stream()
                 .map(e -> {
-                    EventFullDto eventFullDto = eventMapper.eventToEventFullDto(e);
+                    ResponseEventFullDto eventFullDto = eventMapper.eventToEventFullDto(e);
 
                     eventFullDto.setInitiator(users.get(e.getInitiator()));
                     eventFullDto.setCategory(category.get(e.getCategory()));
@@ -272,7 +269,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
+    public ResponseEventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest) {
 
         log.info(Messages.MESSAGE_UPDATE_EVENT);
 
@@ -281,17 +278,18 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.getEventByUserIdAndEventId(userId, eventId)
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
 
-        if (event.getState().equals(State.PUBLISHED.toString())) {
+        if (event.getState().equals(State.PUBLISHED)) {
             throw new ForbiddenException(Exceptions.EXCEPTION_CANT_UPDATE_PUBLISHED);
         }
 
-        Location location = null;
+        Location location;
 
         if (updateEventUserRequest.getLocation() != null) {
             location = locationRepository
                     .save(locationMapper.locationDtoToLocation(updateEventUserRequest.getLocation()));
         } else {
-            location = locationRepository.findById(event.getLocation()).get();
+            location = locationRepository.findById(event.getLocation())
+                    .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
         }
 
         eventMapper.updateEventUserRequestToEvent(event, location.getId(), updateEventUserRequest);
@@ -299,17 +297,17 @@ public class EventServiceImpl implements EventService {
         if (updateEventUserRequest.getStateAction() != null) {
             switch (updateEventUserRequest.getStateAction()) {
                 case CANCEL_REVIEW -> {
-                    if (event.getState().equals(State.PENDING.toString()) ||
-                            event.getState().equals(State.CANCELED.toString())) {
-                        event.setState(State.CANCELED.toString());
+                    if (event.getState().equals(State.PENDING) ||
+                            event.getState().equals(State.CANCELED)) {
+                        event.setState(State.CANCELED);
                     } else {
                         throw new NotMeetRulesEditionException(Exceptions.EXCEPTION_NOT_MEET_RULES);
                     }}
                 case SEND_TO_REVIEW -> {
-                    if (event.getState().equals(State.CANCELED.toString())) {
-                        event.setState(State.PENDING.toString());
+                    if (event.getState().equals(State.CANCELED)) {
+                        event.setState(State.PENDING);
                     } else {
-                        event.setState(State.CANCELED.toString());
+                        event.setState(State.CANCELED);
                     }}
                 default ->
                     throw new NotMeetRulesEditionException(Exceptions.EXCEPTION_NOT_MEET_RULES);
@@ -322,13 +320,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
+    public ResponseEventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
 
         log.info(Messages.MESSAGE_UPDATE_EVENT);
 
         checkDate(updateEventAdminRequest.getEventDate());
 
-        Location location = null;
+        Location location;
 
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
@@ -338,21 +336,23 @@ public class EventServiceImpl implements EventService {
                     .save(locationMapper.locationDtoToLocation(updateEventAdminRequest.getLocation()));
             event.setLocation(location.getId());
         } else {
-            location = locationRepository.findById(event.getLocation()).get();
+            location = locationRepository.findById(event.getLocation())
+                    .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
+
             updateEventAdminRequest.setLocation(locationMapper.locationToLocationDto(location));
         }
 
         eventMapper.updateEventAdminRequestToEvent(event, location.getId(), updateEventAdminRequest);
 
         if (updateEventAdminRequest.getStateAction() != null) {
-            if (!event.getState().equals(State.PUBLISHED.toString())
+            if (!event.getState().equals(State.PUBLISHED)
                     && updateEventAdminRequest.getStateAction()
                     .equals(StateEvent.REJECT_EVENT)) {
-                event.setState(State.CANCELED.toString());
-            } else if (event.getState().equals(State.PENDING.toString())
+                event.setState(State.CANCELED);
+            } else if (event.getState().equals(State.PENDING)
                     && updateEventAdminRequest.getStateAction()
                     .equals(StateEvent.PUBLISH_EVENT)) {
-                event.setState(State.PUBLISHED.toString());
+                event.setState(State.PUBLISHED);
             } else {
                 throw new NotMeetRulesEditionException(Exceptions.EXCEPTION_NOT_MEET_RULES);
             }
@@ -373,7 +373,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format(Exceptions.EXCEPTION_EVENT_NOT_FOUND, id)));
 
-        if (!event.getState().equals("PUBLISHED")) {
+        if (!event.getState().equals(State.PUBLISHED)) {
             throw new ValidationException(Exceptions.EXCEPTION_COMMENT_NOT_PUBLISHED);
         }
 
@@ -398,7 +398,7 @@ public class EventServiceImpl implements EventService {
             throw new ForbiddenException(Exceptions.EXCEPTION_REQUEST_INITIATOR_OWN);
         }
 
-        if (!event.getState().equals(State.PUBLISHED.toString())) {
+        if (!event.getState().equals(State.PUBLISHED)) {
             throw new ForbiddenException(Exceptions.EXCEPTION_REQUEST_NOT_PUBLISHED);
         }
 
@@ -413,7 +413,7 @@ public class EventServiceImpl implements EventService {
         return String.valueOf(Status.CONFIRMED);
     }
 
-    private EventFullDto getEventFullDto(Event event, Location location) {
+    private ResponseEventFullDto getEventFullDto(Event event, Location location) {
 
         UserShortDto user = userClient.getUserById(event.getInitiator()).getBody();
 
@@ -424,10 +424,10 @@ public class EventServiceImpl implements EventService {
         CategoryDto category = categoryClient.getCategory(event.getCategory()).getBody();
 
         if (category == null) {
-            throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND, event.getCategory()));
+            throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND));
         }
 
-        EventFullDto eventFullDto = eventMapper.eventToEventFullDto(event);
+        ResponseEventFullDto eventFullDto = eventMapper.eventToEventFullDto(event);
 
         eventFullDto.setPublishedOn(OffsetDateTime.now().format(DateTimeFormatter.ofPattern(Values.DATE_TIME_PATTERN)));
         eventFullDto.setInitiator(user);
@@ -449,7 +449,7 @@ public class EventServiceImpl implements EventService {
         CategoryDto category = categoryClient.getCategory(event.getCategory()).getBody();
 
         if (category == null) {
-            throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND, event.getCategory()));
+            throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND));
         }
 
         eventShortDto.setInitiator(user);
@@ -470,21 +470,6 @@ public class EventServiceImpl implements EventService {
 
         if (Duration.between(OffsetDateTime.now(zoneId), dateTime).toHours() < 2) {
             throw new MismatchDateException(Exceptions.EXCEPTION_DATE_MISMATCH);
-        }
-    }
-
-    private void validateEventFields(NewEventDto newEventDto) {
-
-        if (newEventDto.annotation() != null && newEventDto.annotation().trim().isEmpty()) {
-            throw new ValidationException(Exceptions.EXCEPTION_FIELD_ANNOTATION_NOT_HAS_SPACE);
-        }
-
-        if (newEventDto.description() != null && newEventDto.description().trim().isEmpty()) {
-            throw new ValidationException(Exceptions.EXCEPTION_FIELD_DESCRIPTION_NOT_HAS_SPACE);
-        }
-
-        if (newEventDto.title() != null && newEventDto.title().trim().isEmpty()) {
-            throw new ValidationException(Exceptions.EXCEPTION_FIELD_TITLE_NOT_HAS_SPACE);
         }
     }
 

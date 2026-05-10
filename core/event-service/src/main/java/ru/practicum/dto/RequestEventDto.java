@@ -7,10 +7,9 @@ import jakarta.validation.constraints.Size;
 
 import lombok.Builder;
 
-import main.dto.LocationDto;
-
 @Builder
-public record NewEventDto(
+public record RequestEventDto(
+
         @NotBlank
         @Size(min = 20, max = 2000)
         String annotation,

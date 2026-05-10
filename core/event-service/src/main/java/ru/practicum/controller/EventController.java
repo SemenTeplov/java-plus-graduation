@@ -6,14 +6,14 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import main.dto.EventShortDto;
-import main.java.ru.practicum.dto.EventFullDto;
-import main.dto.EventRequestStatusRequest;
-import main.dto.EventRequestStatusUpdateResult;
+import main.java.ru.practicum.dto.EventShortDto;
+import main.java.ru.practicum.dto.ResponseEventFullDto;
+import main.java.ru.practicum.dto.EventRequestStatusRequest;
+import main.java.ru.practicum.dto.EventRequestStatusUpdateResult;
 import main.java.ru.practicum.dto.GetEventsForAdminRequest;
 import main.java.ru.practicum.dto.GetEventsRequest;
-import main.java.ru.practicum.dto.NewEventDto;
-import main.dto.ParticipationRequestDto;
+import main.java.ru.practicum.dto.RequestEventDto;
+import main.java.ru.practicum.dto.ParticipationRequestDto;
 import main.java.ru.practicum.dto.UpdateEventAdminRequest;
 import main.java.ru.practicum.dto.UpdateEventUserRequest;
 import main.java.ru.practicum.service.EventService;
@@ -41,10 +41,10 @@ public class EventController {
     private final EventService eventService;
 
     @PostMapping("/users/{userId}/events")
-    ResponseEntity<EventFullDto> addEvent(@PathVariable("userId") Long userId,
-                                          @Valid @RequestBody NewEventDto newEventDto) {
+    ResponseEntity<ResponseEventFullDto> addEvent(@PathVariable("userId") Long userId,
+                                                  @Valid @RequestBody RequestEventDto request) {
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addEvent(userId, newEventDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.addEvent(userId, request));
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}/requests")
@@ -57,7 +57,7 @@ public class EventController {
     }
 
     @GetMapping("/events/{id}")
-    ResponseEntity<EventFullDto> getEvent(@PathVariable("id") Long id) {
+    ResponseEntity<ResponseEventFullDto> getEvent(@PathVariable("id") Long id) {
 
         return ResponseEntity.ok(eventService.getEvent(id));
     }
@@ -70,7 +70,7 @@ public class EventController {
     }
 
     @GetMapping("/users/{userId}/events/{eventId}")
-    ResponseEntity<EventFullDto> getEventUser(@PathVariable("userId") Long userId, @PathVariable("eventId") Long eventId) {
+    ResponseEntity<ResponseEventFullDto> getEventUser(@PathVariable("userId") Long userId, @PathVariable("eventId") Long eventId) {
 
         return ResponseEntity.ok(eventService.getEventUser(userId, eventId));
     }
@@ -100,13 +100,13 @@ public class EventController {
     }
 
     @GetMapping("/admin/events")
-    ResponseEntity<List<EventFullDto>> getEventsAdmin(@RequestParam(value = "users", required = false) List<Long> users,
-                                                      @RequestParam(value = "states", required = false) List<String> states,
-                                                      @RequestParam(value = "categories", required = false) List<Long> categories,
-                                                      @RequestParam(value = "rangeStart", required = false) String rangeStart,
-                                                      @RequestParam(value = "rangeEnd", required = false) String rangeEnd,
-                                                      @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
-                                                      @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+    ResponseEntity<List<ResponseEventFullDto>> getEventsAdmin(@RequestParam(value = "users", required = false) List<Long> users,
+                                                              @RequestParam(value = "states", required = false) List<String> states,
+                                                              @RequestParam(value = "categories", required = false) List<Long> categories,
+                                                              @RequestParam(value = "rangeStart", required = false) String rangeStart,
+                                                              @RequestParam(value = "rangeEnd", required = false) String rangeEnd,
+                                                              @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
+                                                              @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
 
         return ResponseEntity.ok(eventService.getEventsAdmin(GetEventsForAdminRequest.builder()
                 .users(users)
@@ -128,16 +128,16 @@ public class EventController {
     }
 
     @PatchMapping("/users/{userId}/events/{eventId}")
-    ResponseEntity<EventFullDto> updateEvent(@PathVariable("userId") Long userId,
-                                             @PathVariable("eventId") Long eventId,
-                                             @RequestBody(required = false) UpdateEventUserRequest updateEventUserRequest) {
+    ResponseEntity<ResponseEventFullDto> updateEvent(@PathVariable("userId") Long userId,
+                                                     @PathVariable("eventId") Long eventId,
+                                                     @RequestBody(required = false) UpdateEventUserRequest updateEventUserRequest) {
 
         return ResponseEntity.ok(eventService.updateEvent(userId, eventId, updateEventUserRequest));
     }
 
     @PatchMapping("/admin/events/{eventId}")
-    ResponseEntity<EventFullDto> updateEventAdmin(@PathVariable("eventId") Long eventId,
-                                                  @RequestBody(required = false) UpdateEventAdminRequest updateEventAdminRequest) {
+    ResponseEntity<ResponseEventFullDto> updateEventAdmin(@PathVariable("eventId") Long eventId,
+                                                          @RequestBody(required = false) UpdateEventAdminRequest updateEventAdminRequest) {
 
         return ResponseEntity.ok(eventService.updateEventAdmin(eventId, updateEventAdminRequest));
     }

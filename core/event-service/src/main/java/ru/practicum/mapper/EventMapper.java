@@ -1,19 +1,21 @@
 package main.java.ru.practicum.mapper;
 
-import main.dto.EventShortDto;
+import main.java.ru.practicum.dto.EventShortDto;
 import main.java.ru.practicum.constant.Values;
-import main.java.ru.practicum.dto.EventFullDto;
-import main.java.ru.practicum.dto.NewEventDto;
+import main.java.ru.practicum.dto.ResponseEventFullDto;
+import main.java.ru.practicum.dto.RequestEventDto;
 import main.java.ru.practicum.dto.UpdateEventAdminRequest;
 import main.java.ru.practicum.dto.UpdateEventUserRequest;
 import main.java.ru.practicum.persistence.entity.Event;
 import main.java.ru.practicum.persistence.status.State;
 
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -21,19 +23,27 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(componentModel = "spring",
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        unmappedTargetPolicy = ReportingPolicy.ERROR,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface EventMapper {
-    static final DateTimeFormatter FORMATTER =
+
+    DateTimeFormatter FORMATTER =
             DateTimeFormatter.ofPattern(Values.DATE_TIME_PATTERN);
 
     @Mapping(target = "eventDate", qualifiedByName = "toOffsetDateTime")
-    @Mapping(target = "location", ignore = true)
+    @Mapping(target = "location", source = "locationId")
+    @Mapping(target = "initiator", source = "userId")
+    @Mapping(target = "state", expression = "java(main.java.ru.practicum.persistence.status.State.PENDING)")
+    @Mapping(target = "confirmedRequests", defaultValue = "0")
+    @Mapping(target = "views", defaultValue = "0L")
     @Mapping(target = "paid", expression = "java(newEventDto.paid() == null ? false : newEventDto.paid())")
     @Mapping(target = "participantLimit",
             expression = "java(newEventDto.participantLimit() == null ? 0 : newEventDto.participantLimit())")
     @Mapping(target = "requestModeration",
             expression = "java(newEventDto.requestModeration() == null ? true : newEventDto.requestModeration())")
-    Event newEventDtoToEvent(NewEventDto newEventDto);
+    Event newEventDtoToEvent(RequestEventDto newEventDto, Long userId, Long locationId);
 
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "initiator", ignore = true)
@@ -41,7 +51,7 @@ public interface EventMapper {
     @Mapping(target = "state", qualifiedByName = "toStatusEnum")
     @Mapping(target = "eventDate", qualifiedByName = "toStringFromTime")
     @Mapping(target = "createdOn", expression = "java(java.time.LocalDateTime.now().toString())")
-    EventFullDto eventToEventFullDto(Event event);
+    ResponseEventFullDto eventToEventFullDto(Event event);
 
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "initiator", ignore = true)

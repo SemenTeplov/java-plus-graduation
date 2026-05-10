@@ -2,6 +2,8 @@ package main.java.ru.practicum.persistence.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +18,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
+
+import main.java.ru.practicum.persistence.status.State;
 
 import java.time.OffsetDateTime;
 
@@ -71,8 +75,9 @@ public class Event {
     @Column(name = "title", nullable = false)
     String title;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "state", length = 10)
-    String state;
+    State state;
 
     Long views;
 }

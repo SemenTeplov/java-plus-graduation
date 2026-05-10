@@ -1,7 +1,7 @@
 package main.java.ru.practicum.externel;
 
-import main.dto.EndpointHitDto;
-import main.dto.ViewStats;
+import main.java.ru.practicum.dto.EndpointHitDto;
+import main.java.ru.practicum.dto.ViewStats;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;

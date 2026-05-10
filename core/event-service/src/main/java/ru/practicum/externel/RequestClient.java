@@ -1,6 +1,7 @@
 package main.java.ru.practicum.externel;
 
-import main.dto.ParticipationRequestDto;
+import main.java.ru.practicum.dto.ParticipationRequestDto;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

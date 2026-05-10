@@ -20,6 +20,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -48,5 +49,5 @@ public class Compilation {
             name = "compilation_to_events",
             joinColumns = @JoinColumn(name = "compilation_id"))
     @Column(name = "event_id")
-    List<Long> events;
+    List<Long> events = new ArrayList<>(); ;
 }

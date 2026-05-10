@@ -1,13 +1,13 @@
 package main.java.ru.practicum.service;
 
-import main.dto.EventShortDto;
-import main.java.ru.practicum.dto.EventFullDto;
-import main.dto.EventRequestStatusRequest;
+import main.java.ru.practicum.dto.EventShortDto;
+import main.java.ru.practicum.dto.ResponseEventFullDto;
+import main.java.ru.practicum.dto.EventRequestStatusRequest;
 import main.java.ru.practicum.dto.GetEventsForAdminRequest;
 import main.java.ru.practicum.dto.GetEventsRequest;
-import main.java.ru.practicum.dto.NewEventDto;
-import main.dto.EventRequestStatusUpdateResult;
-import main.dto.ParticipationRequestDto;
+import main.java.ru.practicum.dto.RequestEventDto;
+import main.java.ru.practicum.dto.EventRequestStatusUpdateResult;
+import main.java.ru.practicum.dto.ParticipationRequestDto;
 import main.java.ru.practicum.dto.UpdateEventAdminRequest;
 import main.java.ru.practicum.dto.UpdateEventUserRequest;
 
@@ -15,27 +15,27 @@ import java.util.List;
 
 public interface EventService {
 
-    EventFullDto addEvent(Long userId, NewEventDto newEventDto);
+    ResponseEventFullDto addEvent(Long userId, RequestEventDto newEventDto);
 
     EventRequestStatusUpdateResult changeRequestStatus(Long userId,
                                                                        Long eventId,
                                                                        EventRequestStatusRequest eventRequestStatusRequest);
 
-    EventFullDto getEvent(Long id);
+    ResponseEventFullDto getEvent(Long id);
 
     List<ParticipationRequestDto> getEventParticipants(Long userId, Long eventId);
 
-    EventFullDto getEventUser(Long userId, Long eventId);
+    ResponseEventFullDto getEventUser(Long userId, Long eventId);
 
     List<EventShortDto> getEvents(GetEventsRequest request);
 
-    List<EventFullDto> getEventsAdmin(GetEventsForAdminRequest request);
+    List<ResponseEventFullDto> getEventsAdmin(GetEventsForAdminRequest request);
 
     List<EventShortDto> getEventsUser(Long userId, Integer from, Integer size);
 
-    EventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest);
+    ResponseEventFullDto updateEvent(Long userId, Long eventId, UpdateEventUserRequest updateEventUserRequest);
 
-    EventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
+    ResponseEventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
     Boolean existsByCategoryId(Long eventId);
 
