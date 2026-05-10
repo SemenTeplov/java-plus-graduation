@@ -1,8 +1,5 @@
 package main.java.ru.practicum.dto;
 
-import main.dto.EventShortDto;
-import main.dto.UserShortDto;
-
 import lombok.Builder;
 
 @Builder
