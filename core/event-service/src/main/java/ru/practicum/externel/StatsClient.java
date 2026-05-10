@@ -2,6 +2,7 @@ package main.java.ru.practicum.externel;
 
 import main.java.ru.practicum.dto.EndpointHitDto;
 import main.java.ru.practicum.dto.ViewStats;
+import main.java.ru.practicum.externel.config.FeignErrorDecoder;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@FeignClient(name = "stats-server")
+@FeignClient(name = "stats-server", configuration = FeignErrorDecoder.class)
 public interface StatsClient {
 
     @PostMapping("/hit")

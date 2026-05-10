@@ -1,6 +1,7 @@
 package main.java.ru.practicum.external;
 
 import main.java.ru.practicum.dto.ParticipationRequestDto;
+import main.java.ru.practicum.external.config.FeignErrorDecoder;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "request-service")
+@FeignClient(name = "request-service", configuration = FeignErrorDecoder.class)
 public interface RequestClient {
 
     @GetMapping("/request/{eventId}/{status}")
