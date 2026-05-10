@@ -24,9 +24,11 @@ public interface CompilationMapper {
     @Mapping(target = "events", source = "list")
     ResponseCompilationDto compilationAndEventsToCompilationDto(Compilation compilation, List<EventShortDto> list);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "events", source = "list")
     Compilation newCompilationDtoToCompilation(RequestCompilationDto newCompilationDto, List<Long> list);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "events", ignore = true)
     void updateCompilationRequestToCompilation(@MappingTarget Compilation compilation,
                                                RequestUpdateCompilationDto updateCompilationRequest);
