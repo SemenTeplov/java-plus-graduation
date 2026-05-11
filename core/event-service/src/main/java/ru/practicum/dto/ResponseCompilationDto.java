@@ -3,24 +3,26 @@ package main.java.ru.practicum.dto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-@Data
+import java.util.List;
+
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ParticipationRequestDto {
+public class ResponseCompilationDto {
 
-        String created;
-
-        Long event;
+        List<EventShortDto> events;
 
         Long id;
 
-        Long requester;
+        Boolean pinned;
 
-        String status;
+        String title;
 }

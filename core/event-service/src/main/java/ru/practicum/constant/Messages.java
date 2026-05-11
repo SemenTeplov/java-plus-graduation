@@ -30,4 +30,10 @@ public class Messages {
     public static final String MESSAGE_GET_COMMENT_BY_ID = "Получение комментария по идентификатору {}";
     public static final String MESSAGE_DELETE_COMMENT = "Удаление комментария {} пользователем {}";
     public static final String MESSAGE_DELETE_COMMENT_BY_ADMIN = "Удаление комментария {} администратором";
+    public static final String NOT_FOUND_COMPLETION = "Подборка событий по id не найдено";
+    public static final String GET_COMPILATIONS = "Пришел запрос на получение подборки событий";
+    public static final String GET_COMPILATION = "Пришел запрос на получение подборки события по id {}";
+    public static final String SAVE_COMPILATION = "Пришел запрос на сохранение подборки события {}";
+    public static final String DELETE_COMPILATION = "Пришел запрос на удаление подборки события {}";
+    public static final String UPDATE_COMPILATION = "Пришел запрос на обновление подборки события {}";
 }

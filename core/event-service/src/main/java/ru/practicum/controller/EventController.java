@@ -141,7 +141,7 @@ public class EventController {
 
         return ResponseEntity.ok(eventService.updateEventAdmin(eventId, updateEventAdminRequest));
     }
-
+//---
     @GetMapping("/events/category/{categoryId}")
     ResponseEntity<Boolean> existsByCategoryId(@PathVariable("categoryId") Long eventId) {
 

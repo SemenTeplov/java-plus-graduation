@@ -29,4 +29,5 @@ public class Exceptions {
     public static final String EXCEPTION_ONLY_AUTHOR_CAN_EDIT = "Редактировать комментарий может только автор";
     public static final String EXCEPTION_COMMENT_FOR_OTHER_EVENT = "Этот комментарий относится к другому мероприятию";
     public static final String EXCEPTION_ONLY_AUTHOR_CAN_DELETE = "Удалить комментарий может только автор";
+    public static final String NOT_FOUND_COMPLETION = "Подборка событий не найдена";
 }

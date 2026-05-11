@@ -8,20 +8,15 @@ spring:
           predicates:
             - Path=/admin/categories/**, /categories/**
 
-#        - id: comment_service_route
-#          uri: lb://comment-service
+#        - id: compilation_service_route
+#          uri: lb://compilation-service
 #          predicates:
-#            - Path=/admin/comments/**, /comments/**
-
-        - id: compilation_service_route
-          uri: lb://compilation-service
-          predicates:
-            - Path=/admin/compilations/**, /compilations/**
+#            - Path=/admin/compilations/**, /compilations/**
 
         - id: event_service_route
           uri: lb://event-service
           predicates:
-            - Path=/admin/events/**, /events/**, /users/*/events/**, /admin/comments/**, /comments/**
+            - Path=/admin/events/**, /events/**, /users/*/events/**, /admin/comments/**, /comments/**, /admin/compilations/**, /compilations/**
 
         - id: request_service_route
           uri: lb://request-service

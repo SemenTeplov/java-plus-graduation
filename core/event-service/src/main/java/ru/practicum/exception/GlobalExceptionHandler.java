@@ -23,6 +23,19 @@ import java.util.Arrays;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler({NotFoundCompletion.class})
+    public ResponseEntity<ApiError> handleNotFoundCompletion(NotFoundCompletion ex) {
+        log.warn(Messages.NOT_FOUND_COMPLETION, ex);
+        ApiError body = new ApiError(Arrays.stream(
+                ex.getStackTrace()).map(String::valueOf).toList(),
+                Exceptions.NOT_FOUND_COMPLETION,
+                Messages.NOT_FOUND_COMPLETION,
+                HttpStatus.NOT_FOUND.value() + " " + HttpStatus.NOT_FOUND.getReasonPhrase(),
+                LocalDateTime.now().toString());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException  e) {
         log.info(Exceptions.EXCEPTION_NOT_ILLEGAL_ARGUMENT, e.getMessage(), e);
