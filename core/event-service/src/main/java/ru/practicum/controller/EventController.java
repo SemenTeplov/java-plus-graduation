@@ -141,23 +141,11 @@ public class EventController {
 
         return ResponseEntity.ok(eventService.updateEventAdmin(eventId, updateEventAdminRequest));
     }
-//---
+
     @GetMapping("/events/category/{categoryId}")
     ResponseEntity<Boolean> existsByCategoryId(@PathVariable("categoryId") Long eventId) {
 
         return ResponseEntity.ok(eventService.existsByCategoryId(eventId));
-    }
-
-    @GetMapping("/events/comment/{eventId}")
-    ResponseEntity<EventShortDto> getEventById(@PathVariable("eventId") Long eventId) {
-
-        return ResponseEntity.ok(eventService.getEventById(eventId));
-    }
-
-    @GetMapping("/events/compilations")
-    ResponseEntity<List<EventShortDto>> getAllById(@RequestParam(required = false) List<Long> ids) {
-
-        return ResponseEntity.ok(eventService.getAllById(ids));
     }
 
     @GetMapping("/users/client/{eventId}/{userId}/{status}/{count}")

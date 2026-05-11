@@ -8,11 +8,6 @@ spring:
           predicates:
             - Path=/admin/categories/**, /categories/**
 
-#        - id: compilation_service_route
-#          uri: lb://compilation-service
-#          predicates:
-#            - Path=/admin/compilations/**, /compilations/**
-
         - id: event_service_route
           uri: lb://event-service
           predicates:

@@ -39,9 +39,5 @@ public interface EventService {
 
     Boolean existsByCategoryId(Long eventId);
 
-    EventShortDto getEventById(Long id);
-
-    List<EventShortDto> getAllById(List<Long> ids);
-
     String getStatus(Long eventId, Long userId, String status, Long count);
 }

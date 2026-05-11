@@ -360,32 +360,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventShortDto getEventById(Long id) {
-
-        Event event = eventRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format(Exceptions.EXCEPTION_EVENT_NOT_FOUND, id)));
-
-        if (!event.getState().equals(State.PUBLISHED)) {
-            throw new ValidationException(Exceptions.EXCEPTION_COMMENT_NOT_PUBLISHED);
-        }
-
-        return eventMapper.eventToEventShortDto(event);
-    }
-
-    @Override
-    public List<EventShortDto> getAllById(List<Long> ids) {
-
-        if (ids == null || ids.isEmpty()) {
-            return List.of();
-        }
-
-        return eventRepository
-                .getEventsByIds(ids.toArray(Long[]::new)).stream()
-                .map(eventMapper::eventToEventShortDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public String getStatus(Long eventId, Long userId, String status, Long count) {
 
         Event event = eventRepository.findById(eventId)
