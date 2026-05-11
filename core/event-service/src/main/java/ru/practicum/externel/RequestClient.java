@@ -28,4 +28,7 @@ public interface RequestClient {
 
     @GetMapping("/request/client/{eventId}")
     ResponseEntity<List<ParticipationRequestDto>> getRequestsByEvent(@PathVariable("eventId") Long eventId);
+
+    @GetMapping("/request")
+    ResponseEntity<List<ParticipationRequestDto>> getAll();
 }
