@@ -37,7 +37,5 @@ public interface EventService {
 
     ResponseEventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
-    Boolean existsByCategoryId(Long eventId);
-
     String getStatus(Long eventId, Long userId, String status, Long count);
 }

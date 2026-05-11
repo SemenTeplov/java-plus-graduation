@@ -30,4 +30,6 @@ public class Exceptions {
     public static final String EXCEPTION_COMMENT_FOR_OTHER_EVENT = "Этот комментарий относится к другому мероприятию";
     public static final String EXCEPTION_ONLY_AUTHOR_CAN_DELETE = "Удалить комментарий может только автор";
     public static final String NOT_FOUND_COMPLETION = "Подборка событий не найдена";
+    public static final String EXCEPTION_CONFLICT_CATEGORY = "Категория с именем %s уже существует";
+    public static final String EXCEPTION_CANT_DELETE_CATEGORY = "Невозможно удалить категорию, так как с ней связаны события";
 }

@@ -354,12 +354,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Boolean existsByCategoryId(Long eventId) {
-
-        return eventRepository.existsByCategoryId(eventId);
-    }
-
-    @Override
     public String getStatus(Long eventId, Long userId, String status, Long count) {
 
         Event event = eventRepository.findById(eventId)

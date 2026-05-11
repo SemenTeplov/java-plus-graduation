@@ -36,4 +36,11 @@ public class Messages {
     public static final String SAVE_COMPILATION = "Пришел запрос на сохранение подборки события {}";
     public static final String DELETE_COMPILATION = "Пришел запрос на удаление подборки события {}";
     public static final String UPDATE_COMPILATION = "Пришел запрос на обновление подборки события {}";
+    public static final String MESSAGE_ADD_CATEGORIES = "POST /admin/categories with request: {}";
+    public static final String MESSAGE_UPDATE_CATEGORY = "PATCH /admin/categories/{} with request: {}";
+    public static final String MESSAGE_GET_CATEGORIES = "GET /categories";
+    public static final String MESSAGE_DELETE_CATEGORIES = "DELETE /admin/categories/{}";
+    public static final String MESSAGE_CATEGORY_NOT_FOUND = "Категория с id=%d не найдена";
+    public static final String MESSAGE_GET_CATEGORIES_BY_IDS = "GET /categories/client with request {}";
+    public static final String MESSAGE_GET_CATEGORY = "GET /categories/{}";
 }
