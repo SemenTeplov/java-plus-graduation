@@ -65,10 +65,4 @@ public class CategoryController {
 
         return ResponseEntity.ok(categoryService.updateCategory(catId, categoryDto));
     }
-
-    @GetMapping("/categories/client")
-    ResponseEntity<List<ResponseCategoryDto>> getCategoriesByIds(@RequestParam List<Long> ids) {
-
-        return ResponseEntity.ok(categoryService.getCategoriesByIds(ids));
-    }
 }

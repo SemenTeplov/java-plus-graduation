@@ -12,11 +12,12 @@ import main.java.ru.practicum.dto.RequestUpdateCompilationDto;
 import main.java.ru.practicum.dto.ResponseCompilationDto;
 import main.java.ru.practicum.dto.UserShortDto;
 import main.java.ru.practicum.exception.NotFoundCompletion;
-import main.java.ru.practicum.externel.CategoryClient;
 import main.java.ru.practicum.externel.UserClient;
+import main.java.ru.practicum.mapper.CategoryMapper;
 import main.java.ru.practicum.mapper.CompilationMapper;
 import main.java.ru.practicum.mapper.EventMapper;
 import main.java.ru.practicum.persistence.entity.Compilation;
+import main.java.ru.practicum.persistence.repository.CategoryRepository;
 import main.java.ru.practicum.persistence.repository.CompilationRepository;
 
 import main.java.ru.practicum.persistence.repository.EventRepository;
@@ -40,9 +41,11 @@ public class CompilationServerImpl implements CompilationServer {
 
     private final CompilationRepository compilationRepository;
 
+    private final CategoryRepository categoryRepository;
+
     private final CompilationMapper compilationMapper;
 
-    private final CategoryClient categoryClient;
+    private final CategoryMapper categoryMapper;
 
     private final UserClient userClient;
 
@@ -142,7 +145,8 @@ public class CompilationServerImpl implements CompilationServer {
 
     private List<CategoryDto> getCategories(Long[] categoryIds) {
 
-        return categoryClient.getCategoriesByIds(Arrays.stream(categoryIds).toList()).getBody();
+        return categoryRepository.getCategoriesByIds(categoryIds).stream()
+                .map(categoryMapper::toCategoryDto).toList();
     }
 
     private List<UserShortDto> getUsers(Long[] initiatorIds) {

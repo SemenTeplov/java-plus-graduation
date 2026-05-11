@@ -1,5 +1,6 @@
 package main.java.ru.practicum.mapper;
 
+import main.java.ru.practicum.dto.CategoryDto;
 import main.java.ru.practicum.dto.RequestCategoryDto;
 import main.java.ru.practicum.dto.ResponseCategoryDto;
 import main.java.ru.practicum.persistence.entity.Category;
@@ -19,5 +20,7 @@ public interface CategoryMapper {
     @Mapping(target = "id", ignore = true)
     Category toCategory(RequestCategoryDto newCategoryDto);
 
-    ResponseCategoryDto toCategoryDto(Category category);
+    CategoryDto toCategoryDto(Category category);
+
+    ResponseCategoryDto toRequestCategoryDto(Category category);
 }

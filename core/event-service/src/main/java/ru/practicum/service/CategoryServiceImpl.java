@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ForbiddenException(String.format(Exceptions.EXCEPTION_CONFLICT_CATEGORY, requestCategoryDto.name()));
         }
 
-        return categoryMapper.toCategoryDto(categoryRepository.save(categoryMapper.toCategory(requestCategoryDto)));
+        return categoryMapper.toRequestCategoryDto(categoryRepository.save(categoryMapper.toCategory(requestCategoryDto)));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         category.setName(categoryDto.name());
 
-        return categoryMapper.toCategoryDto(categoryRepository.save(category));
+        return categoryMapper.toRequestCategoryDto(categoryRepository.save(category));
     }
 
     @Override
@@ -71,13 +71,13 @@ public class CategoryServiceImpl implements CategoryService {
         log.info(Messages.MESSAGE_GET_CATEGORIES);
 
         return categoryRepository.findAll(PageRequest.of(from / size, size)).stream()
-                .map(categoryMapper::toCategoryDto).collect(Collectors.toList());
+                .map(categoryMapper::toRequestCategoryDto).collect(Collectors.toList());
     }
 
     @Override
     public ResponseCategoryDto getCategoryById(Long categoryId) {
 
-        return categoryMapper.toCategoryDto(getCategory(categoryId));
+        return categoryMapper.toRequestCategoryDto(getCategory(categoryId));
     }
 
     @Override
@@ -94,15 +94,6 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         categoryRepository.deleteById(categoryId);
-    }
-
-    @Override
-    public List<ResponseCategoryDto> getCategoriesByIds(List<Long> ids) {
-
-        log.info(Messages.MESSAGE_GET_CATEGORIES_BY_IDS, ids);
-
-        return categoryRepository.getCategoriesByIds(ids.toArray(Long[]::new)).stream()
-                .map(categoryMapper::toCategoryDto).toList();
     }
 
     private Category getCategory(Long categoryId) {

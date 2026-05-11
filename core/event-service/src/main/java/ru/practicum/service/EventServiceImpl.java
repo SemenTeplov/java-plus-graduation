@@ -27,14 +27,15 @@ import main.java.ru.practicum.exception.MismatchDateException;
 import main.java.ru.practicum.exception.NotFoundException;
 import main.java.ru.practicum.exception.NotMeetRulesEditionException;
 import main.java.ru.practicum.exception.NotRespondStatusException;
-import main.java.ru.practicum.externel.CategoryClient;
 import main.java.ru.practicum.externel.RequestClient;
 import main.java.ru.practicum.externel.StatsClient;
 import main.java.ru.practicum.externel.UserClient;
+import main.java.ru.practicum.mapper.CategoryMapper;
 import main.java.ru.practicum.mapper.EventMapper;
 import main.java.ru.practicum.mapper.LocationMapper;
 import main.java.ru.practicum.persistence.entity.Event;
 import main.java.ru.practicum.persistence.entity.Location;
+import main.java.ru.practicum.persistence.repository.CategoryRepository;
 import main.java.ru.practicum.persistence.repository.EventRepository;
 import main.java.ru.practicum.persistence.repository.LocationRepository;
 import main.java.ru.practicum.persistence.status.State;
@@ -65,13 +66,15 @@ public class EventServiceImpl implements EventService {
 
     private final LocationRepository locationRepository;
 
+    private final CategoryRepository categoryRepository;
+
     private final EventMapper eventMapper;
 
     private final LocationMapper locationMapper;
 
-    private final UserClient userClient;
+    private final CategoryMapper categoryMapper;
 
-    private final CategoryClient categoryClient;
+    private final UserClient userClient;
 
     private final RequestClient requestClient;
 
@@ -235,8 +238,10 @@ public class EventServiceImpl implements EventService {
         Map<Long, UserShortDto> users = userClient.getUsersById(events.map(Event::getInitiator).toList()).getBody()
                 .stream().collect(Collectors.toMap(UserShortDto::id, u -> u));
 
-        Map<Long, CategoryDto> category = categoryClient.getCategoriesByIds(events.map(Event::getCategory).toList()).getBody()
-                .stream().collect(Collectors.toMap(CategoryDto::id, c -> c));
+        Map<Long, CategoryDto> category = categoryRepository
+                .getCategoriesByIds(events.map(Event::getCategory).toList().toArray(Long[]::new)).stream()
+                .map(categoryMapper::toCategoryDto)
+                .collect(Collectors.toMap(CategoryDto::id, c -> c));
 
         Map<Long, Location> location = locationRepository.findAllById(events.map(Event::getLocation).toList())
                 .stream().collect(Collectors.toMap(Location::getId, l -> l));
@@ -386,7 +391,8 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND_USER, event.getInitiator()));
         }
 
-        CategoryDto category = categoryClient.getCategory(event.getCategory()).getBody();
+        CategoryDto category = categoryMapper.toCategoryDto(categoryRepository.findById(event.getCategory()).orElseThrow(() ->
+                new NotFoundException(String.format(Messages.MESSAGE_CATEGORY_NOT_FOUND, event.getCategory()))));
 
         if (category == null) {
             throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND));
@@ -409,7 +415,8 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND_USER, event.getInitiator()));
         }
 
-        CategoryDto category = categoryClient.getCategory(event.getCategory()).getBody();
+        CategoryDto category = categoryMapper.toCategoryDto(categoryRepository.findById(event.getCategory()).orElseThrow(() ->
+                new NotFoundException(String.format(Messages.MESSAGE_CATEGORY_NOT_FOUND, event.getCategory()))));
 
         if (category == null) {
             throw new NotFoundException(String.format(Exceptions.EXCEPTION_NOT_FOUND));
