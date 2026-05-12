@@ -1,24 +1,34 @@
-package main.dto;
+package main.java.ru.practicum.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import constant.Values;
 
+import jakarta.validation.constraints.NotBlank;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ExceptionDto {
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class EndpointHitDto {
+    @NotBlank
+    String app;
 
-    String message;
+    @NotBlank
+    String uri;
 
-    Integer code;
+    @NotBlank
+    String ip;
 
     @JsonFormat(pattern = Values.DATE_TIME_PATTERN)
     LocalDateTime timestamp;
