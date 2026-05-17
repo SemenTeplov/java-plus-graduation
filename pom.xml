@@ -16,8 +16,8 @@
 	<modules>
 		<module>infra</module>
 		<module>stats</module>
-		<module>core</module>
 		<module>telemetry</module>
+		<module>core</module>
 	</modules>
 
 	<groupId>ru.practicum</groupId>
