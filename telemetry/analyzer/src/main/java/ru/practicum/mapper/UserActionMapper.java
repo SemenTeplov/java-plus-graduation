@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public interface UserActionMapper {
 
     @Mapping(target = "userActionId", source = "user", qualifiedByName = "toUserActionId")
-    @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(timestamp))")
+    @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(user.getTimestamp()))")
     UserAction toUserAction(UserActionAvro user);
 
     @Named("toUserActionId")
