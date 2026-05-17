@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KafkaConfig {
 
-    @Value("${collector.kafka.bootstrap-servers}")
+    @Value("${kafka.bootstrap-servers}")
     private String server;
 
     @Bean
