@@ -6,9 +6,9 @@ kafka:
   topics:
     user: stats.user-actions.v1
 grpc:
-  collector:
+  server:
     port: 0
-  analyzer:
+  collector:
     address: 'discovery:///collector'
     enableKeepAlive: true
     keepAliveWithoutCalls: true
