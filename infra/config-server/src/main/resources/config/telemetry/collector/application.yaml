@@ -10,3 +10,8 @@ grpc:
   server:
     port: 0
     enable-detailed-health-checks: true
+
+eureka:
+  instance:
+    metadata-map:
+      grpc-port: ${grpc.server.port}
