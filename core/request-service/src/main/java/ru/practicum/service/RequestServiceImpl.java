@@ -57,6 +57,13 @@ public class RequestServiceImpl implements RequestService {
 
         log.info(Messages.MESSAGE_ADDED_REQUEST, request.getId(), request.getStatus());
 
+        clientController.collectUserAction(UserActionProto
+                .newBuilder()
+                .setUserId(Math.toIntExact(userId))
+                .setEventId(Math.toIntExact(eventId))
+                .setActionType(ActionTypeProto.ACTION_REGISTER)
+                .build());
+
         return requestMapper.toParticipationRequestDto(requestRepository.save(request));
     }
 
@@ -126,19 +133,5 @@ public class RequestServiceImpl implements RequestService {
 
         return requestRepository.getRequestsByEventId(eventId).stream()
                 .map(requestMapper::toParticipationRequestDto).toList();
-    }
-
-    @Override
-    public void sendRegistrationUser(Long userId) {
-
-        requestRepository.getRequestsByUserId(userId)
-                .forEach(i -> {
-                    clientController.collectUserAction(UserActionProto
-                            .newBuilder()
-                            .setUserId(Math.toIntExact(userId))
-                            .setEventId(Math.toIntExact(i.getEvent()))
-                            .setActionType(ActionTypeProto.ACTION_REGISTER)
-                            .build());
-                });
     }
 }
