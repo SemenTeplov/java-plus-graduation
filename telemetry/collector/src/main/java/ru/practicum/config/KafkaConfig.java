@@ -1,6 +1,6 @@
 package main.java.ru.practicum.config;
 
-import ru.practicum.kafka.serializer.GeneralAvroSerializer;
+import kafka.serializer.GeneralAvroSerializer;
 
 import lombok.RequiredArgsConstructor;
 

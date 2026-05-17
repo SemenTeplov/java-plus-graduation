@@ -47,7 +47,7 @@
                             <goal>idl-protocol</goal>
                         </goals>
                         <configuration>
-                            <sourceDirectory>${project.basedir}/ru.practicum/ewm/stats/avro/</sourceDirectory>
+                            <sourceDirectory>ru.practicum/src/stats/avro/</sourceDirectory>
                             <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
                             <stringType>String</stringType>
                         </configuration>
