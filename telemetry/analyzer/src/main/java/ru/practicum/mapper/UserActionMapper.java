@@ -13,6 +13,7 @@ import org.mapstruct.ReportingPolicy;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Mapper(componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
@@ -21,13 +22,13 @@ import java.time.LocalDateTime;
 public interface UserActionMapper {
 
     @Mapping(target = "userActionId", source = "user", qualifiedByName = "toUserActionId")
-    @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(user.getTimestamp()))")
+    @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(user.getTimestamp(), ZoneId.of(\"Europe/Moscow\")))")
     UserAction toUserAction(UserActionAvro user);
 
     @Named("toUserActionId")
     default UserActionId toUserActionId(UserActionAvro user) {
 
-        if (user == null) {
+        if (user.getTimestamp() == null) {
             return null;
         }
 

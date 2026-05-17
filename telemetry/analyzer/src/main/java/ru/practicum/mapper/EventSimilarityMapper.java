@@ -18,7 +18,7 @@ import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface EventSimilarityMapper {
 
-    @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(event.getTimestamp()))")
+    @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(event.getTimestamp(), ZoneId.of(\"Europe/Moscow\")))")
     @Mapping(target = "eventSimilarityId", source = "event", qualifiedByName = "toEventSimilarityId")
     EventSimilarity toEventSimilarity(EventSimilarityAvro event);
 
