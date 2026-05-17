@@ -11,14 +11,14 @@ import org.springframework.kafka.config.TopicBuilder;
 public class KafkaTopicConfig {
 
     @Bean
-    public NewTopic eventConsumerTopic(@Value("${aggregator.kafka.topics.events}") String topic) {
+    public NewTopic eventConsumerTopic(@Value("${kafka.topics.events}") String topic) {
         return TopicBuilder
                 .name(topic)
                 .build();
     }
 
     @Bean
-    public NewTopic userConsumerTopic(@Value("${aggregator.kafka.topics.user}") String topic) {
+    public NewTopic userConsumerTopic(@Value("${kafka.topics.user}") String topic) {
         return TopicBuilder
                 .name(topic)
                 .build();

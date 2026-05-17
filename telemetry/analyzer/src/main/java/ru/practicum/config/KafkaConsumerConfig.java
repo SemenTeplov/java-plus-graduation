@@ -23,19 +23,19 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConsumerConfig {
-    @Value("${aggregator.kafka.bootstrap-servers}")
+    @Value("${kafka.bootstrap-servers}")
     private String server;
 
-    @Value("${aggregator.kafka.offset.rest-config}")
+    @Value("${kafka.offset.rest-config}")
     private String offsetRest;
 
-    @Value("${aggregator.kafka.consumer.session-timeout-ms}")
+    @Value("${kafka.consumer.session-timeout-ms}")
     private String sessionTimeout;
 
-    @Value("${aggregator.kafka.consumer.heartbeat-interval-ms}")
+    @Value("${kafka.consumer.heartbeat-interval-ms}")
     private String heartbeatInterval;
 
-    @Value("${aggregator.kafka.consumer.enable-auto-commit}")
+    @Value("${kafka.consumer.enable-auto-commit}")
     private Boolean autoCommit;
 
     @Bean

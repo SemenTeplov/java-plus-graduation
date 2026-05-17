@@ -13,7 +13,7 @@
 
     <properties>
         <apache.kafka.version>3.6.1</apache.kafka.version>
-        <grpc-service.version>2.15.0.RELEASE</grpc-service.version>
+        <grpc-service.version>3.1.0.RELEASE</grpc-service.version>
         <protoc-gen-grpc.version>1.79.0</protoc-gen-grpc.version>
         <proto-schemas.version>0.0.1-SNAPSHOT</proto-schemas.version>
         <avro-schemas.version>0.0.1-SNAPSHOT</avro-schemas.version>

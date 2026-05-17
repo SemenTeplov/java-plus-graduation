@@ -15,7 +15,7 @@
         <apache.kafka.version>3.6.1</apache.kafka.version>
         <grpc.client.starter.version>3.1.0.RELEASE</grpc.client.starter.version>
         <grpc.client.autoconfigure.version>2.15.0.RELEASE</grpc.client.autoconfigure.version>
-        <grpc-service.version>2.15.0.RELEASE</grpc-service.version>
+        <grpc-service.version>3.1.0.RELEASE</grpc-service.version>
         <protoc-gen-grpc.version>1.79.0</protoc-gen-grpc.version>
         <proto-schemas.version>0.0.1-SNAPSHOT</proto-schemas.version>
         <avro-schemas.version>0.0.1-SNAPSHOT</avro-schemas.version>
@@ -61,6 +61,16 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
         <dependency>
