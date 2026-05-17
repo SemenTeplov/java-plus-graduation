@@ -1,6 +1,7 @@
 package main.java.ru.practicum.service;
 
 import com.google.protobuf.Timestamp;
+
 import jakarta.validation.ValidationException;
 
 import lombok.RequiredArgsConstructor;
@@ -175,7 +176,7 @@ public class EventServiceImpl implements EventService {
                 .setActionType(ActionTypeProto.ACTION_VIEW)
                 .setTimestamp(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()).build())
                 .build());
-
+  
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
 
@@ -435,7 +436,7 @@ public class EventServiceImpl implements EventService {
                 .setTimestamp(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()).build())
                 .build());
     }
-
+  
     private ResponseEventFullDto getEventFullDto(Event event, Location location) {
 
         UserShortDto user = userClient.getUserById(event.getInitiator()).getBody();

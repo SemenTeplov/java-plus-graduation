@@ -20,7 +20,6 @@
         <protoc-gen-grpc.version>1.79.0</protoc-gen-grpc.version>
         <grpc-service.version>2.15.0.RELEASE</grpc-service.version>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
