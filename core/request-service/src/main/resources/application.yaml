@@ -5,13 +5,21 @@ spring:
     import: "configserver:"
   cloud:
     config:
-#      fail-fast: true
       retry:
         useRandomPolicy: true
         max-interval: 6000
       discovery:
         enabled: true
         serviceId: config-server
+
+grpc:
+  client:
+    collector:
+      address: 'discovery:///collector'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext
+
   sql:
     init:
       mode: always
