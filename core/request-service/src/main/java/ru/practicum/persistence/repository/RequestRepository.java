@@ -55,5 +55,10 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             """)
     List<Request> getRequestsByEventId(@Param("eventId") Long eventId);
 
+    @Query(nativeQuery = true, value = """
+            SELECT *
+            FROM requests
+            WHERE requester = :userId
+            """)
     List<Request> getRequestsByUserId(@Param("userId") Long userId);
 }
