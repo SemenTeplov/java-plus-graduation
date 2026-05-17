@@ -22,7 +22,7 @@ import java.time.ZoneId;
 public interface UserActionMapper {
 
     @Mapping(target = "userActionId", source = "user", qualifiedByName = "toUserActionId")
-    @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(user.getTimestamp(), ZoneId.of(\"Europe/Moscow\")))")
+    @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(user.getTimestamp(), java.time.ZoneId.of(\"Europe/Moscow\")))")
     UserAction toUserAction(UserActionAvro user);
 
     @Named("toUserActionId")
