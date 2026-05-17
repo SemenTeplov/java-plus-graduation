@@ -12,6 +12,8 @@ import org.mapstruct.ReportingPolicy;
 
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
+import java.time.LocalDateTime;
+
 @Mapper(componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         unmappedTargetPolicy = ReportingPolicy.ERROR,
@@ -19,6 +21,7 @@ import ru.practicum.ewm.stats.avro.UserActionAvro;
 public interface UserActionMapper {
 
     @Mapping(target = "userActionId", source = "user", qualifiedByName = "toUserActionId")
+    @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(timestamp))")
     UserAction toUserAction(UserActionAvro user);
 
     @Named("toUserActionId")
