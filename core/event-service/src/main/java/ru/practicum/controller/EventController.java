@@ -165,7 +165,7 @@ public class EventController {
     ResponseEntity<Void> sendLike(@RequestHeader("X-EWM-USER-ID") Long userId,
                                   @RequestParam("eventId") Long eventId) {
 
-        eventService
+        eventService.sendLike(userId, eventId);
 
         return ResponseEntity.ok().build();
     }
