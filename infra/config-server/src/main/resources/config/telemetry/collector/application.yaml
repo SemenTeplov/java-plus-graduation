@@ -8,8 +8,9 @@ kafka:
 grpc:
   server:
     port: 0
-  collector:
-    address: 'discovery:///collector'
-    enableKeepAlive: true
-    keepAliveWithoutCalls: true
-    negotiationType: plaintext
+  client:
+    collector:
+      address: 'discovery:///collector'
+      enableKeepAlive: true
+      keepAliveWithoutCalls: true
+      negotiationType: plaintext

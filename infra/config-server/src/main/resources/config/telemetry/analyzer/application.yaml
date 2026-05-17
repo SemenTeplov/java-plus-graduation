@@ -18,9 +18,9 @@ kafka:
     retry-backoff-ms: 5000
 
 grpc:
+  server:
+    port: 0
   client:
-    server:
-      port: 0
     analyzer:
       address: 'discovery:///analyzer'
       enableKeepAlive: true
