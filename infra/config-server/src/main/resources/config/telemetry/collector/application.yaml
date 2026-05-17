@@ -9,3 +9,7 @@ kafka:
 grpc:
   server:
     port: 0
+    health:
+      enabled: true
+      reflection:
+        enabled: true
