@@ -1,5 +1,6 @@
 package main.java.ru.practicum.service;
 
+import com.google.protobuf.Timestamp;
 import jakarta.validation.ValidationException;
 
 import lombok.RequiredArgsConstructor;
@@ -44,10 +45,20 @@ import main.java.ru.practicum.specification.EventSpecification;
 import main.java.ru.practicum.persistence.status.StatusRequest;
 import main.java.ru.practicum.persistence.status.Status;
 
+import net.devh.boot.grpc.client.inject.GrpcClient;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import stats.messages.ActionTypeProto;
+import stats.messages.RecommendedEventProto;
+import stats.messages.UserActionProto;
+import stats.messages.UserPredictionsRequestProto;
+import stats.service.collector.RecommendationsControllerGrpc;
+import stats.service.collector.UserActionControllerGrpc;
+
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -81,6 +92,12 @@ public class EventServiceImpl implements EventService {
     private final StatsClient statsClient;
 
     private final EventSpecification eventSpecification;
+
+    @GrpcClient("analyzer")
+    private RecommendationsControllerGrpc.RecommendationsControllerBlockingStub clientAnalyzer;
+
+    @GrpcClient("collector")
+    private UserActionControllerGrpc.UserActionControllerBlockingStub clientController;
 
     @Override
     public ResponseEventFullDto addEvent(Long userId, RequestEventDto newEventDto) {
@@ -148,9 +165,16 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public ResponseEventFullDto getEvent(Long id) {
+    public ResponseEventFullDto getEvent(Long id, Long userId) {
 
         log.info(Messages.MESSAGE_GET_EVENT_BY_ID, id);
+
+        clientController.collectUserAction(UserActionProto.newBuilder()
+                .setEventId(Math.toIntExact(id))
+                .setUserId(Math.toIntExact(userId))
+                .setActionType(ActionTypeProto.ACTION_VIEW)
+                .setTimestamp(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()).build())
+                .build());
 
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
@@ -381,6 +405,35 @@ public class EventServiceImpl implements EventService {
         }
 
         return String.valueOf(Status.CONFIRMED);
+    }
+
+    @Override
+    public List<EventShortDto> getRecommendations(Long userId) {
+
+        RecommendedEventProto proto = clientAnalyzer.getRecommendationsForUser(UserPredictionsRequestProto
+                .newBuilder()
+                .setUserId(Math.toIntExact(userId))
+                .setMaxResults(10)
+                .build());
+
+        List<Event> list = eventRepository.getEventByUserId(userId);
+
+        return list.stream()
+                .filter(i -> i.getId() == proto.getEventId())
+                .map(eventMapper::eventToEventShortDto)
+                .toList();
+    }
+
+    @Override
+    public void sendLike(Long userId, Long eventId) {
+
+        clientController.collectUserAction(UserActionProto
+                .newBuilder()
+                .setEventId(Math.toIntExact(userId))
+                .setUserId(Math.toIntExact(userId))
+                .setActionType(ActionTypeProto.ACTION_LIKE)
+                .setTimestamp(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()).build())
+                .build());
     }
 
     private ResponseEventFullDto getEventFullDto(Event event, Location location) {

@@ -26,7 +26,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,9 +59,10 @@ public class EventController {
     }
 
     @GetMapping("/events/{id}")
-    ResponseEntity<ResponseEventFullDto> getEvent(@PathVariable("id") Long id) {
+    ResponseEntity<ResponseEventFullDto> getEvent(@PathVariable("id") Long id,
+                                                  @RequestHeader("X-EWM-USER-ID") Long userId) {
 
-        return ResponseEntity.ok(eventService.getEvent(id));
+        return ResponseEntity.ok(eventService.getEvent(id, userId));
     }
 
     @GetMapping("/users/{userId}/events/{eventId}/requests")
@@ -149,5 +152,20 @@ public class EventController {
                                      @PathVariable("count") Long count) {
 
         return ResponseEntity.ok(eventService.getStatus(eventId, userId, status, count));
+    }
+
+    @GetMapping("/events/recommendations")
+    ResponseEntity<List<EventShortDto>> getRecommendations(@RequestHeader("X-EWM-USER-ID") Long userId) {
+
+        return ResponseEntity.ok(eventService.getRecommendations(userId));
+    }
+
+    @PutMapping("/events/{eventId}/like")
+    ResponseEntity<Void> sendLike(@RequestHeader("X-EWM-USER-ID") Long userId,
+                                  @RequestParam("eventId") Long eventId) {
+
+        eventService
+
+        return ResponseEntity.ok().build();
     }
 }

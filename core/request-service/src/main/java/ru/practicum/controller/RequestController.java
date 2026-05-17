@@ -80,4 +80,12 @@ public class RequestController {
 
         return ResponseEntity.ok(requestService.getRequestsByEvent(eventId));
     }
+
+    @PostMapping("/users/{userId}/requests")
+    ResponseEntity<Void> sendRegistrationUser(@RequestParam("userId") Long userId) {
+
+        requestService.sendRegistrationUser(userId);
+
+        return ResponseEntity.ok().build();
+    }
 }

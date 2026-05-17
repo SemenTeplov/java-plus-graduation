@@ -16,7 +16,11 @@ import main.java.ru.practicum.persistence.repository.RequestRepository;
 import main.java.ru.practicum.persistence.status.State;
 import main.java.ru.practicum.persistence.status.Status;
 
+import net.devh.boot.grpc.client.inject.GrpcClient;
 import org.springframework.stereotype.Service;
+import stats.messages.ActionTypeProto;
+import stats.messages.UserActionProto;
+import stats.service.collector.UserActionControllerGrpc;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +37,9 @@ public class RequestServiceImpl implements RequestService {
     private final UserClient userClient;
 
     private final EventClient eventClient;
+
+    @GrpcClient("collector")
+    private UserActionControllerGrpc.UserActionControllerBlockingStub clientController;
 
     @Override
     public ParticipationRequestDto addRequest(Long userId, Long eventId) {
@@ -119,5 +126,19 @@ public class RequestServiceImpl implements RequestService {
 
         return requestRepository.getRequestsByEventId(eventId).stream()
                 .map(requestMapper::toParticipationRequestDto).toList();
+    }
+
+    @Override
+    public void sendRegistrationUser(Long userId) {
+
+        requestRepository.getRequestsByUserId(userId)
+                .forEach(i -> {
+                    clientController.collectUserAction(UserActionProto
+                            .newBuilder()
+                            .setUserId(Math.toIntExact(userId))
+                            .setEventId(Math.toIntExact(i.getEvent()))
+                            .setActionType(ActionTypeProto.ACTION_REGISTER)
+                            .build());
+                });
     }
 }

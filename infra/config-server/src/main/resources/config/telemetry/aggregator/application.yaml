@@ -1,0 +1,19 @@
+server:
+  port: 0
+
+kafka:
+  bootstrap-servers: localhost:9092
+  topics:
+    user: stats.user-actions.v1
+    events: stats.events-similarity.v1
+  offset:
+    rest-config: latest
+  consumer:
+    session-timeout-ms: 30000
+    heartbeat-interval-ms: 10000
+    enable-auto-commit: false
+
+spring:
+  kafka:
+    listener:
+      ack-mode: MANUAL_IMMEDIATE

@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS events (
     confirmed_requests INT,
     title TEXT NOT NULL,
     state VARCHAR(10),
-    views BIGINT DEFAULT 0
+    rating DECIMAL(10, 2) DEFAULT 0
 );
 
 DROP TABLE IF EXISTS locations CASCADE;

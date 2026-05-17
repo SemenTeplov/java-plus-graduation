@@ -21,4 +21,6 @@ public interface RequestService {
     List<ParticipationRequestDto> addParticipationRequests(List<ParticipationRequestDto> list);
 
     List<ParticipationRequestDto> getRequestsByEvent(Long eventId);
+
+    void sendRegistrationUser(Long userId);
 }
