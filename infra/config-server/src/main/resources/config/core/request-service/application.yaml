@@ -17,8 +17,8 @@ spring:
 
 grpc:
   client:
-    analyzer:
-      address: 'discovery:///analyzer'
+    collector:
+      address: 'discovery:///collector'
       enableKeepAlive: true
       keepAliveWithoutCalls: true
       negotiationType: plaintext
