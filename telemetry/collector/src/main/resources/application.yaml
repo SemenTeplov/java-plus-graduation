@@ -8,9 +8,9 @@ spring:
       retry:
         useRandomPolicy: true
         max-interval: 6000
-    discovery:
-      enabled: true
-      serviceId: config-server
+      discovery:
+        enabled: true
+        serviceId: config-server
   sql:
     init:
       mode: always
