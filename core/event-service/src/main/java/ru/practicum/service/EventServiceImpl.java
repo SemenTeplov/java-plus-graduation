@@ -180,8 +180,8 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
 
-        if (event.getViews() == 0) {
-            event.setViews(1L);
+        if (event.getRating() == 0) {
+            event.setRating(1.0);
             eventRepository.save(event);
         }
 

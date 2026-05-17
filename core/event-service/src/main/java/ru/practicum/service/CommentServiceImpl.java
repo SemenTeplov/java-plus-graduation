@@ -206,7 +206,7 @@ public class CommentServiceImpl implements CommentService {
 
         assert eventDto != null;
         eventDto.setConfirmedRequests(confirmedRequests);
-        eventDto.setViews(event.getViews() != null ? event.getViews() : 0L);
+        eventDto.setRating(event.getRating() != 0.0 ? event.getRating() : 0.0);
 
         return eventDto;
     }
