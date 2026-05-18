@@ -12,6 +12,7 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic eventConsumerTopic(@Value("${kafka.topics.events}") String topic) {
+
         return TopicBuilder
                 .name(topic)
                 .build();
@@ -19,6 +20,7 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic userConsumerTopic(@Value("${kafka.topics.user}") String topic) {
+
         return TopicBuilder
                 .name(topic)
                 .build();

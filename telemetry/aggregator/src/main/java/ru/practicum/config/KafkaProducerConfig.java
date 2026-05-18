@@ -24,6 +24,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String, EventSimilarityAvro> producerFactory() {
+
         Map<String, Object> configs = new HashMap<>();
 
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
@@ -35,6 +36,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public KafkaTemplate<String, EventSimilarityAvro> kafkaTemplate() {
+
         return new KafkaTemplate<>(producerFactory());
     }
 }

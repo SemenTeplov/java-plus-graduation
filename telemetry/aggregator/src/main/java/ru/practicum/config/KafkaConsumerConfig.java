@@ -25,9 +25,6 @@ public class KafkaConsumerConfig {
     @Value("${kafka.bootstrap-servers}")
     private String server;
 
-    @Value("${kafka.group.user}")
-    private String user;
-
     @Value("${kafka.offset.rest-config}")
     private String offsetRest;
 
@@ -42,6 +39,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, UserActionAvro> eventConsumerFactory() {
+
         Map<String, Object> configs = new HashMap<>();
 
         configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
@@ -57,6 +55,7 @@ public class KafkaConsumerConfig {
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, UserActionAvro> eventConsumer(
             ConsumerFactory<String, UserActionAvro> eventConsumerFactory) {
+
         ConcurrentKafkaListenerContainerFactory<String, UserActionAvro> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(eventConsumerFactory);
