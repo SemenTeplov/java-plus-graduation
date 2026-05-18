@@ -38,8 +38,11 @@ public class KafkaConsumerConfig {
     @Value("${kafka.consumer.enable-auto-commit}")
     private Boolean autoCommit;
 
-    @Value("${kafka.consumer.group-id}")
-    private String groupId;
+    @Value("${kafka.consumer.group-id.analyzer}")
+    private String analyzer;
+
+    @Value("${kafka.consumer.group-id.aggregator}")
+    private String aggregator;
 
     @Bean
     public ConsumerFactory<String, UserActionAvro> userConsumerFactory() {
@@ -47,7 +50,7 @@ public class KafkaConsumerConfig {
         Map<String, Object> configs = consumerConfig();
 
         configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserActionDeserializer.class);
-        configs.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        configs.put(ConsumerConfig.GROUP_ID_CONFIG, aggregator);
 
         return new DefaultKafkaConsumerFactory<>(configs);
     }
@@ -58,6 +61,7 @@ public class KafkaConsumerConfig {
         Map<String, Object> configs = consumerConfig();
 
         configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, EventSimilarityDeserializer.class);
+        configs.put(ConsumerConfig.GROUP_ID_CONFIG, analyzer);
 
         return new DefaultKafkaConsumerFactory<>(configs);
     }

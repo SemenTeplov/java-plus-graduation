@@ -12,7 +12,9 @@ kafka:
     session-timeout-ms: 45000
     heartbeat-interval-ms: 15000
     enable-auto-commit: false
-    group-id: analyzer-user-group
+    group-id:
+      analyzer: analyzer-user-group
+      aggregator: aggregator-user-group
   properties:
     reconnect-backoff-ms: 2000
     reconnect-backoff-max-ms: 60000
