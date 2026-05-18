@@ -1,9 +1,9 @@
 package main.java.ru.practicum.config;
 
 import kafka.serializer.BaseAvroDeserializer;
+import kafka.serializer.UserActionDeserializer;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +46,7 @@ public class KafkaConsumerConfig {
         Map<String, Object> configs = new HashMap<>();
 
         configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
-        configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, UserActionDeserializer.class);
         configs.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
         configs.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, heartbeatInterval);
         configs.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, autoCommit);

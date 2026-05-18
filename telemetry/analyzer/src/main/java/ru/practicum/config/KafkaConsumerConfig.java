@@ -38,12 +38,16 @@ public class KafkaConsumerConfig {
     @Value("${kafka.consumer.enable-auto-commit}")
     private Boolean autoCommit;
 
+    @Value("${kafka.consumer.group-id}")
+    private String groupId;
+
     @Bean
     public ConsumerFactory<String, UserActionAvro> userConsumerFactory() {
 
         Map<String, Object> configs = consumerConfig();
 
         configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserActionDeserializer.class);
+        configs.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
 
         return new DefaultKafkaConsumerFactory<>(configs);
     }
