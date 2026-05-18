@@ -20,7 +20,7 @@ public class UserActionHandlerImpl implements UserActionHandler {
 
     private final Producer<String, SpecificRecordBase> actionProducer;
 
-    @Value("kafka.topics.user")
+    @Value("${kafka.topics.user}")
     private String topic;
 
     @Override
