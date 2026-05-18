@@ -13,6 +13,7 @@ public enum EventStatus {
 
     public static EventStatus fromValue(double value) {
         for (EventStatus status : EventStatus.values()) {
+
             if (status.value == value) {
                 return status;
             }
@@ -23,6 +24,7 @@ public enum EventStatus {
 
     public static double getValue(String value) {
         for (EventStatus status : EventStatus.values()) {
+
             if (status.name().equals(value)) {
                 return status.value;
             }

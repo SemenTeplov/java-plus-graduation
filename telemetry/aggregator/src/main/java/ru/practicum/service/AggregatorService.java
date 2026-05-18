@@ -27,6 +27,7 @@ public class AggregatorService {
     private final Map<Integer, Double> sumWeights;
 
     public AggregatorService() {
+
         this.events = new ConcurrentHashMap<>();
         this.minAccordance = new ConcurrentHashMap<>();
         this.sumWeights = new ConcurrentHashMap<>();
@@ -45,6 +46,8 @@ public class AggregatorService {
             userMap.put(user.getUserId(), EventStatus.getValue(user.getActionType().name()));
 
             for (var entry : events.entrySet()) {
+
+                log.info(Message.PREPARED_EVENT, entry);
 
                 Map<Integer, Double> eventMap = new ConcurrentHashMap<>();
 
@@ -99,6 +102,7 @@ public class AggregatorService {
                                 .setTimestamp(Instant.now())
                                 .build();
                     }))
+                .peek(e -> log.info(Message.TAKE_EVENTS_SIMILARITY, e.getEventA(), e.getEventB(), e.getScore()))
                 .toList());
     }
 
@@ -117,7 +121,7 @@ public class AggregatorService {
 
     private double getMinAccordance(Map.Entry<Integer, Map<Integer, Double>> entry, UserActionAvro user) {
 
-        log.info(Message.SUM);
+        log.info(Message.SUM, entry, user);
 
         double minSum = 0.0;
 
@@ -127,6 +131,8 @@ public class AggregatorService {
                     ? Math.min(EventStatus.getValue(user.getActionType().name()), entry.getValue().get(userId))
                     : entry.getValue().get(userId);
         }
+
+        log.info(Message.SUM_RESULT, minSum);
 
         return minSum;
     }

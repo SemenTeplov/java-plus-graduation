@@ -36,6 +36,8 @@ public class UserActionListener {
 
         if (opExistUser.isEmpty() || !opExistUser.get().equals(userAction)) {
 
+            log.info(Message.SAVE_USER_ACTION, action);
+
             userActionRepository.save(userAction);
         }
 

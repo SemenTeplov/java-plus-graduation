@@ -32,20 +32,23 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     @Override
     public List<RecommendedEventProto> getInteractionsCount(InteractionsCountRequestProto proto) {
 
-        log.info(Message.GET_INTERACTIONS_COUNT, proto);
+        log.info(Message.GET_INTERACTIONS_COUNT, String.format(Message.GET_INTERACTIONS_COUNT_VALUE, proto.getEventId()));
 
         return userActionRepository.getUsersByEventId(proto.getEventId()).stream()
+                .peek(u -> log.info(Message.TAKE_USER_ACTION, u))
                 .map(u -> RecommendedEventProto.newBuilder()
                         .setEventId(Math.toIntExact(u.getUserActionId().getEventId()))
                         .setScore(ActionType.getValue(u.getActionType().name()))
                         .build())
+                .peek(u -> log.info(Message.TAKE_INTERACTION_COUNT,
+                        String.format(Message.TAKE_INTERACTION_COUNT_VALUE, u.getEventId(), u.getScore())))
                 .toList();
     }
 
     @Override
     public List<RecommendedEventProto> getSimilarEvents(SimilarEventsRequestProto proto) {
 
-        log.info(Message.GET_SIMILAR_EVENTS, proto);
+        log.info(Message.GET_SIMILAR_EVENTS, proto.getEventId(), proto.getUserId(), proto.getMaxResults());
 
         List<EventSimilarity> events = eventSimilarityRepository.getEventsByEventId(proto.getEventId());
         List<UserAction> users = userActionRepository.getUsersById(proto.getUserId());
@@ -58,10 +61,12 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                             u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventBId()))))
                 .sorted(Comparator.comparing(EventSimilarity::getScore))
                 .limit(proto.getMaxResults())
+                .peek(u -> log.info(Message.TAKE_EVENT_SIMILARITY, u))
                 .map(e -> RecommendedEventProto.newBuilder()
                         .setEventId(Math.toIntExact(e.getEventSimilarityId().getEventAId()))
                         .setScore(e.getScore())
                         .build())
+                .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS, u.getEventId(), u.getScore()))
                 .toList();
     }
 
@@ -72,19 +77,24 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
         List<UserAction> eventsForUser = userActionRepository.getUsersById(proto.getUserId()).stream()
                 .sorted(Comparator.comparing(UserAction::getTimestampMs))
+                .peek(a -> log.info(Message.GET_USER_ACTION, a))
                 .toList();
 
         if (eventsForUser.isEmpty()) {
+
+            log.info(Message.LIST_EMPTY);
 
             return List.of();
         }
 
         List<UserAction> eventsWithoutUser = userActionRepository.getUsersWithoutId(proto.getUserId()).stream()
                 .sorted(Comparator.comparing(UserAction::getTimestampMs))
+                .peek(u -> log.info(Message.GET_USER_ACTION, u))
                 .toList();
 
         List<EventSimilarity> events = eventSimilarityRepository.getEventsByEventIds(eventsForUser.stream()
                 .map(e -> e.getUserActionId().getEventId())
+                .peek(e -> log.info(Message.TAKE_EVENT_ID, e))
                 .toArray(Long[]::new));
 
         double sumWeight = 0;
@@ -96,6 +106,7 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                             u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventAId())
                             || u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventBId()))
                     .map(EventSimilarity::getScore)
+                    .peek(e -> log.info(Message.TAKE_EVENT_SCORE, e))
                     .findFirst()
                     .orElse(0.0);
         }
@@ -107,9 +118,13 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
         double newScore = sumWeight / coefficient;
 
+        log.info(Message.TAKE_NEW_SCORE, sumWeight, coefficient, newScore);
+
         return eventsWithoutUser.stream().filter(e -> {
 
                     double score = ActionType.getValue(e.getActionType().name());
+
+                    log.info(Message.SCORE_ACCORDING, newScore, score);
 
                     return Math.abs(score - newScore) >= 0.2 || Math.abs(score - newScore) <= 0.2;
                 })
@@ -120,6 +135,7 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                         .setEventId(Math.toIntExact(e.getUserActionId().getEventId()))
                         .setScore(ActionType.getValue(e.getActionType().name()))
                         .build())
+                .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS_FOR_USER, u.getEventId(), u.getScore()))
                 .toList();
     }
 }

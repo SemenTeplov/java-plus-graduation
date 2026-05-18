@@ -36,6 +36,8 @@ public class EventSimilarityListener {
 
         if (opEventSimilarity.isEmpty() || !opEventSimilarity.get().equals(eventSimilarity)) {
 
+            log.info(Message.SAVE_EVENTS_SIMILARITY, event);
+
             eventSimilarityRepository.save(eventSimilarity);
         }
 
