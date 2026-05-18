@@ -23,7 +23,8 @@ public interface UserActionHandler {
                             .setUserId(action.getUserId())
                             .setEventId(action.getEventId())
                             .setActionType(ActionTypeAvro.valueOf(action.getActionType().toString().split("_")[1]))
-                            .setTimestamp(Instant.parse(action.getTimestamp().toString()))
+                            .setTimestamp(Instant
+                                    .ofEpochSecond(action.getTimestamp().getSeconds(), action.getTimestamp().getNanos()))
                             .build());
     }
 }
