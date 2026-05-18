@@ -32,7 +32,7 @@ public class AggregationStarter {
 
     private final KafkaTemplate<String, EventSimilarityAvro> template;
 
-    @Value("${aggregator.kafka.topics.events}")
+    @Value("${kafka.topics.events}")
     private String eventTopic;
 
     @Scheduled(fixedDelay = Values.FIXED_DELAY)
@@ -53,7 +53,7 @@ public class AggregationStarter {
         }
     }
 
-    @KafkaListener(topics = "${aggregator.kafka.topics.user}", containerFactory = Values.EVENT_CONSUMER)
+    @KafkaListener(topics = "${kafka.topics.user}", containerFactory = Values.EVENT_CONSUMER)
     public void handler(UserActionAvro event, Acknowledgment acknowledgment) {
 
         sensors.addIfAbsent(event);
