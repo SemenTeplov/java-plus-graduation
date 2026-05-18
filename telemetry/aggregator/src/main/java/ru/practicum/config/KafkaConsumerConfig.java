@@ -46,12 +46,12 @@ public class KafkaConsumerConfig {
         Map<String, Object> configs = new HashMap<>();
 
         configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
-        configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, UserActionDeserializer.class);
+        configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, String.class);
         configs.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
         configs.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, heartbeatInterval);
         configs.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, autoCommit);
         configs.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, BaseAvroDeserializer.class);
+        configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserActionDeserializer.class);
 
         return new DefaultKafkaConsumerFactory<>(configs);
     }
