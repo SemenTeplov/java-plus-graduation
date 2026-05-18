@@ -16,6 +16,8 @@ import stats.messages.UserPredictionsRequestProto;
 
 import stats.service.collector.RecommendationsControllerGrpc;
 
+import java.util.List;
+
 @GrpcService
 @RequiredArgsConstructor
 public class GrpcController extends RecommendationsControllerGrpc.RecommendationsControllerImplBase {
@@ -28,7 +30,15 @@ public class GrpcController extends RecommendationsControllerGrpc.Recommendation
 
         try {
 
-            recommendationsService.getInteractionsCount(request).forEach(responseObserver::onNext);
+            List<RecommendedEventProto> list = recommendationsService.getInteractionsCount(request);
+
+            if (list == null || list.isEmpty()) {
+
+                responseObserver.onNext(RecommendedEventProto.getDefaultInstance());
+            } else {
+
+                list.forEach(responseObserver::onNext);
+            }
 
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -44,7 +54,15 @@ public class GrpcController extends RecommendationsControllerGrpc.Recommendation
 
         try {
 
-            recommendationsService.getSimilarEvents(request).forEach(responseObserver::onNext);
+            List<RecommendedEventProto> list = recommendationsService.getSimilarEvents(request);
+
+            if (list == null || list.isEmpty()) {
+
+                responseObserver.onNext(RecommendedEventProto.getDefaultInstance());
+            } else {
+
+                list.forEach(responseObserver::onNext);
+            }
 
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -60,7 +78,15 @@ public class GrpcController extends RecommendationsControllerGrpc.Recommendation
 
         try {
 
-            recommendationsService.getRecommendationsForUser(request).forEach(responseObserver::onNext);
+            List<RecommendedEventProto> list = recommendationsService.getRecommendationsForUser(request);
+
+            if (list == null || list.isEmpty()) {
+
+                responseObserver.onNext(RecommendedEventProto.getDefaultInstance());
+            } else {
+
+                list.forEach(responseObserver::onNext);
+            }
 
             responseObserver.onCompleted();
         } catch (Exception e) {
