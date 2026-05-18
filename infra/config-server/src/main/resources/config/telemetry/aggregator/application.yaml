@@ -12,6 +12,7 @@ kafka:
     session-timeout-ms: 30000
     heartbeat-interval-ms: 10000
     enable-auto-commit: false
+    group-id: aggregator-user-group
 
 spring:
   kafka:
