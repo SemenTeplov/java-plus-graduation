@@ -26,7 +26,7 @@ public class EventSimilarityListener {
 
     private final EventSimilarityMapper eventSimilarityMapper;
 
-    @KafkaListener(topics = "${aggregator.kafka.topics.events}", containerFactory = Values.EVENT_CONSUMER)
+    @KafkaListener(topics = "${kafka.topics.events}", containerFactory = Values.EVENT_CONSUMER)
     public void handler(EventSimilarityAvro event, Acknowledgment acknowledgment) {
 
         log.info(Message.GET_EVENTS_SIMILARITY, event);

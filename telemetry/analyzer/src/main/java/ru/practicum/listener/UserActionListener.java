@@ -26,7 +26,7 @@ public class UserActionListener {
 
     private final UserActionMapper userActionMapper;
 
-    @KafkaListener(topics = "${aggregator.kafka.topics.user}", containerFactory = Values.USER_CONSUMER)
+    @KafkaListener(topics = "${kafka.topics.user}", containerFactory = Values.USER_CONSUMER)
     public void handler(UserActionAvro action, Acknowledgment acknowledgment) {
 
         log.info(Message.GET_USER_ACTION, action);
