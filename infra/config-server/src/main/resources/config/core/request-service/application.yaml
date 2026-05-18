@@ -20,5 +20,7 @@ grpc:
     collector:
       address: 'discovery:///collector'
       enableKeepAlive: true
+      keepAliveTime: 60s
+      keepAliveTimeout: 20s
       keepAliveWithoutCalls: true
       negotiationType: plaintext
