@@ -12,11 +12,11 @@ option java_multiple_files = true;
 
 service RecommendationsController {
     rpc GetRecommendationsForUser (stats.messages.UserPredictionsRequestProto)
-        returns (stats.messages.RecommendedEventProto);
+        returns (stream stats.messages.RecommendedEventProto);
 
     rpc GetSimilarEvents (stats.messages.SimilarEventsRequestProto)
-            returns (stats.messages.RecommendedEventProto);
+            returns (stream stats.messages.RecommendedEventProto);
 
     rpc GetInteractionsCount (stats.messages.InteractionsCountRequestProto)
-                returns (stats.messages.RecommendedEventProto);
+                returns (stream stats.messages.RecommendedEventProto);
 }
