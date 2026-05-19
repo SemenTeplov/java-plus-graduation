@@ -28,6 +28,6 @@ public interface UserActionRepository extends JpaRepository<UserAction, UserActi
     @Query(nativeQuery = true, value = """
             SELECT *
             FROM user_actions
-            WHERE event_id = :id""")
-    List<UserAction> getUsersByEventId(@Param("id") int id);
+            WHERE event_id IN (:id)""")
+    List<UserAction> getUsersByEventId(@Param("id") Integer[] id);
 }

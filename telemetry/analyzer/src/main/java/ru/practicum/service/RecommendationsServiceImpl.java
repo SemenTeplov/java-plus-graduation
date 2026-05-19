@@ -32,9 +32,10 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     @Override
     public List<RecommendedEventProto> getInteractionsCount(InteractionsCountRequestProto proto) {
 
-        log.info(Message.GET_INTERACTIONS_COUNT, String.format(Message.GET_INTERACTIONS_COUNT_VALUE, proto.getEventId()));
+        log.info(Message.GET_INTERACTIONS_COUNT, String.format(Message.GET_INTERACTIONS_COUNT_VALUE, proto.getEventIdList()));
 
-        return userActionRepository.getUsersByEventId(proto.getEventId()).stream()
+        return userActionRepository.getUsersByEventId(proto.getEventIdList().toArray(Integer[]::new))
+                .stream()
                 .peek(u -> log.info(Message.TAKE_USER_ACTION, u))
                 .map(u -> RecommendedEventProto.newBuilder()
                         .setEventId(Math.toIntExact(u.getUserActionId().getEventId()))
