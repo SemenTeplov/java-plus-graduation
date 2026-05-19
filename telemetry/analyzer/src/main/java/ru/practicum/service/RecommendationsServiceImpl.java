@@ -19,6 +19,8 @@ import stats.messages.UserPredictionsRequestProto;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,13 +32,13 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     private final EventSimilarityRepository eventSimilarityRepository;
 
     @Override
-    public List<RecommendedEventProto> getInteractionsCount(InteractionsCountRequestProto proto) {
+    public Set<RecommendedEventProto> getInteractionsCount(InteractionsCountRequestProto proto) {
 
         log.info(Message.GET_INTERACTIONS_COUNT, String.format(Message.GET_INTERACTIONS_COUNT_VALUE, proto.getEventIdList()));
 
         if (proto.getEventIdList().isEmpty()) {
 
-            return List.of();
+            return Set.of();
         }
 
         return userActionRepository.getUsersByEventId(proto.getEventIdList().toArray(Integer[]::new))
@@ -48,11 +50,11 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                         .build())
                 .peek(u -> log.info(Message.TAKE_INTERACTION_COUNT,
                         String.format(Message.TAKE_INTERACTION_COUNT_VALUE, u.getEventId(), u.getScore())))
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     @Override
-    public List<RecommendedEventProto> getSimilarEvents(SimilarEventsRequestProto proto) {
+    public Set<RecommendedEventProto> getSimilarEvents(SimilarEventsRequestProto proto) {
 
         log.info(Message.GET_SIMILAR_EVENTS, proto.getEventId(), proto.getUserId(), proto.getMaxResults());
 
@@ -73,11 +75,11 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                         .setScore(e.getScore())
                         .build())
                 .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS, u.getEventId(), u.getScore()))
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     @Override
-    public List<RecommendedEventProto> getRecommendationsForUser(UserPredictionsRequestProto proto) {
+    public Set<RecommendedEventProto> getRecommendationsForUser(UserPredictionsRequestProto proto) {
 
         log.info(Message.GET_RECOMMENDATIONS, proto);
 
@@ -90,7 +92,7 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
             log.info(Message.LIST_EMPTY);
 
-            return List.of();
+            return Set.of();
         }
 
         List<UserAction> eventsWithoutUser = userActionRepository.getUsersWithoutId(proto.getUserId()).stream()
@@ -142,6 +144,6 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                         .setScore(ActionType.getValue(e.getActionType().name()))
                         .build())
                 .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS_FOR_USER, u.getEventId(), u.getScore()))
-                .toList();
+                .collect(Collectors.toSet());
     }
 }

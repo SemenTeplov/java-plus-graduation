@@ -12,6 +12,9 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Getter
 @Setter
 @Embeddable
@@ -20,7 +23,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode
 @ToString
-public class EventSimilarityId {
+public class EventSimilarityId implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Column(name = "event_a_id", nullable = false)
     Long eventAId;

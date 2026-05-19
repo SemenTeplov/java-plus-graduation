@@ -16,7 +16,7 @@ import stats.messages.UserPredictionsRequestProto;
 
 import stats.service.collector.RecommendationsControllerGrpc;
 
-import java.util.List;
+import java.util.Set;
 
 @GrpcService
 @RequiredArgsConstructor
@@ -30,14 +30,14 @@ public class GrpcController extends RecommendationsControllerGrpc.Recommendation
 
         try {
 
-            List<RecommendedEventProto> list = recommendationsService.getInteractionsCount(request);
+            Set<RecommendedEventProto> set = recommendationsService.getInteractionsCount(request);
 
-            if (list == null || list.isEmpty()) {
+            if (set == null || set.isEmpty()) {
 
                 responseObserver.onNext(RecommendedEventProto.getDefaultInstance());
             } else {
 
-                list.forEach(responseObserver::onNext);
+                set.forEach(responseObserver::onNext);
             }
 
             responseObserver.onCompleted();
@@ -54,14 +54,14 @@ public class GrpcController extends RecommendationsControllerGrpc.Recommendation
 
         try {
 
-            List<RecommendedEventProto> list = recommendationsService.getSimilarEvents(request);
+            Set<RecommendedEventProto> set = recommendationsService.getSimilarEvents(request);
 
-            if (list == null || list.isEmpty()) {
+            if (set == null || set.isEmpty()) {
 
                 responseObserver.onNext(RecommendedEventProto.getDefaultInstance());
             } else {
 
-                list.forEach(responseObserver::onNext);
+                set.forEach(responseObserver::onNext);
             }
 
             responseObserver.onCompleted();
@@ -78,14 +78,14 @@ public class GrpcController extends RecommendationsControllerGrpc.Recommendation
 
         try {
 
-            List<RecommendedEventProto> list = recommendationsService.getRecommendationsForUser(request);
+            Set<RecommendedEventProto> set = recommendationsService.getRecommendationsForUser(request);
 
-            if (list == null || list.isEmpty()) {
+            if (set == null || set.isEmpty()) {
 
                 responseObserver.onNext(RecommendedEventProto.getDefaultInstance());
             } else {
 
-                list.forEach(responseObserver::onNext);
+                set.forEach(responseObserver::onNext);
             }
 
             responseObserver.onCompleted();
