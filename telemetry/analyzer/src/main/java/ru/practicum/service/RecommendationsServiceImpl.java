@@ -34,6 +34,11 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
         log.info(Message.GET_INTERACTIONS_COUNT, String.format(Message.GET_INTERACTIONS_COUNT_VALUE, proto.getEventIdList()));
 
+        if (proto.getEventIdList().isEmpty()) {
+
+            return List.of();
+        }
+
         return userActionRepository.getUsersByEventId(proto.getEventIdList().toArray(Integer[]::new))
                 .stream()
                 .peek(u -> log.info(Message.TAKE_USER_ACTION, u))
