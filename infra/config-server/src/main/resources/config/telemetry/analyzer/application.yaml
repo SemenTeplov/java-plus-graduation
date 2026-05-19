@@ -13,8 +13,8 @@ kafka:
     heartbeat-interval-ms: 15000
     enable-auto-commit: false
     group-id:
-      analyzer: analyzer-user-group
-      aggregator: aggregator-user-group
+      analyzer: analyzer-collector-user-group
+      aggregator: analyzer-aggregator-user-group
   properties:
     reconnect-backoff-ms: 2000
     reconnect-backoff-max-ms: 60000
