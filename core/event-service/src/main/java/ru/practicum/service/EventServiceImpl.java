@@ -415,7 +415,8 @@ public class EventServiceImpl implements EventService {
                 .newBuilder()
                 .setUserId(Math.toIntExact(userId))
                 .setMaxResults(10)
-                .build());
+                .build())
+                .next();
 
         List<Event> list = eventRepository.getEventByUserId(userId);
 
