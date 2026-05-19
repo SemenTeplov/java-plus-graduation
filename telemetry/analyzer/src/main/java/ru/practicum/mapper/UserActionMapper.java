@@ -24,6 +24,12 @@ public interface UserActionMapper {
     @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(user.getTimestamp(), java.time.ZoneId.of(\"Europe/Moscow\")))")
     UserAction toUserAction(UserActionAvro user);
 
+    @Mapping(target = "mergeFrom", ignore = true)
+    @Mapping(target = "clearField", ignore = true)
+    @Mapping(target = "clearOneof", ignore = true)
+    @Mapping(target = "unknownFields", ignore = true)
+    @Mapping(target = "mergeUnknownFields", ignore = true)
+    @Mapping(target = "allFields", ignore = true)
     @Mapping(target = "eventId", expression = "java(java.lang.Math.toIntExact(user.getUserActionId().getEventId()))")
     @Mapping(target = "score", expression = "java(main.java.ru.practicum.persistence.status.ActionType.getValue(user.getActionType().name()))")
     RecommendedEventProto toRecommendedEventProto(UserAction user);

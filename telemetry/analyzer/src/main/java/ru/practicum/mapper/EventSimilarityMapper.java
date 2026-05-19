@@ -23,6 +23,12 @@ public interface EventSimilarityMapper {
     @Mapping(target = "eventSimilarityId", source = "event", qualifiedByName = "toEventSimilarityId")
     EventSimilarity toEventSimilarity(EventSimilarityAvro event);
 
+    @Mapping(target = "mergeFrom", ignore = true)
+    @Mapping(target = "clearField", ignore = true)
+    @Mapping(target = "clearOneof", ignore = true)
+    @Mapping(target = "unknownFields", ignore = true)
+    @Mapping(target = "mergeUnknownFields", ignore = true)
+    @Mapping(target = "allFields", ignore = true)
     @Mapping(target = "eventId", expression = "java(java.lang.Math.toIntExact(event.getEventSimilarityId().getEventAId()))")
     RecommendedEventProto toRecommendedEventProto(EventSimilarity event);
 
