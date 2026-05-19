@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import main.java.ru.practicum.constant.Message;
+import main.java.ru.practicum.mapper.EventSimilarityMapper;
+import main.java.ru.practicum.mapper.UserActionMapper;
 import main.java.ru.practicum.persistence.model.EventSimilarity;
 import main.java.ru.practicum.persistence.model.UserAction;
 import main.java.ru.practicum.persistence.repository.EventSimilarityRepository;
@@ -31,6 +33,10 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
     private final EventSimilarityRepository eventSimilarityRepository;
 
+    private final UserActionMapper userActionMapper;
+
+    private final EventSimilarityMapper eventSimilarityMapper;
+
     @Override
     public Set<RecommendedEventProto> getInteractionsCount(InteractionsCountRequestProto proto) {
 
@@ -44,10 +50,13 @@ public class RecommendationsServiceImpl implements RecommendationsService {
         return userActionRepository.getUsersByEventId(proto.getEventIdList().toArray(Integer[]::new))
                 .stream()
                 .peek(u -> log.info(Message.TAKE_USER_ACTION, u))
+                .collect(Collectors.toMap(u ->
+                                u.getUserActionId().getEventId(),
+                        u -> ActionType.getValue(u.getActionType().name()),
+                                Double::sum)).entrySet().stream()
                 .map(u -> RecommendedEventProto.newBuilder()
-                        .setEventId(Math.toIntExact(u.getUserActionId().getEventId()))
-                        .setScore(ActionType.getValue(u.getActionType().name()))
-                        .build())
+                        .setEventId(Math.toIntExact(u.getKey()))
+                        .setScore(u.getValue()).build())
                 .peek(u -> log.info(Message.TAKE_INTERACTION_COUNT,
                         String.format(Message.TAKE_INTERACTION_COUNT_VALUE, u.getEventId(), u.getScore())))
                 .collect(Collectors.toSet());
@@ -70,10 +79,7 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                 .sorted(Comparator.comparing(EventSimilarity::getScore))
                 .limit(proto.getMaxResults())
                 .peek(u -> log.info(Message.TAKE_EVENT_SIMILARITY, u))
-                .map(e -> RecommendedEventProto.newBuilder()
-                        .setEventId(Math.toIntExact(e.getEventSimilarityId().getEventAId()))
-                        .setScore(e.getScore())
-                        .build())
+                .map(eventSimilarityMapper::toRecommendedEventProto)
                 .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS, u.getEventId(), u.getScore()))
                 .collect(Collectors.toSet());
     }
@@ -139,10 +145,7 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                 .sorted((u1, u2) ->
                         (int) (ActionType.getValue(u1.getActionType().name()) -
                         ActionType.getValue(u2.getActionType().name())))
-                .map(e -> RecommendedEventProto.newBuilder()
-                        .setEventId(Math.toIntExact(e.getUserActionId().getEventId()))
-                        .setScore(ActionType.getValue(e.getActionType().name()))
-                        .build())
+                .map(userActionMapper::toRecommendedEventProto)
                 .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS_FOR_USER, u.getEventId(), u.getScore()))
                 .collect(Collectors.toSet());
     }

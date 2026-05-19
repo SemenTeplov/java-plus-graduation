@@ -11,6 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
+import stats.messages.RecommendedEventProto;
 
 @Mapper(componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
@@ -21,6 +22,9 @@ public interface EventSimilarityMapper {
     @Mapping(target = "timestampMs", expression = "java(java.time.LocalDateTime.ofInstant(event.getTimestamp(), java.time.ZoneId.of(\"Europe/Moscow\")))")
     @Mapping(target = "eventSimilarityId", source = "event", qualifiedByName = "toEventSimilarityId")
     EventSimilarity toEventSimilarity(EventSimilarityAvro event);
+
+    @Mapping(target = "eventId", expression = "java(java.lang.Math.toIntExact(event.getEventSimilarityId().getEventAId()))")
+    RecommendedEventProto toRecommendedEventProto(EventSimilarity event);
 
     @Named("toEventSimilarityId")
     default EventSimilarityId toEventSimilarityId(EventSimilarityAvro event) {
