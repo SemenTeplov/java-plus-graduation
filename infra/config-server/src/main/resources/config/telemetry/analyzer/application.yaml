@@ -11,7 +11,7 @@ kafka:
   consumer:
     session-timeout-ms: 45000
     heartbeat-interval-ms: 15000
-    fetch-max-bytes: 10485760
+    fetch-max-bytes: 2000000
     enable-auto-commit: false
     group-id:
       analyzer: analyzer-collector-user-group
