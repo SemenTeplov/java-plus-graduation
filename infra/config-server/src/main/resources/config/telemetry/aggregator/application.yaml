@@ -13,6 +13,12 @@ kafka:
     heartbeat-interval-ms: 10000
     enable-auto-commit: false
     group-id: aggregator-user-group
+  producer:
+    acks-config: all
+    retries-config: 3
+    retry-backoff: 100
+    enable-idempotence: true
+    max-connection: 5
 
 spring:
   kafka:
