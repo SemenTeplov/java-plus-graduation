@@ -11,7 +11,7 @@ kafka:
   consumer:
     session-timeout-ms: 30000
     heartbeat-interval-ms: 15000
-    interval-ms: 150000
+    interval-ms: 1500
     enable-auto-commit: false
     group-id:
       analyzer: analyzer-collector-user-group
