@@ -39,16 +39,13 @@ public class Event {
 
             User owner = users.get(user.getId());
 
-            if (owner.getGrade() < user.getGrade()) {
-
-                sum = -owner.getGrade();
-                owner.set(user.getGrade());
-                sum = +owner.getGrade();
-            }
+            sum -= owner.getGrade();
+            owner.set(user.getGrade());
+            sum += owner.getGrade();
         } else {
 
             users.put(user.getId(), user);
-            sum =+ user.getGrade();
+            sum += user.getGrade();
         }
 
         log.info(Message.SUM_WEIGHT, sum);
