@@ -3,10 +3,13 @@ package main.java.ru.practicum.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
+import main.java.ru.practicum.constant.Message;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Getter
 @ToString
 @EqualsAndHashCode(of = {"id"})
@@ -39,12 +42,13 @@ public class Event {
             sum =- owner.getGrade();
             owner.set(user.getGrade());
             sum =+ owner.getGrade();
-
         } else {
 
             users.put(user.getId(), user);
             sum =+ user.getGrade();
         }
+
+        log.info(Message.SUM_WEIGHT, sum);
     }
 
     public double getSimilarity(Event other) {
@@ -52,10 +56,15 @@ public class Event {
         double minSum = this.users.keySet().stream()
                 .filter(k -> other.getUsers().containsKey(k))
                 .map(k -> Math.min(this.users.get(k).getGrade(), other.getUsers().get(k).getGrade()))
+                .peek(g -> log.info(Message.SUM_RESULT, g, this.id, other.getId()))
                 .reduce((Double::sum))
                 .orElse(0.0);
 
+        log.info(Message.MIN_ACCORDING, minSum);
+
         double sumWeight = Math.sqrt(this.sum) * Math.sqrt(other.getSum());
+
+        log.info(Message.SUM_WEIGHT, sumWeight);
 
         return minSum / sumWeight;
     }
