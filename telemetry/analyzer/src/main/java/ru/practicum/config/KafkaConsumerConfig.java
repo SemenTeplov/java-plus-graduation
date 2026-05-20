@@ -19,6 +19,7 @@ import ru.practicum.ewm.stats.avro.UserActionAvro;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Configuration
 @EnableKafka
@@ -59,7 +60,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, EventSimilarityAvro> eventsConsumerFactory() {
+    public ConsumerFactory<String, Set<EventSimilarityAvro>> eventsConsumerFactory() {
 
         Map<String, Object> configs = consumerConfig();
 
@@ -83,10 +84,10 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, EventSimilarityAvro> eventsConsumer(
-            ConsumerFactory<String, EventSimilarityAvro> eventsConsumerFactory) {
+    public ConcurrentKafkaListenerContainerFactory<String, Set<EventSimilarityAvro>> eventsConsumer(
+            ConsumerFactory<String, Set<EventSimilarityAvro>> eventsConsumerFactory) {
 
-        ConcurrentKafkaListenerContainerFactory<String, EventSimilarityAvro> factory =
+        ConcurrentKafkaListenerContainerFactory<String, Set<EventSimilarityAvro>> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(eventsConsumerFactory);
