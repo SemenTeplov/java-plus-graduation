@@ -19,11 +19,14 @@ public class Event {
 
     private final Map<Integer, User> users;
 
+    private final Map<Integer, Boolean> changeUsers;
+
     private double sum;
 
     public Event(int id) {
 
         this.users = new HashMap<>();
+        this.changeUsers = new HashMap<>();
         this.id = id;
     }
 
@@ -40,21 +43,20 @@ public class Event {
             User owner = users.get(user.getId());
 
             sum -= owner.getGrade();
-            owner.set(user.getGrade());
+            changeUsers.put(user.getId(), owner.set(user.getGrade()));
             sum += owner.getGrade();
         } else {
 
             users.put(user.getId(), user);
             sum += user.getGrade();
+            changeUsers.put(user.getId(), true);
         }
-
-        log.info(Message.SUM_WEIGHT, sum);
     }
 
     public double getSimilarity(Event other) {
 
         double minSum = this.users.keySet().stream()
-                .filter(k -> other.getUsers().containsKey(k))
+                .filter(k -> other.getUsers().containsKey(k) && changeUsers.get(k))
                 .map(k -> Math.min(this.users.get(k).getGrade(), other.getUsers().get(k).getGrade()))
                 .peek(g -> log.info(Message.SUM_RESULT, g, this.id, other.getId()))
                 .reduce((Double::sum))
@@ -65,6 +67,8 @@ public class Event {
         double sumWeight = Math.sqrt(this.sum) * Math.sqrt(other.getSum());
 
         log.info(Message.SUM_WEIGHT, sumWeight);
+
+        changeUsers.replaceAll((i, v) -> false);
 
         return minSum / sumWeight;
     }
