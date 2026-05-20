@@ -53,14 +53,17 @@ public class AggregatorService {
                 double similarity = e.getSimilarity(events.get(user.getEventId()));
                 Integer[] eventIds = compareEvents(e.getId(), user.getEventId());
 
-                similarities.add(EventSimilarityAvro.newBuilder()
-                                .setEventA(eventIds[0])
-                                .setEventB(eventIds[1])
-                                .setScore(similarity)
-                                .setTimestamp(Instant.now())
-                        .build());
+                if (similarity != 0) {
 
-                log.info(Message.TAKE_EVENTS_SIMILARITY, eventIds[0], eventIds[1], similarity);
+                    similarities.add(EventSimilarityAvro.newBuilder()
+                            .setEventA(eventIds[0])
+                            .setEventB(eventIds[1])
+                            .setScore(similarity)
+                            .setTimestamp(Instant.now())
+                            .build());
+
+                    log.info(Message.TAKE_EVENTS_SIMILARITY, eventIds[0], eventIds[1], similarity);
+                }
             }
         }
 
