@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
+import java.util.Set;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class AggregationStarter {
 
     private final AggregatorService service;
 
-    private final KafkaTemplate<String, EventSimilarityAvro> template;
+    private final KafkaTemplate<String, Set<EventSimilarityAvro>> template;
 
     @Value("${kafka.topics.events}")
     private String eventTopic;
@@ -33,12 +35,14 @@ public class AggregationStarter {
 
         log.info(Message.GET_USER_ACTION_FROM_KAFKA, Values.EVENT_CONSUMER, event);
 
-        service.updateState(event).ifPresent(list -> {
+//        service.updateState(event).ifPresent(list -> {
+//
+//            log.info(Message.SEND_LIST, list);
+//
+//            list.forEach(userActionAvro -> template.send(eventTopic, userActionAvro));
+//        });
 
-            log.info(Message.SEND_LIST, list);
-
-            list.forEach(userActionAvro -> template.send(eventTopic, userActionAvro));
-        });
+        template.send(eventTopic, service.updateState(event).orElse(Set.of()));
 
         acknowledgment.acknowledge();
     }
