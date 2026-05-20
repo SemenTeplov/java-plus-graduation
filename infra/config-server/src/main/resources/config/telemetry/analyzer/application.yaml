@@ -9,9 +9,9 @@ kafka:
   offset:
     rest-config: earliest
   consumer:
-    session-timeout-ms: 45000
+    session-timeout-ms: 30000
     heartbeat-interval-ms: 15000
-    fetch-max-bytes: 2000
+    interval-ms: 150000
     enable-auto-commit: false
     group-id:
       analyzer: analyzer-collector-user-group

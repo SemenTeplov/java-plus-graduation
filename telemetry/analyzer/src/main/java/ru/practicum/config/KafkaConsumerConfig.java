@@ -44,8 +44,8 @@ public class KafkaConsumerConfig {
     @Value("${kafka.consumer.group-id.aggregator}")
     private String aggregator;
 
-    @Value("${kafka.consumer.fetch-max-bytes}")
-    private String fetchMaxBytes;
+    @Value("${kafka.consumer.interval-ms}")
+    private String interval;
 
     @Bean
     public ConsumerFactory<String, UserActionAvro> userConsumerFactory() {
@@ -104,7 +104,7 @@ public class KafkaConsumerConfig {
         configs.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
         configs.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, heartbeatInterval);
         configs.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, autoCommit);
-        configs.put(ConsumerConfig.FETCH_MAX_BYTES_CONFIG, fetchMaxBytes);
+        configs.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, interval);
 
         return configs;
     }
