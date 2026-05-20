@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -30,7 +31,7 @@ public class EventSimilarityListener {
 
     @Transactional
     @KafkaListener(topics = "${kafka.topics.events}", containerFactory = Values.EVENT_CONSUMER)
-    public void handler(Set<EventSimilarityAvro> events, Acknowledgment acknowledgment) {
+    public void handler(Stream<EventSimilarityAvro> events, Acknowledgment acknowledgment) {
 
         log.info(Message.GET_EVENTS_SIMILARITY, events);
 

@@ -17,6 +17,7 @@ import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -25,7 +26,7 @@ public class AggregationStarter {
 
     private final AggregatorService service;
 
-    private final KafkaTemplate<String, Set<EventSimilarityAvro>> template;
+    private final KafkaTemplate<String, Stream<EventSimilarityAvro>> template;
 
     @Value("${kafka.topics.events}")
     private String eventTopic;
@@ -42,7 +43,7 @@ public class AggregationStarter {
 //            list.forEach(userActionAvro -> template.send(eventTopic, userActionAvro));
 //        });
 
-        template.send(eventTopic, service.updateState(event).orElse(Set.of()));
+        template.send(eventTopic, service.updateState(event).orElse(Set.of()).stream());
 
         acknowledgment.acknowledge();
     }
