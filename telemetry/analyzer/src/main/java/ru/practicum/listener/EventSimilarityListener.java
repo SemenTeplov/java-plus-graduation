@@ -1,5 +1,7 @@
 package main.java.ru.practicum.listener;
 
+import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 
-import java.util.Optional;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,20 +26,17 @@ public class EventSimilarityListener {
 
     private final EventSimilarityMapper eventSimilarityMapper;
 
+    @Transactional
     @KafkaListener(topics = "${kafka.topics.events}", containerFactory = Values.EVENT_CONSUMER)
     public void handler(EventSimilarityAvro event, Acknowledgment acknowledgment) {
 
         log.info(Message.GET_EVENTS_SIMILARITY, event);
 
         EventSimilarity eventSimilarity = eventSimilarityMapper.toEventSimilarity(event);
-        Optional<EventSimilarity> opEventSimilarity = eventSimilarityRepository.findById(eventSimilarity.getEventSimilarityId());
 
-        if (opEventSimilarity.isEmpty() || !opEventSimilarity.get().equals(eventSimilarity)) {
+        log.info(Message.SAVE_EVENTS_SIMILARITY, event);
 
-            log.info(Message.SAVE_EVENTS_SIMILARITY, event);
-
-            eventSimilarityRepository.save(eventSimilarity);
-        }
+        eventSimilarityRepository.save(eventSimilarity);
 
         acknowledgment.acknowledge();
     }

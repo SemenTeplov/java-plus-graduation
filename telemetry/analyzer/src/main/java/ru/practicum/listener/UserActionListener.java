@@ -1,5 +1,7 @@
 package main.java.ru.practicum.listener;
 
+import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
-import java.util.Optional;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,20 +26,17 @@ public class UserActionListener {
 
     private final UserActionMapper userActionMapper;
 
+    @Transactional
     @KafkaListener(topics = "${kafka.topics.user}", containerFactory = Values.USER_CONSUMER)
     public void handler(UserActionAvro action, Acknowledgment acknowledgment) {
 
         log.info(Message.GET_USER_ACTION, action);
 
         UserAction userAction = userActionMapper.toUserAction(action);
-        Optional<UserAction> opExistUser = userActionRepository.findById(userAction.getUserActionId());
 
-        if (opExistUser.isEmpty() || !opExistUser.get().equals(userAction)) {
+        log.info(Message.SAVE_USER_ACTION, action);
 
-            log.info(Message.SAVE_USER_ACTION, action);
-
-            userActionRepository.save(userAction);
-        }
+        userActionRepository.save(userAction);
 
         acknowledgment.acknowledge();
     }
