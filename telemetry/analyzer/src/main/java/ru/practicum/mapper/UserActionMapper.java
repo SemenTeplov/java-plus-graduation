@@ -38,6 +38,7 @@ public interface UserActionMapper {
     default UserActionId toUserActionId(UserActionAvro user) {
 
         if (user.getTimestamp() == null) {
+
             return null;
         }
 

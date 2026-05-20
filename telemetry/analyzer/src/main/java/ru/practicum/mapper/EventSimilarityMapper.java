@@ -11,6 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
+
 import stats.messages.RecommendedEventProto;
 
 @Mapper(componentModel = "spring",

@@ -7,6 +7,7 @@ import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 
 import main.java.ru.practicum.service.RecommendationsService;
+
 import net.devh.boot.grpc.server.service.GrpcService;
 
 import stats.messages.InteractionsCountRequestProto;
