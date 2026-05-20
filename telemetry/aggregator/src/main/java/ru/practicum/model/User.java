@@ -23,29 +23,21 @@ public class User {
         this.set(status);
     }
 
-    public boolean set(double grade) {
+    public void set(double grade) {
 
         if (this.grade < grade) {
 
             this.grade = grade;
-
-            return true;
         }
-
-        return false;
     }
 
-    public boolean set(String status) {
+    public void set(String status) {
 
         double getGrade = EventStatus.getValue(status);
 
         if (this.grade < getGrade) {
 
             this.grade = getGrade;
-
-            return true;
         }
-
-        return false;
     }
 }

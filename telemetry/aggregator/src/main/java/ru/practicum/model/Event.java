@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+
 import main.java.ru.practicum.constant.Message;
 
 import java.util.HashMap;
@@ -19,14 +20,11 @@ public class Event {
 
     private final Map<Integer, User> users;
 
-    private final Map<Integer, Boolean> changeUsers;
-
     private double sum;
 
     public Event(int id) {
 
         this.users = new HashMap<>();
-        this.changeUsers = new HashMap<>();
         this.id = id;
     }
 
@@ -43,20 +41,21 @@ public class Event {
             User owner = users.get(user.getId());
 
             sum -= owner.getGrade();
-            changeUsers.put(user.getId(), owner.set(user.getGrade()));
+            owner.set(user.getGrade());
             sum += owner.getGrade();
         } else {
 
             users.put(user.getId(), user);
             sum += user.getGrade();
-            changeUsers.put(user.getId(), true);
         }
+
+        log.info(Message.SUM_WEIGHT, sum);
     }
 
     public double getSimilarity(Event other) {
 
         double minSum = this.users.keySet().stream()
-                .filter(k -> other.getUsers().containsKey(k) && changeUsers.get(k))
+                .filter(k -> other.getUsers().containsKey(k))
                 .map(k -> Math.min(this.users.get(k).getGrade(), other.getUsers().get(k).getGrade()))
                 .peek(g -> log.info(Message.SUM_RESULT, g, this.id, other.getId()))
                 .reduce((Double::sum))
@@ -67,8 +66,6 @@ public class Event {
         double sumWeight = Math.sqrt(this.sum) * Math.sqrt(other.getSum());
 
         log.info(Message.SUM_WEIGHT, sumWeight);
-
-        changeUsers.replaceAll((i, v) -> false);
 
         return minSum / sumWeight;
     }
