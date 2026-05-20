@@ -14,13 +14,11 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
-
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @Configuration
 @EnableKafka
@@ -61,7 +59,7 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConsumerFactory<String, Stream<EventSimilarityAvro>> eventsConsumerFactory() {
+    public ConsumerFactory<String, EventSimilarityAvro> eventsConsumerFactory() {
 
         Map<String, Object> configs = consumerConfig();
 
@@ -85,10 +83,10 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Stream<EventSimilarityAvro>> eventsConsumer(
-            ConsumerFactory<String, Stream<EventSimilarityAvro>> eventsConsumerFactory) {
+    public ConcurrentKafkaListenerContainerFactory<String, EventSimilarityAvro> eventsConsumer(
+            ConsumerFactory<String, EventSimilarityAvro> eventsConsumerFactory) {
 
-        ConcurrentKafkaListenerContainerFactory<String, Stream<EventSimilarityAvro>> factory =
+        ConcurrentKafkaListenerContainerFactory<String, EventSimilarityAvro> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 
         factory.setConsumerFactory(eventsConsumerFactory);

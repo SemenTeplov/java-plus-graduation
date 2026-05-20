@@ -16,7 +16,6 @@ import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @Configuration
 public class KafkaProducerConfig {
@@ -40,7 +39,7 @@ public class KafkaProducerConfig {
     private String maxConnection;
 
     @Bean
-    public ProducerFactory<String, Stream<EventSimilarityAvro>> producerFactory() {
+    public ProducerFactory<String, EventSimilarityAvro> producerFactory() {
 
         Map<String, Object> configs = new HashMap<>();
 
@@ -52,12 +51,14 @@ public class KafkaProducerConfig {
         configs.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, retryBackoff);
         configs.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, enableIdempotence);
         configs.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxConnection);
+        configs.put(ProducerConfig.BATCH_SIZE_CONFIG, 10);
+        configs.put(ProducerConfig.LINGER_MS_CONFIG, 100);
 
         return new DefaultKafkaProducerFactory<>(configs);
     }
 
     @Bean
-    public KafkaTemplate<String, Stream<EventSimilarityAvro>> kafkaTemplate() {
+    public KafkaTemplate<String, EventSimilarityAvro> kafkaTemplate() {
 
         return new KafkaTemplate<>(producerFactory());
     }
