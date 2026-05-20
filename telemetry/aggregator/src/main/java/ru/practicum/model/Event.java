@@ -12,7 +12,7 @@ import java.util.Map;
 @EqualsAndHashCode(of = {"id"})
 public class Event {
 
-    private int id;
+    private final int id;
 
     private final Map<Integer, User> users;
 
@@ -50,6 +50,7 @@ public class Event {
     public double getSimilarity(Event other) {
 
         double minSum = this.users.keySet().stream()
+                .filter(k -> other.getUsers().containsKey(k))
                 .map(k -> Math.min(this.users.get(k).getGrade(), other.getUsers().get(k).getGrade()))
                 .reduce((Double::sum))
                 .orElse(0.0);
