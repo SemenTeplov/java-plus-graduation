@@ -52,7 +52,7 @@ public class AggregatorService {
 
         for (Event e : events.values()) {
 
-            if (e.getId() != user.getEventId()) {
+            if (e.getId() != user.getEventId() && e.getUsers().containsKey(user.getUserId())) {
 
                 double similarity = e.getSimilarity(events.get(user.getEventId()));
                 Integer[] eventIds = compareEvents(e.getId(), user.getEventId());
