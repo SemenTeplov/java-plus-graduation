@@ -72,7 +72,7 @@ public class AggregatorService {
 
                         log.info(Message.TAKE_EVENTS_SIMILARITY, eventIds[0], eventIds[1], similarity);
 
-                        if (eventsSimilarities.containsKey(eventIds[0])) {
+                        if (!eventsSimilarities.containsKey(eventIds[0])) {
 
                             Map<Integer, Double> map = new HashMap<>();
                             map.put(eventIds[1], similarity);
