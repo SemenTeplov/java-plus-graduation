@@ -7,6 +7,8 @@ import lombok.ToString;
 
 import main.java.ru.practicum.status.EventStatus;
 
+import java.time.Instant;
+
 @Getter
 @ToString
 @EqualsAndHashCode(of = {"id"})
@@ -17,27 +19,31 @@ public class User {
 
     private double grade;
 
-    public User(int id, String status) {
+    private Instant instant;
+
+    public User(int id, String status, Instant instant) {
 
         this.id = id;
-        this.set(status);
+        this.set(status, instant);
     }
 
-    public void set(double grade) {
+    public void set(double grade, Instant instant) {
 
         if (this.grade < grade) {
 
             this.grade = grade;
+            this.instant = instant;
         }
     }
 
-    public void set(String status) {
+    public void set(String status, Instant instant) {
 
         double getGrade = EventStatus.getValue(status);
 
         if (this.grade < getGrade) {
 
             this.grade = getGrade;
+            this.instant = instant;
         }
     }
 }

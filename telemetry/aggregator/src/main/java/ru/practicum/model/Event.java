@@ -41,7 +41,7 @@ public class Event {
             User owner = users.get(user.getId());
 
             sum -= owner.getGrade();
-            owner.set(user.getGrade());
+            owner.set(user.getGrade(), user.getInstant());
             sum += owner.getGrade();
         } else {
 

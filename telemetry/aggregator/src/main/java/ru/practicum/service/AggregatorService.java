@@ -12,7 +12,6 @@ import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
@@ -25,12 +24,9 @@ public class AggregatorService {
 
     private final Map<Integer, Event> events;
 
-//    private final Map<Integer, Map<Integer, Double>> eventsSimilarities;
-
     public AggregatorService() {
 
         this.events = new ConcurrentHashMap<>();
-//        this.eventsSimilarities = new ConcurrentHashMap<>();
     }
 
     public Optional<Set<EventSimilarityAvro>> updateState(UserActionAvro user) {
@@ -42,49 +38,31 @@ public class AggregatorService {
             log.info(Message.EVENT_DON_T_EXIST, user.getEventId());
 
             events.put(user.getEventId(), new Event(user.getEventId(),
-                    new User(user.getUserId(), user.getActionType().name())));
+                    new User(user.getUserId(), user.getActionType().name(), user.getTimestamp())));
         } else {
 
-            events.get(user.getEventId()).add(new User(user.getUserId(), user.getActionType().name()));
+            events.get(user.getEventId()).add(new User(user.getUserId(), user.getActionType().name(), user.getTimestamp()));
         }
 
         Set<EventSimilarityAvro> similarities = new HashSet<>();
 
         for (Event e : events.values()) {
 
-            if (e.getId() != user.getEventId() && e.getUsers().containsKey(user.getUserId())) {
+            if (e.getId() != user.getEventId()
+                    && e.getUsers().containsKey(user.getUserId())
+                    && e.getUsers().get(user.getUserId()).getInstant().equals(user.getTimestamp())) {
 
                 double similarity = e.getSimilarity(events.get(user.getEventId()));
                 Integer[] eventIds = compareEvents(e.getId(), user.getEventId());
 
-//                if (!eventsSimilarities.containsKey(eventIds[0])
-//                        || !eventsSimilarities.get(eventIds[0]).containsKey(eventIds[1])
-//                        || eventsSimilarities.get(eventIds[0]).get(eventIds[1]) != similarity) {
+                similarities.add(EventSimilarityAvro.newBuilder()
+                        .setEventA(eventIds[0])
+                        .setEventB(eventIds[1])
+                        .setScore(similarity)
+                        .setTimestamp(Instant.now())
+                        .build());
 
-//                    if (similarity != 0) {
-
-                        similarities.add(EventSimilarityAvro.newBuilder()
-                                .setEventA(eventIds[0])
-                                .setEventB(eventIds[1])
-                                .setScore(similarity)
-                                .setTimestamp(Instant.now())
-                                .build());
-
-                        log.info(Message.TAKE_EVENTS_SIMILARITY, eventIds[0], eventIds[1], similarity);
-
-//                        if (!eventsSimilarities.containsKey(eventIds[0])) {
-//
-//                            Map<Integer, Double> map = new HashMap<>();
-//                            map.put(eventIds[1], similarity);
-//
-//                            eventsSimilarities.put(eventIds[0], map);
-//                        } else {
-//
-//                            eventsSimilarities.get(eventIds[0]).put(eventIds[1], similarity);
-//
-//                        }
-//                    }
-//                }
+                log.info(Message.TAKE_EVENTS_SIMILARITY, eventIds[0], eventIds[1], similarity);
             }
         }
 
