@@ -25,12 +25,12 @@ public class AggregatorService {
 
     private final Map<Integer, Event> events;
 
-    private final Map<Integer, Map<Integer, Double>> eventsSimilarities;
+//    private final Map<Integer, Map<Integer, Double>> eventsSimilarities;
 
     public AggregatorService() {
 
         this.events = new ConcurrentHashMap<>();
-        this.eventsSimilarities = new ConcurrentHashMap<>();
+//        this.eventsSimilarities = new ConcurrentHashMap<>();
     }
 
     public Optional<Set<EventSimilarityAvro>> updateState(UserActionAvro user) {
@@ -57,11 +57,11 @@ public class AggregatorService {
                 double similarity = e.getSimilarity(events.get(user.getEventId()));
                 Integer[] eventIds = compareEvents(e.getId(), user.getEventId());
 
-                if (!eventsSimilarities.containsKey(eventIds[0])
-                        || !eventsSimilarities.get(eventIds[0]).containsKey(eventIds[1])
-                        || eventsSimilarities.get(eventIds[0]).get(eventIds[1]) != similarity) {
+//                if (!eventsSimilarities.containsKey(eventIds[0])
+//                        || !eventsSimilarities.get(eventIds[0]).containsKey(eventIds[1])
+//                        || eventsSimilarities.get(eventIds[0]).get(eventIds[1]) != similarity) {
 
-                    if (similarity != 0) {
+//                    if (similarity != 0) {
 
                         similarities.add(EventSimilarityAvro.newBuilder()
                                 .setEventA(eventIds[0])
@@ -72,19 +72,19 @@ public class AggregatorService {
 
                         log.info(Message.TAKE_EVENTS_SIMILARITY, eventIds[0], eventIds[1], similarity);
 
-                        if (!eventsSimilarities.containsKey(eventIds[0])) {
-
-                            Map<Integer, Double> map = new HashMap<>();
-                            map.put(eventIds[1], similarity);
-
-                            eventsSimilarities.put(eventIds[0], map);
-                        } else {
-
-                            eventsSimilarities.get(eventIds[0]).put(eventIds[1], similarity);
-
-                        }
-                    }
-                }
+//                        if (!eventsSimilarities.containsKey(eventIds[0])) {
+//
+//                            Map<Integer, Double> map = new HashMap<>();
+//                            map.put(eventIds[1], similarity);
+//
+//                            eventsSimilarities.put(eventIds[0], map);
+//                        } else {
+//
+//                            eventsSimilarities.get(eventIds[0]).put(eventIds[1], similarity);
+//
+//                        }
+//                    }
+//                }
             }
         }
 
