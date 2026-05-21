@@ -51,8 +51,6 @@ public class KafkaProducerConfig {
         configs.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, retryBackoff);
         configs.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, enableIdempotence);
         configs.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxConnection);
-        configs.put(ProducerConfig.BATCH_SIZE_CONFIG, 10);
-        configs.put(ProducerConfig.LINGER_MS_CONFIG, 1000);
 
         return new DefaultKafkaProducerFactory<>(configs);
     }

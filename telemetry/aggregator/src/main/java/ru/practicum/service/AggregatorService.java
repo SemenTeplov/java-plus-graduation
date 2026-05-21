@@ -13,10 +13,12 @@ import ru.practicum.ewm.stats.avro.UserActionAvro;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
 @Service
@@ -24,9 +26,12 @@ public class AggregatorService {
 
     private final Map<Integer, Event> events;
 
+    private final List<Event> eventsForSend;
+
     public AggregatorService() {
 
         this.events = new ConcurrentHashMap<>();
+        this.eventsForSend = new CopyOnWriteArrayList<>();
     }
 
     public Optional<Set<EventSimilarityAvro>> updateState(UserActionAvro user) {
@@ -44,9 +49,11 @@ public class AggregatorService {
             events.get(user.getEventId()).add(new User(user.getUserId(), user.getActionType().name()));
         }
 
+        eventsForSend.add(events.get(user.getEventId()));
+
         Set<EventSimilarityAvro> similarities = new HashSet<>();
 
-        for (Event e : events.values()) {
+        for (Event e : eventsForSend) {
 
             if (e.getId() != user.getEventId()) {
 
@@ -66,6 +73,8 @@ public class AggregatorService {
                 }
             }
         }
+
+        eventsForSend.clear();
 
         return Optional.of(similarities);
     }
