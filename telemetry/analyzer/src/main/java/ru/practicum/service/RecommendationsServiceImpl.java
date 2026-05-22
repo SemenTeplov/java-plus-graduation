@@ -123,55 +123,6 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                 .sorted((u1, u2) -> (int) (u1.getScore() - u2.getScore()))
                 .limit(proto.getMaxResults())
                 .collect(Collectors.toSet());
-
-
-//        List<UserAction> eventsWithoutUser = userActionRepository.getUsersWithoutId(proto.getUserId()).stream()
-//                .sorted(Comparator.comparing(UserAction::getTimestampMs))
-//                .peek(u -> log.info(Message.GET_USER_ACTION, u))
-//                .toList();
-//
-//        List<EventSimilarity> events = eventSimilarityRepository.getEventsByEventIds(eventsForUser.stream()
-//                .map(e -> e.getUserActionId().getEventId())
-//                .peek(e -> log.info(Message.TAKE_EVENT_ID, e))
-//                .toArray(Long[]::new));
-//
-//        double sumWeight = 0;
-//
-//        for (var u : eventsForUser) {
-//
-//            sumWeight += ActionType.getValue(u.getActionType().name()) * events.stream()
-//                    .filter(e ->
-//                            u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventAId())
-//                            || u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventBId()))
-//                    .map(EventSimilarity::getScore)
-//                    .peek(e -> log.info(Message.TAKE_EVENT_SCORE, e))
-//                    .findFirst()
-//                    .orElse(0.0);
-//        }
-//
-//        double coefficient = eventsForUser.stream()
-//                .map(e -> ActionType.getValue(e.getActionType().name()))
-//                .reduce(Double::sum)
-//                .orElse(0.0);
-//
-//        double newScore = sumWeight / coefficient;
-//
-//        log.info(Message.TAKE_NEW_SCORE, sumWeight, coefficient, newScore);
-//
-//        return eventsWithoutUser.stream().filter(e -> {
-//
-//                    double score = ActionType.getValue(e.getActionType().name());
-//
-//                    log.info(Message.SCORE_ACCORDING, newScore, score);
-//
-//                    return Math.abs(score - newScore) >= 0.2 || Math.abs(score - newScore) <= 0.2;
-//                })
-//                .sorted((u1, u2) ->
-//                        (int) (ActionType.getValue(u1.getActionType().name()) -
-//                        ActionType.getValue(u2.getActionType().name())))
-//                .map(userActionMapper::toRecommendedEventProto)
-//                .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS_FOR_USER, u.getEventId(), u.getScore()))
-//                .collect(Collectors.toSet());
     }
 
     private double sumMultiplyGradeAndSimilarity(List<UserAction> userActions,
