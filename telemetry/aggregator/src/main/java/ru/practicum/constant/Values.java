@@ -6,4 +6,5 @@ import lombok.experimental.UtilityClass;
 public class Values {
 
     public static final String EVENT_CONSUMER = "eventConsumer";
+    public static final long FIXED_DELAY = 5000;
 }
