@@ -46,11 +46,11 @@ public class KafkaProducerConfig {
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
         configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GeneralAvroSerializer.class);
-//        configs.put(ProducerConfig.ACKS_CONFIG, acksConfig);
-//        configs.put(ProducerConfig.RETRIES_CONFIG, retriesConfig);
-//        configs.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, retryBackoff);
-//        configs.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, enableIdempotence);
-//        configs.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxConnection);
+        configs.put(ProducerConfig.ACKS_CONFIG, acksConfig);
+        configs.put(ProducerConfig.RETRIES_CONFIG, retriesConfig);
+        configs.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, retryBackoff);
+        configs.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, enableIdempotence);
+        configs.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, maxConnection);
 
         return new DefaultKafkaProducerFactory<>(configs);
     }

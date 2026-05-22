@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
+import java.util.concurrent.TimeUnit;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -37,7 +39,15 @@ public class AggregationStarter {
 
             log.info(Message.SEND_LIST, list);
 
-            list.forEach(userActionAvro -> template.send(eventTopic, userActionAvro));
+            list.forEach(userActionAvro -> {
+                try {
+
+                    template.send(eventTopic, userActionAvro).get(5, TimeUnit.SECONDS);
+                } catch (Exception e) {
+
+                    throw new RuntimeException(e);
+                }
+            });
         });
 
         acknowledgment.acknowledge();
