@@ -42,7 +42,7 @@ public class AggregationStarter {
             list.forEach(userActionAvro -> {
                 try {
 
-                    template.send(eventTopic, userActionAvro).get(1, TimeUnit.SECONDS);
+                    template.send(eventTopic, userActionAvro).get(100, TimeUnit.MILLISECONDS);
                 } catch (Exception e) {
 
                     throw new RuntimeException(e);
