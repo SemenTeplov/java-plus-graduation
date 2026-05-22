@@ -89,64 +89,127 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
         log.info(Message.GET_RECOMMENDATIONS, proto);
 
-        List<UserAction> eventsForUser = userActionRepository.getUsersById(proto.getUserId()).stream()
-                .sorted(Comparator.comparing(UserAction::getTimestampMs))
+        List<UserAction> userActions = userActionRepository.getUsersById(proto.getUserId()).stream()
                 .peek(a -> log.info(Message.GET_USER_ACTION, a))
                 .toList();
 
-        if (eventsForUser.isEmpty()) {
+        if (userActions.isEmpty()) {
 
             log.info(Message.LIST_EMPTY);
 
             return Set.of();
         }
 
-        List<UserAction> eventsWithoutUser = userActionRepository.getUsersWithoutId(proto.getUserId()).stream()
-                .sorted(Comparator.comparing(UserAction::getTimestampMs))
-                .peek(u -> log.info(Message.GET_USER_ACTION, u))
-                .toList();
+        List<EventSimilarity> events = eventSimilarityRepository
+                .getEventsByEventIds(userActions.stream()
+                        .map(u -> u.getUserActionId().getEventId()).toArray(Long[]::new));
 
-        List<EventSimilarity> events = eventSimilarityRepository.getEventsByEventIds(eventsForUser.stream()
-                .map(e -> e.getUserActionId().getEventId())
-                .peek(e -> log.info(Message.TAKE_EVENT_ID, e))
-                .toArray(Long[]::new));
+        if (events.isEmpty()) {
 
-        double sumWeight = 0;
+            log.info(Message.LIST_EMPTY);
 
-        for (var u : eventsForUser) {
-
-            sumWeight += ActionType.getValue(u.getActionType().name()) * events.stream()
-                    .filter(e ->
-                            u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventAId())
-                            || u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventBId()))
-                    .map(EventSimilarity::getScore)
-                    .peek(e -> log.info(Message.TAKE_EVENT_SCORE, e))
-                    .findFirst()
-                    .orElse(0.0);
+            return Set.of();
         }
 
-        double coefficient = eventsForUser.stream()
-                .map(e -> ActionType.getValue(e.getActionType().name()))
-                .reduce(Double::sum)
-                .orElse(0.0);
+        return userActions.stream()
+                .flatMap(u -> choiceEventSimilarity(events, u.getUserActionId().getEventId())
+                                .stream().map(e ->
+                                RecommendedEventProto.newBuilder()
+                                    .setEventId(getEventId(e, u.getUserActionId().getEventId()))
+                                    .setScore(
+                                            sumMultiplyGradeAndSimilarity(userActions, events, u.getUserActionId().getEventId()) /
+                                            sumSimilarity(events, u.getUserActionId().getEventId()))
+                                    .build()))
+                 .collect(Collectors.toSet());
 
-        double newScore = sumWeight / coefficient;
 
-        log.info(Message.TAKE_NEW_SCORE, sumWeight, coefficient, newScore);
+//        List<UserAction> eventsWithoutUser = userActionRepository.getUsersWithoutId(proto.getUserId()).stream()
+//                .sorted(Comparator.comparing(UserAction::getTimestampMs))
+//                .peek(u -> log.info(Message.GET_USER_ACTION, u))
+//                .toList();
+//
+//        List<EventSimilarity> events = eventSimilarityRepository.getEventsByEventIds(eventsForUser.stream()
+//                .map(e -> e.getUserActionId().getEventId())
+//                .peek(e -> log.info(Message.TAKE_EVENT_ID, e))
+//                .toArray(Long[]::new));
+//
+//        double sumWeight = 0;
+//
+//        for (var u : eventsForUser) {
+//
+//            sumWeight += ActionType.getValue(u.getActionType().name()) * events.stream()
+//                    .filter(e ->
+//                            u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventAId())
+//                            || u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventBId()))
+//                    .map(EventSimilarity::getScore)
+//                    .peek(e -> log.info(Message.TAKE_EVENT_SCORE, e))
+//                    .findFirst()
+//                    .orElse(0.0);
+//        }
+//
+//        double coefficient = eventsForUser.stream()
+//                .map(e -> ActionType.getValue(e.getActionType().name()))
+//                .reduce(Double::sum)
+//                .orElse(0.0);
+//
+//        double newScore = sumWeight / coefficient;
+//
+//        log.info(Message.TAKE_NEW_SCORE, sumWeight, coefficient, newScore);
+//
+//        return eventsWithoutUser.stream().filter(e -> {
+//
+//                    double score = ActionType.getValue(e.getActionType().name());
+//
+//                    log.info(Message.SCORE_ACCORDING, newScore, score);
+//
+//                    return Math.abs(score - newScore) >= 0.2 || Math.abs(score - newScore) <= 0.2;
+//                })
+//                .sorted((u1, u2) ->
+//                        (int) (ActionType.getValue(u1.getActionType().name()) -
+//                        ActionType.getValue(u2.getActionType().name())))
+//                .map(userActionMapper::toRecommendedEventProto)
+//                .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS_FOR_USER, u.getEventId(), u.getScore()))
+//                .collect(Collectors.toSet());
+    }
 
-        return eventsWithoutUser.stream().filter(e -> {
+    private double sumMultiplyGradeAndSimilarity(List<UserAction> userActions,
+                                                 List<EventSimilarity> events,
+                                                 long event) {
 
-                    double score = ActionType.getValue(e.getActionType().name());
+        return choiceEventSimilarity(events, event).stream()
+                .map(e -> e.getScore() * getGrade(e, userActions))
+                .reduce(Double::sum).orElse(0.0);
+    }
 
-                    log.info(Message.SCORE_ACCORDING, newScore, score);
+    private double sumSimilarity(List<EventSimilarity> events, Long event) {
 
-                    return Math.abs(score - newScore) >= 0.2 || Math.abs(score - newScore) <= 0.2;
-                })
-                .sorted((u1, u2) ->
-                        (int) (ActionType.getValue(u1.getActionType().name()) -
-                        ActionType.getValue(u2.getActionType().name())))
-                .map(userActionMapper::toRecommendedEventProto)
-                .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS_FOR_USER, u.getEventId(), u.getScore()))
-                .collect(Collectors.toSet());
+        return choiceEventSimilarity(events, event).stream()
+                .map(EventSimilarity::getScore)
+                .reduce(Double::sum).orElse(0.0);
+    }
+
+    private List<EventSimilarity> choiceEventSimilarity(List<EventSimilarity> events, Long event) {
+
+        return events.stream().filter(e ->
+                    e.getEventSimilarityId().getEventAId().equals(event) ||
+                    e.getEventSimilarityId().getEventBId().equals(event))
+                .toList();
+    }
+
+    private double getGrade(EventSimilarity eventSimilarity, List<UserAction> userActions) {
+
+        return ActionType.getValue(userActions.stream()
+                .filter(u ->
+                        u.getUserActionId().getEventId().equals(eventSimilarity.getEventSimilarityId().getEventAId()) ||
+                        u.getUserActionId().getEventId().equals(eventSimilarity.getEventSimilarityId().getEventBId()))
+                .findFirst()
+                .get().getActionType().name());
+    }
+
+    private int getEventId(EventSimilarity eventSimilarity, long event) {
+
+        return Math.toIntExact(eventSimilarity.getEventSimilarityId().getEventAId().equals(event)
+                ? eventSimilarity.getEventSimilarityId().getEventAId()
+                : eventSimilarity.getEventSimilarityId().getEventBId());
     }
 }
