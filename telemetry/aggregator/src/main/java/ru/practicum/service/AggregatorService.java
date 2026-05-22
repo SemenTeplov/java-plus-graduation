@@ -24,9 +24,12 @@ public class AggregatorService {
 
     private final Map<Integer, Event> events;
 
+    private final Map<Integer, Map<Integer, Double>> oldSimilarities;
+
     public AggregatorService() {
 
         this.events = new ConcurrentHashMap<>();
+        this.oldSimilarities = new ConcurrentHashMap<>();
     }
 
     public Optional<Set<EventSimilarityAvro>> updateState(UserActionAvro user) {
@@ -49,20 +52,35 @@ public class AggregatorService {
         for (Event e : events.values()) {
 
             if (e.getId() != user.getEventId()
-                    && e.getUsers().containsKey(user.getUserId())
-                    && !e.getUsers().get(user.getUserId()).getInstant().isAfter(user.getTimestamp())) {
+                    && e.getUsers().containsKey(user.getUserId())) {
 
                 double similarity = e.getSimilarity(events.get(user.getEventId()));
                 Integer[] eventIds = compareEvents(e.getId(), user.getEventId());
 
-                similarities.add(EventSimilarityAvro.newBuilder()
-                        .setEventA(eventIds[0])
-                        .setEventB(eventIds[1])
-                        .setScore(similarity)
-                        .setTimestamp(Instant.now())
-                        .build());
+                if (!(oldSimilarities.containsKey(eventIds[0]) &&
+                        oldSimilarities.get(eventIds[0]).containsKey(eventIds[1]) &&
+                        oldSimilarities.get(eventIds[0]).get(eventIds[1]).equals(similarity))) {
 
-                log.info(Message.TAKE_EVENTS_SIMILARITY, eventIds[0], eventIds[1], similarity);
+                    similarities.add(EventSimilarityAvro.newBuilder()
+                            .setEventA(eventIds[0])
+                            .setEventB(eventIds[1])
+                            .setScore(similarity)
+                            .setTimestamp(Instant.now())
+                            .build());
+
+                    Map<Integer, Double> secondEvent = new ConcurrentHashMap<>();
+
+                    if (!oldSimilarities.containsKey(eventIds[0])) {
+
+                        secondEvent.put(eventIds[1], similarity);
+                        oldSimilarities.put(eventIds[0], secondEvent);
+                    } else {
+
+                        oldSimilarities.get(eventIds[0]).put(eventIds[1], similarity);
+                    }
+
+                    log.info(Message.TAKE_EVENTS_SIMILARITY, eventIds[0], eventIds[1], similarity);
+                }
             }
         }
 
