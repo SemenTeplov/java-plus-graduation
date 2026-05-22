@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
+import static java.lang.Thread.sleep;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -29,9 +31,11 @@ public class AggregationStarter {
     private String eventTopic;
 
     @KafkaListener(topics = "${kafka.topics.user}", containerFactory = Values.EVENT_CONSUMER)
-    public void handler(UserActionAvro event, Acknowledgment acknowledgment) {
+    public void handler(UserActionAvro event, Acknowledgment acknowledgment) throws InterruptedException {
 
         log.info(Message.GET_USER_ACTION_FROM_KAFKA, Values.EVENT_CONSUMER, event);
+
+        sleep(5000);
 
         service.updateState(event).ifPresent(list -> {
 
