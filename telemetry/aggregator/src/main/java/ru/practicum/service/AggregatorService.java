@@ -50,7 +50,7 @@ public class AggregatorService {
 
             if (e.getId() != user.getEventId()
                     && e.getUsers().containsKey(user.getUserId())
-                    && e.getUsers().get(user.getUserId()).getInstant().equals(user.getTimestamp())) {
+                    && !e.getUsers().get(user.getUserId()).getInstant().isAfter(user.getTimestamp())) {
 
                 double similarity = e.getSimilarity(events.get(user.getEventId()));
                 Integer[] eventIds = compareEvents(e.getId(), user.getEventId());
