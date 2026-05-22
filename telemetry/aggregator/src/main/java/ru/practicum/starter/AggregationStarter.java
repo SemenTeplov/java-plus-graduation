@@ -39,15 +39,7 @@ public class AggregationStarter {
 
             log.info(Message.SEND_LIST, list);
 
-            list.forEach(userActionAvro -> {
-                try {
-
-                    template.send(eventTopic, userActionAvro).get(50, TimeUnit.MILLISECONDS);
-                } catch (Exception e) {
-
-                    throw new RuntimeException(e);
-                }
-            });
+            list.forEach(userActionAvro -> template.send(eventTopic, userActionAvro));
         });
 
         acknowledgment.acknowledge();
