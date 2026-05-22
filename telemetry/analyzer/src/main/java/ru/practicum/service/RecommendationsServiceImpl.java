@@ -21,6 +21,7 @@ import stats.messages.UserPredictionsRequestProto;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,19 +48,24 @@ public class RecommendationsServiceImpl implements RecommendationsService {
             return Set.of();
         }
 
-        return userActionRepository.getUsersByEventId(proto.getEventIdList().toArray(Integer[]::new))
-                .stream()
-                .peek(u -> log.info(Message.TAKE_USER_ACTION, u))
-                .collect(Collectors.toMap(u ->
-                                u.getUserActionId().getEventId(),
-                        u -> ActionType.getValue(u.getActionType().name()),
-                                Double::sum)).entrySet().stream()
+        Map<Long, Double> events =
+                userActionRepository
+                    .getUsersByEventId(proto.getEventIdList().toArray(Integer[]::new))
+                    .stream()
+                    .collect(Collectors.toMap(u -> u.getUserActionId().getEventId(),
+                            u -> ActionType.getValue(u.getActionType().name()), Double::sum));
+
+        log.info(Message.TAKE_USER_ACTION, events);
+
+        Set<RecommendedEventProto> recommendations = events.entrySet().stream()
                 .map(u -> RecommendedEventProto.newBuilder()
                         .setEventId(Math.toIntExact(u.getKey()))
                         .setScore(u.getValue()).build())
-                .peek(u -> log.info(Message.TAKE_INTERACTION_COUNT,
-                        String.format(Message.TAKE_INTERACTION_COUNT_VALUE, u.getEventId(), u.getScore())))
                 .collect(Collectors.toSet());
+
+        log.info(Message.TAKE_INTERACTION_COUNT, recommendations);
+
+        return recommendations;
     }
 
     @Override
