@@ -120,7 +120,9 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                                             sumMultiplyGradeAndSimilarity(userActions, events, u.getUserActionId().getEventId()) /
                                             sumSimilarity(events, u.getUserActionId().getEventId()))
                                     .build()))
-                 .collect(Collectors.toSet());
+                .sorted((u1, u2) -> (int) (u1.getScore() - u2.getScore()))
+                .limit(proto.getMaxResults())
+                .collect(Collectors.toSet());
 
 
 //        List<UserAction> eventsWithoutUser = userActionRepository.getUsersWithoutId(proto.getUserId()).stream()
