@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
-import java.util.concurrent.TimeUnit;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
