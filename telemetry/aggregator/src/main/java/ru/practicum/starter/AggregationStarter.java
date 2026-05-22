@@ -35,7 +35,7 @@ public class AggregationStarter {
 
         log.info(Message.GET_USER_ACTION_FROM_KAFKA, Values.EVENT_CONSUMER, event);
 
-        sleep(5000);
+        sleep(500);
 
         service.updateState(event).ifPresent(list -> {
 
