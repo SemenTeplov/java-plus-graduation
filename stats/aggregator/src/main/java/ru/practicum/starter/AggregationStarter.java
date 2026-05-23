@@ -20,6 +20,9 @@ import ru.practicum.ewm.stats.avro.UserActionAvro;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @Component
@@ -48,7 +51,15 @@ public class AggregationStarter {
 
                 log.info(Message.SEND_LIST, list);
 
-                list.forEach(userActionAvro -> template.send(eventTopic, userActionAvro));
+                list.forEach(userActionAvro -> {
+                    try {
+
+                        template.send(eventTopic, userActionAvro).get(5, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+
+                        throw new RuntimeException(e);
+                    }
+                });
             });
 
             events.removeAll(forRemove);
