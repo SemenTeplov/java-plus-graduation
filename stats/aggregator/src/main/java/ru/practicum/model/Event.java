@@ -1,6 +1,5 @@
 package main.java.ru.practicum.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import java.util.Map;
 @Slf4j
 @Getter
 @ToString
-@EqualsAndHashCode(of = {"id"})
 public class Event {
 
     private final int id;
@@ -67,6 +65,6 @@ public class Event {
 
         log.info(Message.SUM_WEIGHT, sumWeight);
 
-        return minSum / sumWeight;
+        return minSum < 0.0001 ? 0.0 : minSum / sumWeight;
     }
 }
