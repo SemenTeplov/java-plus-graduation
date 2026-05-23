@@ -26,20 +26,14 @@ public class KafkaConsumerConfig {
     @Value("${kafka.bootstrap-servers}")
     private String server;
 
-    @Value("${kafka.offset.rest-config}")
-    private String offsetRest;
-
     @Value("${kafka.consumer.session-timeout-ms}")
-    private String sessionTimeout;
+    private Integer sessionTimeout;
 
     @Value("${kafka.consumer.heartbeat-interval-ms}")
-    private String heartbeatInterval;
+    private Integer heartbeatInterval;
 
     @Value("${kafka.consumer.group-id}")
     private String groupId;
-
-    @Value("${kafka.consumer.enable-auto-commit}")
-    private Boolean autoCommit;
 
     @Bean
     public ConsumerFactory<String, UserActionAvro> eventConsumerFactory() {
@@ -50,7 +44,6 @@ public class KafkaConsumerConfig {
         configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configs.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
         configs.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, heartbeatInterval);
-        configs.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, autoCommit);
         configs.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserActionDeserializer.class);
 
