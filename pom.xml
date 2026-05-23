@@ -16,7 +16,6 @@
 	<modules>
 		<module>infra</module>
 		<module>stats</module>
-		<module>telemetry</module>
 		<module>core</module>
 	</modules>
 
