@@ -13,7 +13,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 
 @Slf4j
@@ -25,15 +24,12 @@ public class EventSimilarityListener {
 
     private final EventSimilarityMapper eventSimilarityMapper;
 
-    @Transactional
     @KafkaListener(topics = "${kafka.topics.events}", containerFactory = Values.EVENT_CONSUMER)
     public void handler(EventSimilarityAvro event, Acknowledgment acknowledgment) {
 
         log.info(Message.GET_EVENTS_SIMILARITY, event);
 
         EventSimilarity eventSimilarity = eventSimilarityMapper.toEventSimilarity(event);
-
-        log.info(Message.SAVE_EVENTS_SIMILARITY, event);
 
         eventSimilarityRepository.save(eventSimilarity);
 

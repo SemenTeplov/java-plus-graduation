@@ -26,9 +26,6 @@ public class KafkaConsumerConfig {
     @Value("${kafka.bootstrap-servers}")
     private String server;
 
-    @Value("${kafka.offset.rest-config}")
-    private String offsetRest;
-
     @Value("${kafka.consumer.session-timeout-ms}")
     private String sessionTimeout;
 

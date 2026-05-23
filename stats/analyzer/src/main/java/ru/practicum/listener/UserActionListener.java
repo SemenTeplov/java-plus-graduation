@@ -1,7 +1,5 @@
 package main.java.ru.practicum.listener;
 
-import jakarta.transaction.Transactional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,15 +26,12 @@ public class UserActionListener {
 
     private final UserActionMapper userActionMapper;
 
-    @Transactional
     @KafkaListener(topics = "${kafka.topics.user}", containerFactory = Values.USER_CONSUMER)
     public void handler(UserActionAvro action, Acknowledgment acknowledgment) {
 
         log.info(Message.GET_USER_ACTION, action);
 
         UserAction userAction = userActionMapper.toUserAction(action);
-
-        log.info(Message.SAVE_USER_ACTION, action);
 
         UserAction oldUserAction = userActionRepository.findById(new UserActionId(
                 (long) action.getUserId(), (long) action.getEventId())).orElse(null);
