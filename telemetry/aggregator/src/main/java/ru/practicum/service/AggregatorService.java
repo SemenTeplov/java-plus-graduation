@@ -59,7 +59,7 @@ public class AggregatorService {
 
                 if (!(oldSimilarities.containsKey(eventIds[0]) &&
                         oldSimilarities.get(eventIds[0]).containsKey(eventIds[1]) &&
-                        oldSimilarities.get(eventIds[0]).get(eventIds[1]).equals(similarity))) {
+                        Math.abs(oldSimilarities.get(eventIds[0]).get(eventIds[1]) - similarity) > 1e-9)) {
 
                     similarities.add(EventSimilarityAvro.newBuilder()
                             .setEventA(eventIds[0])

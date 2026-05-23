@@ -1,7 +1,5 @@
 package main.java.ru.practicum.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -11,13 +9,11 @@ import java.time.Instant;
 
 @Getter
 @ToString
-@EqualsAndHashCode(of = {"id"})
-@AllArgsConstructor
 public class User {
 
-    private int id;
+    private final int id;
 
-    private double grade;
+    private volatile double grade;
 
     private Instant instant;
 
@@ -27,7 +23,7 @@ public class User {
         this.set(status, instant);
     }
 
-    public void set(double grade, Instant instant) {
+    public synchronized void set(double grade, Instant instant) {
 
         if (this.grade < grade) {
 
@@ -36,7 +32,7 @@ public class User {
         }
     }
 
-    public void set(String status, Instant instant) {
+    public synchronized void set(String status, Instant instant) {
 
         double getGrade = EventStatus.getValue(status);
 

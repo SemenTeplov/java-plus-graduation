@@ -20,7 +20,7 @@ public class Event {
 
     private final Map<Integer, User> users;
 
-    private double sum;
+    private volatile double sum;
 
     public Event(int id) {
 
