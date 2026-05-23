@@ -84,7 +84,7 @@ public class AggregatorService {
             }
         }
 
-        return similarities.isEmpty() ? Optional.empty() : Optional.of(similarities);
+        return Optional.of(similarities);
     }
 
     private Integer[] compareEvents(Integer eventA, Integer eventB) {
