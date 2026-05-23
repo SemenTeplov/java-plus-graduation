@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Slf4j
@@ -36,7 +38,9 @@ public class AggregationStarter {
     @Scheduled(fixedDelay = Values.FIXED_DELAY)
     public void sendSnapshots() {
 
-        for (UserActionAvro event : events) {
+        List<UserActionAvro> forRemove = new ArrayList<>(events);
+
+        for (UserActionAvro event : forRemove) {
 
             log.info(Message.GET_USER_ACTION_FROM_KAFKA, Values.EVENT_CONSUMER, event);
 
@@ -45,8 +49,9 @@ public class AggregationStarter {
                 log.info(Message.SEND_LIST, list);
 
                 list.forEach(userActionAvro -> template.send(eventTopic, userActionAvro));
-                events.remove(event);
             });
+
+            events.removeAll(forRemove);
         }
     }
 
