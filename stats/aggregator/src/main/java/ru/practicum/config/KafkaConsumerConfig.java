@@ -12,7 +12,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.listener.ContainerProperties;
 
 import ru.practicum.ewm.stats.avro.UserActionAvro;
 
@@ -35,6 +34,9 @@ public class KafkaConsumerConfig {
     @Value("${kafka.consumer.group-id}")
     private String groupId;
 
+    @Value("${kafka.consumer.enable-auto-commit}")
+    private Boolean autoCommit;
+
     @Bean
     public ConsumerFactory<String, UserActionAvro> eventConsumerFactory() {
 
@@ -44,6 +46,7 @@ public class KafkaConsumerConfig {
         configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configs.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
         configs.put(ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG, heartbeatInterval);
+        configs.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, autoCommit);
         configs.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, UserActionDeserializer.class);
 
@@ -57,7 +60,6 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, UserActionAvro> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(eventConsumerFactory);
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
 
         return factory;
     }
