@@ -65,6 +65,6 @@ public class Event {
 
         log.info(Message.SUM_WEIGHT, sumWeight);
 
-        return minSum < 0.0001 ? 0.0 : minSum / sumWeight;
+        return minSum / sumWeight;
     }
 }
