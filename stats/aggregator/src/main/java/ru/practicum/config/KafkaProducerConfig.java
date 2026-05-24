@@ -23,6 +23,9 @@ public class KafkaProducerConfig {
     @Value("${kafka.bootstrap-servers}")
     private String server;
 
+    @Value("${kafka.producer.acks-config}")
+    private String acksConfig;
+
     @Bean
     public ProducerFactory<String, EventSimilarityAvro> producerFactory() {
 
@@ -31,6 +34,7 @@ public class KafkaProducerConfig {
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
         configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GeneralAvroSerializer.class);
+        configs.put(ProducerConfig.ACKS_CONFIG, acksConfig);
 
         return new DefaultKafkaProducerFactory<>(configs);
     }
