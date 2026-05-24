@@ -36,7 +36,7 @@ public class AggregationStarter {
     private String eventTopic;
 
     @Scheduled(fixedDelay = Values.FIXED_DELAY)
-    public void sendSnapshots() {
+    public void sendEventSimilarity() {
 
         List<UserActionAvro> forRemove = new ArrayList<>(events);
 
