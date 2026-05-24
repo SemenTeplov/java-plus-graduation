@@ -31,8 +31,7 @@ public class KafkaProducerConfig {
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
         configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GeneralAvroSerializer.class);
-        configs.put(ProducerConfig.RETRIES_CONFIG, Integer.MAX_VALUE);
-        configs.put(ProducerConfig.RETRY_BACKOFF_MS_CONFIG, 100);
+        configs.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
 
         return new DefaultKafkaProducerFactory<>(configs);
     }
