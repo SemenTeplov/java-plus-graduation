@@ -30,7 +30,6 @@ public class EventSimilarityListener {
         log.info(Message.GET_EVENTS_SIMILARITY, event);
 
         EventSimilarity eventSimilarity = eventSimilarityMapper.toEventSimilarity(event);
-
         eventSimilarityRepository.save(eventSimilarity);
 
         acknowledgment.acknowledge();
