@@ -31,8 +31,6 @@ public class KafkaProducerConfig {
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, server);
         configs.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configs.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GeneralAvroSerializer.class);
-        configs.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 30000);
-        configs.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, 120000);
 
         return new DefaultKafkaProducerFactory<>(configs);
     }
