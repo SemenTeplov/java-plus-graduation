@@ -58,9 +58,8 @@ public class AggregatorService {
                 double similarity = e.getSimilarity(events.get(user.getEventId()));
                 Integer[] eventIds = compareEvents(e.getId(), user.getEventId());
 
-//                if (!(oldSimilarities.containsKey(eventIds[0]) &&
-//                        oldSimilarities.get(eventIds[0]).containsKey(eventIds[1]) &&
-//                        Math.abs(oldSimilarities.get(eventIds[0]).get(eventIds[1]) - similarity) < 0.0001)) {
+                if (!(oldSimilarities.containsKey(eventIds[0]) &&
+                        oldSimilarities.get(eventIds[0]).containsKey(eventIds[1]))) {
 
                     similarities.add(EventSimilarityAvro.newBuilder()
                             .setEventA(eventIds[0])
@@ -81,7 +80,7 @@ public class AggregatorService {
                     }
 
                     log.info(Message.TAKE_EVENTS_SIMILARITY, eventIds[0], eventIds[1], similarity);
-//                }
+                }
             }
         }
 
