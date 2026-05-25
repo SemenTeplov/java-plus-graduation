@@ -85,6 +85,8 @@ public class AggregatorService {
             }
         }
 
+        log.info("Всего сравнений событий {}", oldSimilarities);
+
         return Optional.of(similarities);
     }
 
