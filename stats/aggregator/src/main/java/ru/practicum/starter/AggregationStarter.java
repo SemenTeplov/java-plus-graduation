@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static java.lang.Thread.sleep;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -43,8 +41,6 @@ public class AggregationStarter {
         List<UserActionAvro> forRemove = new ArrayList<>(events);
 
         for (UserActionAvro event : forRemove) {
-
-            sleep(5000);
 
             log.info(Message.GET_USER_ACTION_FROM_KAFKA, Values.EVENT_CONSUMER, event);
 
