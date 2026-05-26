@@ -44,15 +44,8 @@ public class AggregatorService {
                     new User(user.getUserId(), user.getActionType().name(), user.getTimestamp())));
         } else {
 
-            if (events.get(user.getEventId()).getUsers().containsKey(user.getUserId())) {
-
-                events.get(user.getEventId()).getUsers().get(user.getUserId())
-                        .set(user.getActionType().name(), user.getTimestamp());
-            } else {
-
-                events.get(user.getEventId())
+            events.get(user.getEventId())
                         .add(new User(user.getUserId(), user.getActionType().name(), user.getTimestamp()));
-            }
         }
 
         Set<EventSimilarityAvro> similarities = new HashSet<>();
