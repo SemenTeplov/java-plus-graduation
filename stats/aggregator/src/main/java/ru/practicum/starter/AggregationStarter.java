@@ -50,9 +50,7 @@ public class AggregationStarter {
 
                 list.forEach(userActionAvro -> {
 
-                    if (userActionAvro != null) {
-                        template.send(eventTopic, userActionAvro);
-                    }
+                    template.send(eventTopic, userActionAvro);
                 });
             });
 
