@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import main.java.ru.practicum.dto.CategoryDto;
-import main.java.ru.practicum.dto.EndpointHitDto;
 import main.java.ru.practicum.dto.EventRequestStatusRequest;
 import main.java.ru.practicum.dto.EventRequestStatusUpdateResult;
 import main.java.ru.practicum.dto.EventShortDto;
@@ -89,8 +88,6 @@ public class EventServiceImpl implements EventService {
     private final UserClient userClient;
 
     private final RequestClient requestClient;
-
-    private final StatsClient statsClient;
 
     private final EventSpecification eventSpecification;
 
@@ -192,13 +189,6 @@ public class EventServiceImpl implements EventService {
         Location location = locationRepository.findById(event.getLocation())
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
 
-//        statsClient.saveHit(EndpointHitDto.builder()
-//                .uri(Values.EVENT_GET_URI + id)
-//                .app(Values.APPLICATION)
-//                .ip(Values.EWM_IP)
-//                .timestamp(LocalDateTime.now())
-//                .build());
-
         return getEventFullDto(event, location);
     }
 
@@ -242,13 +232,6 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .map(this::getEventShortDto)
                 .toList();
-
-//        statsClient.saveHit(EndpointHitDto.builder()
-//                .uri(Values.EVENTS_GET_URI)
-//                .app(Values.APPLICATION)
-//                .ip(Values.EWM_IP)
-//                .timestamp(LocalDateTime.now())
-//                .build());
 
         return list;
     }
