@@ -192,12 +192,12 @@ public class EventServiceImpl implements EventService {
         Location location = locationRepository.findById(event.getLocation())
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
 
-        statsClient.saveHit(EndpointHitDto.builder()
-                .uri(Values.EVENT_GET_URI + id)
-                .app(Values.APPLICATION)
-                .ip(Values.EWM_IP)
-                .timestamp(LocalDateTime.now())
-                .build());
+//        statsClient.saveHit(EndpointHitDto.builder()
+//                .uri(Values.EVENT_GET_URI + id)
+//                .app(Values.APPLICATION)
+//                .ip(Values.EWM_IP)
+//                .timestamp(LocalDateTime.now())
+//                .build());
 
         return getEventFullDto(event, location);
     }
@@ -243,12 +243,12 @@ public class EventServiceImpl implements EventService {
                 .map(this::getEventShortDto)
                 .toList();
 
-        statsClient.saveHit(EndpointHitDto.builder()
-                .uri(Values.EVENTS_GET_URI)
-                .app(Values.APPLICATION)
-                .ip(Values.EWM_IP)
-                .timestamp(LocalDateTime.now())
-                .build());
+//        statsClient.saveHit(EndpointHitDto.builder()
+//                .uri(Values.EVENTS_GET_URI)
+//                .app(Values.APPLICATION)
+//                .ip(Values.EWM_IP)
+//                .timestamp(LocalDateTime.now())
+//                .build());
 
         return list;
     }
