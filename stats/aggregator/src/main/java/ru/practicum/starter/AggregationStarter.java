@@ -49,7 +49,10 @@ public class AggregationStarter {
                 log.info(Message.SEND_LIST, list);
 
                 list.forEach(userActionAvro -> {
-                    template.send(eventTopic, userActionAvro);
+
+                    if (userActionAvro != null) {
+                        template.send(eventTopic, userActionAvro);
+                    }
                 });
             });
 
