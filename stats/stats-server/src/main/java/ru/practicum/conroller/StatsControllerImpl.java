@@ -35,7 +35,7 @@ public class StatsControllerImpl {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> saveHit(@Valid @RequestBody EndpointHitDto request) {
+    public ResponseEntity<String> saveHit(@RequestBody EndpointHitDto request) {
         log.info(Messages.POST_HIT_REQUEST, request.getApp(), request.getUri(),request.getIp());
 
         statsService.saveHit(request);
