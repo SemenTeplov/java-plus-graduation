@@ -155,7 +155,7 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
     private int getEventId(EventSimilarity eventSimilarity, long event) {
         return Math.toIntExact(eventSimilarity.getEventSimilarityId().getEventAId().equals(event)
-                ? eventSimilarity.getEventSimilarityId().getEventAId()
-                : eventSimilarity.getEventSimilarityId().getEventBId());
+                ? eventSimilarity.getEventSimilarityId().getEventBId()
+                : eventSimilarity.getEventSimilarityId().getEventAId());
     }
 }
