@@ -30,7 +30,7 @@ public interface EventSimilarityMapper {
     @Mapping(target = "unknownFields", ignore = true)
     @Mapping(target = "mergeUnknownFields", ignore = true)
     @Mapping(target = "allFields", ignore = true)
-    @Mapping(target = "eventId", expression = "java(getEventId(event))")
+    @Mapping(target = "eventId", expression = "java(java.lang.Math.toIntExact(event.getEventSimilarityId().getEventAId()))")
     RecommendedEventProto toRecommendedEventProto(EventSimilarity event);
 
     @Named("toEventSimilarityId")
@@ -40,9 +40,5 @@ public interface EventSimilarityMapper {
         }
 
         return new EventSimilarityId((long) event.getEventA(), (long) event.getEventB());
-    }
-
-    default int getEventId(EventSimilarity event) {
-        return Math.toIntExact(event.getEventSimilarityId().getEventBId());
     }
 }
