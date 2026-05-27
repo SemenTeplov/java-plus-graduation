@@ -21,17 +21,14 @@ import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 public class EventSimilarityListener {
 
     private final EventSimilarityRepository eventSimilarityRepository;
-
     private final EventSimilarityMapper eventSimilarityMapper;
 
     @KafkaListener(topics = "${kafka.topics.events}", containerFactory = Values.EVENT_CONSUMER)
     public void handler(EventSimilarityAvro event, Acknowledgment acknowledgment) {
-
         log.info(Message.GET_EVENTS_SIMILARITY, event);
 
         EventSimilarity eventSimilarity = eventSimilarityMapper.toEventSimilarity(event);
         eventSimilarityRepository.save(eventSimilarity);
-
         acknowledgment.acknowledge();
     }
 }

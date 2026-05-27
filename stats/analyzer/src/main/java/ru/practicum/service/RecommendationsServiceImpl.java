@@ -31,20 +31,15 @@ import java.util.stream.Collectors;
 public class RecommendationsServiceImpl implements RecommendationsService {
 
     private final UserActionRepository userActionRepository;
-
     private final EventSimilarityRepository eventSimilarityRepository;
-
     private final UserActionMapper userActionMapper;
-
     private final EventSimilarityMapper eventSimilarityMapper;
 
     @Override
     public Set<RecommendedEventProto> getInteractionsCount(InteractionsCountRequestProto proto) {
-
         log.info(Message.GET_INTERACTIONS_COUNT, String.format(Message.GET_INTERACTIONS_COUNT_VALUE, proto.getEventIdList()));
 
         if (proto.getEventIdList().isEmpty()) {
-
             return Set.of();
         }
 
@@ -70,7 +65,6 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
     @Override
     public Set<RecommendedEventProto> getSimilarEvents(SimilarEventsRequestProto proto) {
-
         log.info(Message.GET_SIMILAR_EVENTS, proto.getEventId(), proto.getUserId(), proto.getMaxResults());
 
         List<EventSimilarity> events = eventSimilarityRepository.getEventsByEventId(proto.getEventId());
@@ -92,7 +86,6 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
     @Override
     public Set<RecommendedEventProto> getRecommendationsForUser(UserPredictionsRequestProto proto) {
-
         log.info(Message.GET_RECOMMENDATIONS, proto);
 
         List<UserAction> userActions = userActionRepository.getUsersById(proto.getUserId()).stream()
@@ -100,7 +93,6 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                 .toList();
 
         if (userActions.isEmpty()) {
-
             log.info(Message.LIST_EMPTY);
 
             return Set.of();
@@ -111,7 +103,6 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                         .map(u -> u.getUserActionId().getEventId()).toArray(Long[]::new));
 
         if (events.isEmpty()) {
-
             log.info(Message.LIST_EMPTY);
 
             return Set.of();
@@ -141,14 +132,12 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     }
 
     private double sumSimilarity(List<EventSimilarity> events, Long event) {
-
         return choiceEventSimilarity(events, event).stream()
                 .map(EventSimilarity::getScore)
                 .reduce(Double::sum).orElse(0.0);
     }
 
     private List<EventSimilarity> choiceEventSimilarity(List<EventSimilarity> events, Long event) {
-
         return events.stream().filter(e ->
                     e.getEventSimilarityId().getEventAId().equals(event) ||
                     e.getEventSimilarityId().getEventBId().equals(event))
@@ -156,7 +145,6 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     }
 
     private double getGrade(EventSimilarity eventSimilarity, List<UserAction> userActions) {
-
         return ActionType.getValue(userActions.stream()
                 .filter(u ->
                         u.getUserActionId().getEventId().equals(eventSimilarity.getEventSimilarityId().getEventAId()) ||
@@ -166,7 +154,6 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     }
 
     private int getEventId(EventSimilarity eventSimilarity, long event) {
-
         return Math.toIntExact(eventSimilarity.getEventSimilarityId().getEventAId().equals(event)
                 ? eventSimilarity.getEventSimilarityId().getEventAId()
                 : eventSimilarity.getEventSimilarityId().getEventBId());

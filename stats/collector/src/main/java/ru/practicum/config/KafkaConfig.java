@@ -27,7 +27,6 @@ public class KafkaConfig {
 
     @Bean
     public Producer<String, SpecificRecordBase> eventProducer() {
-
         Map<String, Object> configs = new HashMap<>();
 
         configs.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, server);

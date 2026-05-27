@@ -23,11 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AggregatorService {
 
     private final Map<Integer, Event> events;
-
     private final Map<Integer, Map<Integer, Double>> oldSimilarities;
-
     public AggregatorService() {
-
         this.events = new ConcurrentHashMap<>();
         this.oldSimilarities = new ConcurrentHashMap<>();
     }
@@ -37,13 +34,11 @@ public class AggregatorService {
         log.info(Message.GET_LIST_OF_USER, user);
 
         if (!events.containsKey(user.getEventId())) {
-
             log.info(Message.EVENT_DON_T_EXIST, user.getEventId());
 
             events.put(user.getEventId(), new Event(user.getEventId(),
                     new User(user.getUserId(), user.getActionType().name(), user.getTimestamp())));
         } else {
-
             events.get(user.getEventId())
                         .add(new User(user.getUserId(), user.getActionType().name(), user.getTimestamp()));
         }
@@ -51,7 +46,6 @@ public class AggregatorService {
         Set<EventSimilarityAvro> similarities = new HashSet<>();
 
         for (Event e : events.values()) {
-
             if (e.getId() != user.getEventId()
                     && e.getUsers().containsKey(user.getUserId())) {
 
@@ -73,11 +67,9 @@ public class AggregatorService {
                     Map<Integer, Double> secondEvent = new ConcurrentHashMap<>();
 
                     if (!oldSimilarities.containsKey(eventIds[0])) {
-
                         secondEvent.put(eventIds[1], similarity);
                         oldSimilarities.put(eventIds[0], secondEvent);
                     } else {
-
                         oldSimilarities.get(eventIds[0]).put(eventIds[1], similarity);
                     }
 

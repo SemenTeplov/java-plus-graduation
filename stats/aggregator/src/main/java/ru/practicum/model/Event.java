@@ -15,19 +15,14 @@ import java.util.Map;
 public class Event {
 
     private final int id;
-
     private final Map<Integer, User> users;
-
     private volatile double sum;
-
     public Event(int id) {
-
         this.users = new HashMap<>();
         this.id = id;
     }
 
     public Event(int id, User user) {
-
         this(id);
         add(user);
     }
@@ -35,14 +30,12 @@ public class Event {
     public void add(User user) {
 
         if (users.containsKey(user.getId())) {
-
             User owner = users.get(user.getId());
 
             sum -= owner.getGrade();
             owner.set(user.getGrade(), user.getInstant());
             sum += owner.getGrade();
         } else {
-
             users.put(user.getId(), user);
             sum += user.getGrade();
         }

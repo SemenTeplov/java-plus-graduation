@@ -30,20 +30,16 @@ public class GrpcController extends RecommendationsControllerGrpc.Recommendation
                                      StreamObserver<RecommendedEventProto> responseObserver) {
 
         try {
-
             Set<RecommendedEventProto> set = recommendationsService.getInteractionsCount(request);
 
             if (set == null || set.isEmpty()) {
-
                 responseObserver.onNext(RecommendedEventProto.getDefaultInstance());
             } else {
-
                 set.forEach(responseObserver::onNext);
             }
 
             responseObserver.onCompleted();
         } catch (Exception e) {
-
             responseObserver.onError(new StatusRuntimeException(
                     Status.INTERNAL.withDescription(e.getLocalizedMessage()).withCause(e)));
         }
@@ -54,20 +50,16 @@ public class GrpcController extends RecommendationsControllerGrpc.Recommendation
                                  StreamObserver<RecommendedEventProto> responseObserver) {
 
         try {
-
             Set<RecommendedEventProto> set = recommendationsService.getSimilarEvents(request);
 
             if (set == null || set.isEmpty()) {
-
                 responseObserver.onNext(RecommendedEventProto.getDefaultInstance());
             } else {
-
                 set.forEach(responseObserver::onNext);
             }
 
             responseObserver.onCompleted();
         } catch (Exception e) {
-
             responseObserver.onError(new StatusRuntimeException(
                     Status.INTERNAL.withDescription(e.getLocalizedMessage()).withCause(e)));
         }
@@ -78,20 +70,16 @@ public class GrpcController extends RecommendationsControllerGrpc.Recommendation
                                           StreamObserver<RecommendedEventProto> responseObserver) {
 
         try {
-
             Set<RecommendedEventProto> set = recommendationsService.getRecommendationsForUser(request);
 
             if (set == null || set.isEmpty()) {
-
                 responseObserver.onNext(RecommendedEventProto.getDefaultInstance());
             } else {
-
                 set.forEach(responseObserver::onNext);
             }
 
             responseObserver.onCompleted();
         } catch (Exception e) {
-
             responseObserver.onError(new StatusRuntimeException(
                     Status.INTERNAL.withDescription(e.getLocalizedMessage()).withCause(e)));
         }

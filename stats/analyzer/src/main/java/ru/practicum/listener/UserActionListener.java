@@ -23,22 +23,18 @@ import ru.practicum.ewm.stats.avro.UserActionAvro;
 public class UserActionListener {
 
     private final UserActionRepository userActionRepository;
-
     private final UserActionMapper userActionMapper;
 
     @KafkaListener(topics = "${kafka.topics.user}", containerFactory = Values.USER_CONSUMER)
     public void handler(UserActionAvro action, Acknowledgment acknowledgment) {
-
         log.info(Message.GET_USER_ACTION, action);
 
         UserAction userAction = userActionMapper.toUserAction(action);
-
         UserAction oldUserAction = userActionRepository.findById(new UserActionId(
                 (long) action.getUserId(), (long) action.getEventId())).orElse(null);
 
         if (oldUserAction == null || ActionType.getValue(oldUserAction.getActionType().name())
                 < ActionType.getValue(userAction.getActionType().name())) {
-
             userActionRepository.save(userAction);
         }
 

@@ -35,7 +35,6 @@ public interface EventSimilarityMapper {
 
     @Named("toEventSimilarityId")
     default EventSimilarityId toEventSimilarityId(EventSimilarityAvro event) {
-
         if (event == null) {
             return null;
         }

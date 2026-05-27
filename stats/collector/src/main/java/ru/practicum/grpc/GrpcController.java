@@ -23,15 +23,12 @@ public class GrpcController extends UserActionControllerGrpc.UserActionControlle
 
     @Override
     public void collectUserAction(UserActionProto request, StreamObserver<Empty> responseObserver) {
-
         try {
-
             handler.handle(request);
 
             responseObserver.onNext(Empty.getDefaultInstance());
             responseObserver.onCompleted();
         } catch (Exception e) {
-
             responseObserver.onError(new StatusRuntimeException(
                     Status.INTERNAL.withDescription(e.getLocalizedMessage()).withCause(e)));
         }

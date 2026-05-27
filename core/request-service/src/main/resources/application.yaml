@@ -12,11 +12,6 @@ spring:
         enabled: true
         serviceId: config-server
 
-  sql:
-    init:
-      mode: always
-      schema-locations: classpath:schema.sql
-
 eureka:
   client:
     serviceUrl:

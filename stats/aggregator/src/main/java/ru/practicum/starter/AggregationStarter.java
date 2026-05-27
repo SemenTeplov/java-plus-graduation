@@ -27,9 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class AggregationStarter {
 
     private final AggregatorService service;
-
     private final KafkaTemplate<String, EventSimilarityAvro> template;
-
     private final CopyOnWriteArrayList<UserActionAvro> events = new CopyOnWriteArrayList<>();
 
     @Value("${kafka.topics.events}")
@@ -37,29 +35,24 @@ public class AggregationStarter {
 
     @Scheduled(fixedDelay = Values.FIXED_DELAY)
     public void sendEventSimilarity() throws InterruptedException {
-
         List<UserActionAvro> forRemove = new ArrayList<>(events);
 
         for (UserActionAvro event : forRemove) {
-
             log.info(Message.GET_USER_ACTION_FROM_KAFKA, Values.EVENT_CONSUMER, event);
 
             service.updateState(event).ifPresent(list -> {
-
                 log.info(Message.SEND_LIST, list);
 
                 list.forEach(userActionAvro -> {
                     template.send(eventTopic, userActionAvro);
                 });
             });
-
             events.removeAll(forRemove);
         }
     }
 
     @KafkaListener(topics = "${kafka.topics.user}", containerFactory = Values.EVENT_CONSUMER)
     public void handler(UserActionAvro event, Acknowledgment acknowledgment) {
-
         events.addIfAbsent(event);
         acknowledgment.acknowledge();
     }

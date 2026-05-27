@@ -14,3 +14,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/stats
     username: stats
     password: stats
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql

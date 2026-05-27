@@ -14,6 +14,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/request
     username: request
     password: request
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
 
 grpc:
   client:

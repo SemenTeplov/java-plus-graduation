@@ -19,11 +19,6 @@ public class GeneralAvroSerializer implements Serializer<SpecificRecordBase> {
     private final EncoderFactory encoderFactory = EncoderFactory.get();
 
     @Override
-    public void configure(Map<String, ?> configs, boolean isKey) {
-
-    }
-
-    @Override
     public byte[] serialize(String topic, SpecificRecordBase event) {
         if (event == null) {
             return null;
@@ -40,10 +35,5 @@ public class GeneralAvroSerializer implements Serializer<SpecificRecordBase> {
         } catch (IOException e) {
             throw new SerializationException();
         }
-    }
-
-    @Override
-    public void close() {
-
     }
 }

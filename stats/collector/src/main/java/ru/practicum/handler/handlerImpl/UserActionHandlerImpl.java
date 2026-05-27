@@ -25,7 +25,6 @@ public class UserActionHandlerImpl implements UserActionHandler {
 
     @Override
     public void handle(UserActionProto action) {
-
         log.info(Message.SEND_ACTION, action);
 
         actionProducer.send(getRecord(action, topic));

@@ -37,7 +37,6 @@ public class KafkaProducerConfig {
 
     @Bean
     public KafkaTemplate<String, EventSimilarityAvro> kafkaTemplate() {
-
         return new KafkaTemplate<>(producerFactory());
     }
 }
