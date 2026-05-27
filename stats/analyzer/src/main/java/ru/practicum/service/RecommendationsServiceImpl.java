@@ -67,18 +67,13 @@ public class RecommendationsServiceImpl implements RecommendationsService {
     public Set<RecommendedEventProto> getSimilarEvents(SimilarEventsRequestProto proto) {
         log.info(Message.GET_SIMILAR_EVENTS, proto.getEventId(), proto.getUserId(), proto.getMaxResults());
 
-        List<EventSimilarity> events = eventSimilarityRepository.getEventsByEventId(proto.getEventId());
         List<UserAction> users = userActionRepository.getUsersById(proto.getUserId());
+        List<EventSimilarity> events = eventSimilarityRepository
+                .getEventsByEventIdAndUserIds(proto.getEventId(), users.stream()
+                        .map(u -> u.getUserActionId().getEventId())
+                        .toArray(Long[]::new), proto.getMaxResults());
 
         return events.stream()
-                .filter(e ->
-                    !(users.stream().anyMatch(u ->
-                            u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventAId())) &&
-                    users.stream().anyMatch(u ->
-                            u.getUserActionId().getEventId().equals(e.getEventSimilarityId().getEventBId()))))
-                .sorted(Comparator.comparing(EventSimilarity::getScore))
-                .limit(proto.getMaxResults())
-                .peek(u -> log.info(Message.TAKE_EVENT_SIMILARITY, u))
                 .map(eventSimilarityMapper::toRecommendedEventProto)
                 .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS, u.getEventId(), u.getScore()))
                 .collect(Collectors.toSet());
