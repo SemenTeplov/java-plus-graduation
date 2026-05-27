@@ -79,9 +79,21 @@ public class RecommendationsServiceImpl implements RecommendationsService {
                 .sorted(Comparator.comparing(EventSimilarity::getScore))
                 .limit(proto.getMaxResults())
                 .peek(u -> log.info(Message.TAKE_EVENT_SIMILARITY, u))
-                .map(eventSimilarityMapper::toRecommendedEventProto)
+                .map(eventSimilarity -> toRecommendedEventProto(eventSimilarity, proto.getEventId()))
                 .peek(u -> log.info(Message.TAKE_RECOMMENDATIONS, u.getEventId(), u.getScore()))
                 .collect(Collectors.toSet());
+    }
+
+    private RecommendedEventProto toRecommendedEventProto(EventSimilarity eventSimilarity, long userEventId) {
+        int recommendedEventId = Math.toIntExact(
+                eventSimilarity.getEventSimilarityId().getEventAId().equals(userEventId)
+                        ? eventSimilarity.getEventSimilarityId().getEventBId()
+                        : eventSimilarity.getEventSimilarityId().getEventAId());
+
+        return RecommendedEventProto.newBuilder()
+                .setEventId(recommendedEventId)
+                .setScore(eventSimilarity.getScore())
+                .build();
     }
 
     @Override
