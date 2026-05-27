@@ -4,7 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record ResponseCommentDto(
-
         Long id,
 
         String text,
