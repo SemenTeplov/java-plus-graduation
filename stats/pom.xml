@@ -15,7 +15,6 @@
     <name>stats</name>
 
     <modules>
-        <module>stats-client</module>
         <module>aggregator</module>
         <module>analyzer</module>
         <module>collector</module>
