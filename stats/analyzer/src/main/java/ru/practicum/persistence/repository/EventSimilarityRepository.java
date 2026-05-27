@@ -25,7 +25,7 @@ public interface EventSimilarityRepository extends JpaRepository<EventSimilarity
             WHERE (event_a_id = :id OR event_b_id = :id)
             AND (event_a_id IN :ids OR event_b_id IN :ids)
             ORDER BY score DESC
-            LIMIT count""")
+            LIMIT :count""")
     List<EventSimilarity> getEventsByEventIdAndUserIds(@Param("id") int id, @Param("ids") Long[] ids, @Param("count") int count);
 
     @Query(nativeQuery = true, value = """
