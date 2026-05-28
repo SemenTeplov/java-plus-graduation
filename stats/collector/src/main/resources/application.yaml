@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: collector
+  config:
+    import: "configserver:"
+  cloud:
+    config:
+      retry:
+        useRandomPolicy: true
+        max-interval: 6000
+      discovery:
+        enabled: true
+        serviceId: config-server
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+    metadata-map:
+      grpc-port: ${grpc.server.port}

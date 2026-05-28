@@ -39,4 +39,11 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     @Query("SELECT COUNT(e) > 0 FROM Event e WHERE e.category = :categoryId")
     boolean existsByCategoryId(@Param("categoryId") Long categoryId);
+
+    @Query(nativeQuery = true, value = """
+            SELECT *
+            FROM events
+            WHERE initiator = :userId
+            """)
+    List<Event> getEventByUserId(@Param("userId") Long userId);
 }

@@ -21,7 +21,7 @@ public interface EventService {
                                                                        Long eventId,
                                                                        EventRequestStatusRequest eventRequestStatusRequest);
 
-    ResponseEventFullDto getEvent(Long id);
+    ResponseEventFullDto getEvent(Long id, Long userId);
 
     List<ParticipationRequestDto> getEventParticipants(Long userId, Long eventId);
 
@@ -38,4 +38,8 @@ public interface EventService {
     ResponseEventFullDto updateEventAdmin(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
     String getStatus(Long eventId, Long userId, String status, Long count);
+
+    List<EventShortDto> getRecommendations(Long userId);
+
+    void sendLike(Long userId, Long eventId);
 }

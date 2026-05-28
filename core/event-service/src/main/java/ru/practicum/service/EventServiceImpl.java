@@ -1,24 +1,25 @@
 package main.java.ru.practicum.service;
 
+import com.google.protobuf.Timestamp;
+
 import jakarta.validation.ValidationException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import main.java.ru.practicum.dto.CategoryDto;
-import main.java.ru.practicum.dto.EndpointHitDto;
 import main.java.ru.practicum.dto.EventRequestStatusRequest;
 import main.java.ru.practicum.dto.EventRequestStatusUpdateResult;
 import main.java.ru.practicum.dto.EventShortDto;
 import main.java.ru.practicum.dto.ParticipationRequestDto;
+import main.java.ru.practicum.dto.RequestEventDto;
+import main.java.ru.practicum.dto.ResponseEventFullDto;
 import main.java.ru.practicum.dto.UserShortDto;
 import main.java.ru.practicum.constant.Exceptions;
 import main.java.ru.practicum.constant.Messages;
 import main.java.ru.practicum.constant.Values;
-import main.java.ru.practicum.dto.ResponseEventFullDto;
 import main.java.ru.practicum.dto.GetEventsForAdminRequest;
 import main.java.ru.practicum.dto.GetEventsRequest;
-import main.java.ru.practicum.dto.RequestEventDto;
 import main.java.ru.practicum.dto.UpdateEventAdminRequest;
 import main.java.ru.practicum.dto.UpdateEventUserRequest;
 import main.java.ru.practicum.exception.ForbiddenException;
@@ -28,7 +29,6 @@ import main.java.ru.practicum.exception.NotFoundException;
 import main.java.ru.practicum.exception.NotMeetRulesEditionException;
 import main.java.ru.practicum.exception.NotRespondStatusException;
 import main.java.ru.practicum.externel.RequestClient;
-import main.java.ru.practicum.externel.StatsClient;
 import main.java.ru.practicum.externel.UserClient;
 import main.java.ru.practicum.mapper.CategoryMapper;
 import main.java.ru.practicum.mapper.EventMapper;
@@ -44,10 +44,20 @@ import main.java.ru.practicum.specification.EventSpecification;
 import main.java.ru.practicum.persistence.status.StatusRequest;
 import main.java.ru.practicum.persistence.status.Status;
 
+import net.devh.boot.grpc.client.inject.GrpcClient;
+
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import stats.messages.ActionTypeProto;
+import stats.messages.RecommendedEventProto;
+import stats.messages.UserActionProto;
+import stats.messages.UserPredictionsRequestProto;
+import stats.service.collector.RecommendationsControllerGrpc;
+import stats.service.collector.UserActionControllerGrpc;
+
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -78,9 +88,13 @@ public class EventServiceImpl implements EventService {
 
     private final RequestClient requestClient;
 
-    private final StatsClient statsClient;
-
     private final EventSpecification eventSpecification;
+
+    @GrpcClient("analyzer")
+    private RecommendationsControllerGrpc.RecommendationsControllerBlockingStub clientAnalyzer;
+
+    @GrpcClient("collector")
+    private UserActionControllerGrpc.UserActionControllerBlockingStub clientController;
 
     @Override
     public ResponseEventFullDto addEvent(Long userId, RequestEventDto newEventDto) {
@@ -148,15 +162,22 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public ResponseEventFullDto getEvent(Long id) {
+    public ResponseEventFullDto getEvent(Long id, Long userId) {
 
         log.info(Messages.MESSAGE_GET_EVENT_BY_ID, id);
 
+        clientController.collectUserAction(UserActionProto.newBuilder()
+                .setEventId(Math.toIntExact(id))
+                .setUserId(Math.toIntExact(userId))
+                .setActionType(ActionTypeProto.ACTION_VIEW)
+                .setTimestamp(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()).build())
+                .build());
+  
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
 
-        if (event.getViews() == 0) {
-            event.setViews(1L);
+        if (event.getRating() == 0) {
+            event.setRating(1.0);
             eventRepository.save(event);
         }
 
@@ -166,13 +187,6 @@ public class EventServiceImpl implements EventService {
 
         Location location = locationRepository.findById(event.getLocation())
                 .orElseThrow(() -> new NotFoundException(Exceptions.EXCEPTION_NOT_FOUND));
-
-        statsClient.saveHit(EndpointHitDto.builder()
-                .uri(Values.EVENT_GET_URI + id)
-                .app(Values.APPLICATION)
-                .ip(Values.EWM_IP)
-                .timestamp(LocalDateTime.now())
-                .build());
 
         return getEventFullDto(event, location);
     }
@@ -217,13 +231,6 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .map(this::getEventShortDto)
                 .toList();
-
-        statsClient.saveHit(EndpointHitDto.builder()
-                .uri(Values.EVENTS_GET_URI)
-                .app(Values.APPLICATION)
-                .ip(Values.EWM_IP)
-                .timestamp(LocalDateTime.now())
-                .build());
 
         return list;
     }
@@ -383,6 +390,36 @@ public class EventServiceImpl implements EventService {
         return String.valueOf(Status.CONFIRMED);
     }
 
+    @Override
+    public List<EventShortDto> getRecommendations(Long userId) {
+
+        RecommendedEventProto proto = clientAnalyzer.getRecommendationsForUser(UserPredictionsRequestProto
+                .newBuilder()
+                .setUserId(Math.toIntExact(userId))
+                .setMaxResults(10)
+                .build())
+                .next();
+
+        List<Event> list = eventRepository.getEventByUserId(userId);
+
+        return list.stream()
+                .filter(i -> i.getId() == proto.getEventId())
+                .map(eventMapper::eventToEventShortDto)
+                .toList();
+    }
+
+    @Override
+    public void sendLike(Long userId, Long eventId) {
+
+        clientController.collectUserAction(UserActionProto
+                .newBuilder()
+                .setEventId(Math.toIntExact(userId))
+                .setUserId(Math.toIntExact(userId))
+                .setActionType(ActionTypeProto.ACTION_LIKE)
+                .setTimestamp(Timestamp.newBuilder().setSeconds(Instant.now().getEpochSecond()).build())
+                .build());
+    }
+  
     private ResponseEventFullDto getEventFullDto(Event event, Location location) {
 
         UserShortDto user = userClient.getUserById(event.getInitiator()).getBody();

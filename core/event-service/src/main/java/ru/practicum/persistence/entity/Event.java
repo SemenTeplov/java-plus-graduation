@@ -79,5 +79,5 @@ public class Event {
     @Column(name = "state", length = 10)
     State state;
 
-    Long views;
+    double rating;
 }

@@ -46,5 +46,5 @@ public class ResponseEventFullDto {
 
         String title;
 
-        Long views;
+        double rating;
 }

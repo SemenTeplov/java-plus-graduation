@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import main.java.ru.practicum.constant.Exceptions;
 import main.java.ru.practicum.constant.Messages;
-import main.dto.ApiError;
+import main.java.ru.practicum.dto.ApiError;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

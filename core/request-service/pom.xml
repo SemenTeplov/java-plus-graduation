@@ -13,6 +13,13 @@
     <packaging>jar</packaging>
     <version>0.0.1-SNAPSHOT</version>
 
+    <properties>
+        <proto-schemas.version>0.0.1-SNAPSHOT</proto-schemas.version>
+        <grpc.client.starter.version>3.1.0.RELEASE</grpc.client.starter.version>
+        <grpc.client.autoconfigure.version>2.15.0.RELEASE</grpc.client.autoconfigure.version>
+        <protoc-gen-grpc.version>1.79.0</protoc-gen-grpc.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -31,8 +38,30 @@
 
         <dependency>
             <groupId>ru.practicum</groupId>
-            <artifactId>stats-dto</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <artifactId>proto-schemas</artifactId>
+            <version>${proto-schemas.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-client-spring-boot-starter</artifactId>
+            <version>${grpc.client.starter.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.devh</groupId>
+            <artifactId>grpc-client-spring-boot-autoconfigure</artifactId>
+            <version>${grpc.client.autoconfigure.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>protoc-gen-grpc-java</artifactId>
+            <version>${protoc-gen-grpc.version}</version>
+            <type>pom</type>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
