@@ -14,6 +14,7 @@ public class User {
     private final int id;
     private volatile double grade;
     private Instant instant;
+
     public User(int id, String status, Instant instant) {
         this.id = id;
         this.set(status, instant);

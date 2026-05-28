@@ -24,13 +24,13 @@ public class AggregatorService {
 
     private final Map<Integer, Event> events;
     private final Map<Integer, Map<Integer, Double>> oldSimilarities;
+
     public AggregatorService() {
         this.events = new ConcurrentHashMap<>();
         this.oldSimilarities = new ConcurrentHashMap<>();
     }
 
     public Optional<Set<EventSimilarityAvro>> updateState(UserActionAvro user) {
-
         log.info(Message.GET_LIST_OF_USER, user);
 
         if (!events.containsKey(user.getEventId())) {
@@ -54,7 +54,6 @@ public class AggregatorService {
 
                 if (!(oldSimilarities.containsKey(eventIds[0]) &&
                         oldSimilarities.get(eventIds[0]).containsKey(eventIds[1]) &&
-                        similarity > 0.0001 &&
                         Math.abs(oldSimilarities.get(eventIds[0]).get(eventIds[1]) - similarity) <= 0.0001)) {
 
                     similarities.add(EventSimilarityAvro.newBuilder()
@@ -82,14 +81,11 @@ public class AggregatorService {
     }
 
     private Integer[] compareEvents(Integer eventA, Integer eventB) {
-
         log.info(Message.DEFINITION_ORDER, eventA, eventB);
 
         if (eventA < eventB) {
-
             return new Integer[] {eventA, eventB};
         } else {
-
             return new Integer[] {eventB, eventA};
         }
     }
